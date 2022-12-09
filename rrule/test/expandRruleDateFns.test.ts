@@ -1,9 +1,7 @@
-import { Frequency } from 'Common/Util/rrule/types'
-import { expandRRule } from 'Common/Util/rrule/expandRrule'
 import { addDays, addHours, addMinutes, addYears, startOfDay } from 'date-fns'
 import { parseRecurrenceFromString } from '../parseRrule'
 import { toRRuleDateString } from '../rRuleDateStringFormat'
-import { Weekday } from '../types'
+import { Frequency, Weekday } from '../types'
 
 const today = addDays(startOfDay(new Date()), -1)
 const startPeriod = addYears(today, -2)
@@ -37,42 +35,51 @@ intervals.map((interval) => {
 
             const rRule = parseRecurrenceFromString(rRuleString, Weekday.Sunday)
             expect(rRule).not.toBeUndefined()
-            expect(rRule?.interval).toEqual(interval)
-            expect(rRule?.frequency).toEqual(frequency)
-            expect(rRule?.count).toEqual(3)
 
-            const ex = expandRRule(rRule!!, startPeriod, endPeriod)
-            expect(ex).not.toBeUndefined()
-            expect(ex.events.length).toEqual(3)
-            expect(ex.events[0].date).toBeInstanceOf(Date)
+            if (rRule) {
+                expect(rRule.interval).toEqual(interval)
+                expect(rRule.frequency).toEqual(frequency)
+                expect(rRule.count).toEqual(3)
 
-            // eslint-disable-next-line array-callback-return
-            ex.events.map((e, i) => {
-                expect(e.index).toEqual(i + 1)
+                const ex = expandRRule(rRule, startPeriod, endPeriod)
+                expect(ex).not.toBeUndefined()
+                expect(ex.events.length).toEqual(3)
+                expect(ex.events[0].date).toBeInstanceOf(Date)
 
-                switch (frequency) {
-                    case Frequency.MINUTELY:
-                        expect(e.date).toEqual(addMinutes(today, i * interval))
-                        break
-                    case Frequency.HOURLY:
-                        expect(e.date).toEqual(addHours(today, i * interval))
-                        break
-                    case Frequency.DAILY:
-                        expect(e.date).toEqual(addDays(today, i * interval))
-                        break
-                    case Frequency.WEEKLY:
-                        expect(e.date).toEqual(addDays(today, i * interval * 7))
-                        break
-                    // case Frequency.MONTHLY:
-                    //     expect(e.date).toEqual(addMonths(today, i * interval))
-                    //     break
-                    // case Frequency.YEARLY:
-                    //     expect(e.date).toEqual(addYears(today, i * interval))
-                    //     break
+                // eslint-disable-next-line array-callback-return
+                ex.events.map((e, i) => {
+                    expect(e.index).toEqual(i + 1)
 
-                    default:
-                }
-            })
+                    switch (frequency) {
+                        case Frequency.MINUTELY:
+                            expect(e.date).toEqual(
+                                addMinutes(today, i * interval)
+                            )
+                            break
+                        case Frequency.HOURLY:
+                            expect(e.date).toEqual(
+                                addHours(today, i * interval)
+                            )
+                            break
+                        case Frequency.DAILY:
+                            expect(e.date).toEqual(addDays(today, i * interval))
+                            break
+                        case Frequency.WEEKLY:
+                            expect(e.date).toEqual(
+                                addDays(today, i * interval * 7)
+                            )
+                            break
+                        // case Frequency.MONTHLY:
+                        //     expect(e.date).toEqual(addMonths(today, i * interval))
+                        //     break
+                        // case Frequency.YEARLY:
+                        //     expect(e.date).toEqual(addYears(today, i * interval))
+                        //     break
+
+                        default:
+                    }
+                })
+            }
         })
     })
 })
