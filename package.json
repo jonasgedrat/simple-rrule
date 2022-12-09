@@ -31,7 +31,7 @@
     "lodash":"^4.17.21"
   },
   "scripts": {   
-    "test": "jest --forceExit",
-    "test:watch": "jest --watch"
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest",
+    
   }
 }
