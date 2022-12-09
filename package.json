@@ -1,0 +1,28 @@
+{
+  "name": "simple-rrule",
+  "version": "0.0.1",
+  "description": "rrule string parser and event expands",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonasgedrat/simple-rrule.git"
+  },
+  "author": "Jonas Gedrat",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jonasgedrat/simple-rrule.git/issues"
+  },
+  "homepage": "https://github.com/jonasgedrat/simple-rrule.git#readme",
+  "engines": {
+    "npm": ">=8",
+    "node": ">=16 <17"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1",
+    "prettier": "^2.8.1"
+  },
+  "peerDependencies": {"date-fns":"^2.29.3"},
+  "scripts": {   
+    "test": "jest --forceExit",
+    "test:watch": "jest --watch"
+  }
+}
