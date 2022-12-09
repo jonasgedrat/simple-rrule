@@ -1,0 +1,40 @@
+name: Tests
+
+on: [pull_request]
+
+jobs:
+    tests:
+        name: Run tests
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Get commit code
+              uses: actions/checkout@v2
+
+            - name: Node.js install
+              uses: actions/setup-node@v1
+              with:
+                  node-version: '12.x'
+
+            - name: cache_dependencies
+              id: cache_dependencies
+              uses: actions/cache@v2
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-dependencies-${{ hashFiles('./package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
+
+            - name: npm install
+              if: steps.cache_dependencies.outputs.cache-hit != 'true'
+              run: npm ci
+
+            - name: run tests
+              run: npm test
+
+            - name: Archive code coverage results
+              uses: actions/upload-artifact@v2
+              with:
+                  name: code-coverage-report
+                  path: reports/coverage/lcov.info
+
