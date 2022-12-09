@@ -1,4 +1,5 @@
 import { addDays, addHours, addMinutes, addYears, startOfDay } from 'date-fns'
+import { expandRRule } from '../expandRrule'
 import { parseRecurrenceFromString } from '../parseRrule'
 import { toRRuleDateString } from '../rRuleDateStringFormat'
 import { Frequency, Weekday } from '../types'
