@@ -1,4 +1,24 @@
 import { addMinutes } from 'date-fns'
+
+export interface ISchedulerEditorSchema {
+    id: string
+    title: string
+    dtStart: Date
+    dtEnd: Date
+
+    frequency: Frequency
+    interval: number
+    count: number
+    until?: Date
+
+    byDay: string
+    byMonth: number
+    byMonthDay: number
+    bySetPos: number
+
+    wkst: Weekday
+}
+
 export interface IRrule {
     dtStart: Date
     dtEnd: Date

@@ -1,7 +1,6 @@
-import { ISchedulerEditorSchema } from 'Common/components/SchedulerEditor/schedulerEditorSchema'
 import { toRRuleDateString } from './rRuleDateStringFormat'
 
-import { rRuleFields, Frequency } from './types'
+import { rRuleFields, Frequency, ISchedulerEditorSchema } from './types'
 
 export const getRRuleString = (f: ISchedulerEditorSchema) => {
     if (f.frequency === Frequency.NEVER) {

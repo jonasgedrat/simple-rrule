@@ -1,6 +1,7 @@
 import { parseISO } from 'date-fns'
 import { trim } from 'lodash'
-import { isBetween } from '../numbers'
+import { isBetween } from './numbers'
+
 import { Frequency, IRrule, rRuleDefault, rRuleFields, Weekday } from './types'
 
 const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
