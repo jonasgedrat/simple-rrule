@@ -4,11 +4,6 @@
 
 **Simple recurrence rules to get scheduler events for calendar dates.**
 
-[![NPM version][npm-image]][npm-url]
-[![Build Status][ci-image]][ci-url]
-[![js-standard-style][js-standard-image]][js-standard-url]
-[![Downloads][downloads-image]][downloads-url]
-
 simple-rrule.js expands recurrence dates from a rrule string.
 
 rules as defined in the [iCalendar
