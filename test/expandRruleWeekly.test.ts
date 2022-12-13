@@ -67,7 +67,7 @@ test(`expandRRule Weekly`, () => {
         //     { date: '2022-12-21T03:00:00.000Z', index: 9 },
         // ]
 
-        console.log(ex.events)
+        //console.log(ex.events)
         ex.events.map((x, i) => {
             expect(`${new Date(x.date).toISOString()}`).toEqual(
                 result[i + 3].date
