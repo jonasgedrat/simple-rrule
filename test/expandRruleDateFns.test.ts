@@ -2,16 +2,7 @@ import { addDays, addHours, addMinutes } from 'date-fns'
 import { expandRRule } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
 import { Frequency, Weekday } from '../src/types'
-import { dtStart, frequencies, intervals, today } from './constants'
-
-let startPeriod = new Date()
-let endPeriod = new Date()
-
-test('expandRRule variables tests', () => {
-    expect(today).toBeInstanceOf(Date)
-    expect(startPeriod).toBeInstanceOf(Date)
-    expect(startPeriod).toBeInstanceOf(Date)
-})
+import { dtStart, frequencies, intervals } from './constants'
 
 // eslint-disable-next-line array-callback-return
 intervals.map((interval) => {
@@ -28,28 +19,40 @@ intervals.map((interval) => {
                 expect(rRule.frequency).toEqual(frequency)
                 expect(rRule.count).toEqual(3)
 
+                let startPeriod = addMinutes(rRule.dtStart, interval * -1)
+                let endPeriod = new Date()
+
                 //adjust date to performance
                 switch (frequency) {
                     case Frequency.MINUTELY:
-                        startPeriod = addMinutes(today, -2)
-                        endPeriod = addMinutes(today, 10)
+                        endPeriod = addMinutes(rRule.dtStart, interval * 4)
                         break
                     case Frequency.HOURLY:
-                        startPeriod = addHours(today, -2)
-                        endPeriod = addHours(today, 10)
+                        endPeriod = addHours(rRule.dtStart, interval * 4)
                         break
                     case Frequency.DAILY:
-                        startPeriod = addDays(today, -2)
-                        endPeriod = addDays(today, 10)
+                        endPeriod = addDays(rRule.dtStart, interval * 4)
                         break
                     case Frequency.WEEKLY:
-                        startPeriod = addDays(today, -2)
-                        endPeriod = addDays(today, 10 * 7)
+                        endPeriod = addDays(rRule.dtStart, interval * 4 * 7)
                         break
                     default:
                 }
 
                 const ex = expandRRule(rRule, startPeriod, endPeriod)
+
+                console.log(
+                    'rRuleStart',
+                    rRule.dtStart,
+                    'startPeriod',
+                    startPeriod
+                )
+                // console.log('rRule', rRule)
+
+                console.log('ex.events', ex.events)
+
+                //console.log('result', result)
+
                 expect(ex).not.toBeUndefined()
                 expect(ex.events.length).toEqual(3)
                 expect(ex.events[0].date).toBeInstanceOf(Date)
@@ -61,20 +64,22 @@ intervals.map((interval) => {
                     switch (frequency) {
                         case Frequency.MINUTELY:
                             expect(e.date).toEqual(
-                                addMinutes(today, i * interval)
+                                addMinutes(rRule.dtStart, i * interval)
                             )
                             break
                         case Frequency.HOURLY:
                             expect(e.date).toEqual(
-                                addHours(today, i * interval)
+                                addHours(rRule.dtStart, i * interval)
                             )
                             break
                         case Frequency.DAILY:
-                            expect(e.date).toEqual(addDays(today, i * interval))
+                            expect(e.date).toEqual(
+                                addDays(rRule.dtStart, i * interval)
+                            )
                             break
                         case Frequency.WEEKLY:
                             expect(e.date).toEqual(
-                                addDays(today, i * interval * 7)
+                                addDays(rRule.dtStart, i * interval * 7)
                             )
                             break
 

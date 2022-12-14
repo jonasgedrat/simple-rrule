@@ -50,6 +50,8 @@ export const expandRRule = (
         minimalSecondsDuration
     )
 
+    console.log('r', r)
+
     if (r.hasErrors) {
         return {
             r: r,
@@ -75,9 +77,12 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
         start: r.firstEventInRangePeriod,
         end: r.endRangePeriodOrUntil,
     }
+
     const step = {
         step: r.frequency === Frequency.WEEKLY ? r.interval * 7 : r.interval,
     }
+
+    console.log('interval', interval, 'step', step)
 
     switch (r.frequency) {
         case Frequency.SECONDLY:
@@ -136,15 +141,27 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
     //adjust hour/minute/second
     switch (r.frequency) {
+        case Frequency.MINUTELY:
+            dates = dates.map((x) => {
+                return new Date(x.setSeconds(r.dtStart.getSeconds()))
+            })
+            break
+        case Frequency.HOURLY:
+            dates = dates.map((x) => {
+                const rH = new Date(x.setMinutes(r.dtStart.getMinutes()))
+                return new Date(rH.setSeconds(r.dtStart.getSeconds()))
+            })
+            break
         case Frequency.DAILY:
         case Frequency.WEEKLY:
-            const hour = r.dtStart.getHours()
-            //console.log(r.dtStart, hour)
-            const minute = r.dtStart.getMinutes()
-            const second = r.dtStart.getSeconds()
-
             dates = dates.map((x) => {
-                return new Date(x.setUTCHours(hour, minute, second))
+                return new Date(
+                    x.setUTCHours(
+                        r.dtStart.getUTCHours(),
+                        r.dtStart.getMinutes(),
+                        r.dtStart.getSeconds()
+                    )
+                )
             })
             break
         default:
@@ -152,6 +169,8 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
     const result: IDateEvents[] = dates
         .map((x, i) => {
+            console.log('date in expandoResult Map:', x)
+
             return {
                 date: x,
                 index: r.startIndexCount + i + 1,

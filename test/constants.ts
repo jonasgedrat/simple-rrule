@@ -11,7 +11,7 @@ export const d = {
 }
 
 export const count = 12
-export const intervals = [1, 3]
+export const intervals = [1]
 
 export const today = new Date(
     d.year,
