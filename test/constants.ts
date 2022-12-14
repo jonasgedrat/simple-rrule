@@ -2,8 +2,8 @@ import { toRRuleDateString } from '../src/rRuleDateStringFormat'
 import { Frequency } from '../src/types'
 
 export const d = {
-    year: 2021,
-    month: 11,
+    year: 2022,
+    month: 10,
     day: 1,
     hour: 10,
     minute: 30,
@@ -29,6 +29,6 @@ export const frequencies = [
     Frequency.WEEKLY,
 ]
 
-console.log('today', today)
+//console.log('today', today)
 
 export const dtStart = `DTSTART:${toRRuleDateString(today)}`

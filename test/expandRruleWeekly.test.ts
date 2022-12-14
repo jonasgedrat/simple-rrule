@@ -2,7 +2,23 @@ import { addDays } from 'date-fns'
 import { expandRRule } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
 import { Frequency, Weekday } from '../src/types'
-import { count, dtStart, today, d } from './constants'
+import { count, dtStart, d } from './constants'
+
+// DTSTART:20221102T133000Z
+// RRULE:FREQ=WEEKLY;COUNT=12;INTERVAL=1;WKST=SU;BYDAY=MO,WE,FR
+
+// 1	Wed,	02	Nov	2022	13:30:00
+// 2	Fri,	04	Nov	2022	13:30:00
+// 3	Mon,	07	Nov	2022	13:30:00
+// 4	Wed,	09	Nov	2022	13:30:00
+// 5	Fri,	11	Nov	2022	13:30:00
+// 6	Mon,	14	Nov	2022	13:30:00
+// 7	Wed,	16	Nov	2022	13:30:00
+// 8	Fri,	18	Nov	2022	13:30:00
+// 9	Mon,	21	Nov	2022	13:30:00
+// 10	Wed,	23	Nov	2022	13:30:00
+// 11	Fri,	25	Nov	2022	13:30:00
+// 12	Mon,	28	Nov	2022	13:30:00
 
 test(`expandRRule Weekly`, () => {
     const rRuleString = `${dtStart}\nRRULE:FREQ=${Frequency.WEEKLY};INTERVAL=1;COUNT=${count};BYDAY=MO,WE,FR;WKST=SU`
@@ -14,14 +30,17 @@ test(`expandRRule Weekly`, () => {
         expect(rRule.interval).toEqual(1)
         expect(rRule.frequency).toEqual(Frequency.WEEKLY)
 
-        const startPeriod = addDays(today, 7)
-        const endPeriod = addDays(startPeriod, 14)
+        //console.log('rRule', rRule)
+
+        const startPeriod = addDays(rRule.dtStart, 7)
+        const endPeriod = addDays(rRule.dtStart, 14)
 
         //2 weeks after 1 week - 3 events per week result 6 events
         const ex = expandRRule(rRule, startPeriod, endPeriod)
 
         expect(ex).not.toBeUndefined()
-        const sequenceDays = [2, 5, 7, 9, 12, 14, 16, 19, 21, 23, 26, 28]
+
+        const sequenceDays = [2, 4, 7, 9, 11, 14, 16, 18, 21, 23, 25, 28]
         const result = Array.from(Array(count).keys()).map((x) => {
             return {
                 date: new Date(
@@ -38,8 +57,8 @@ test(`expandRRule Weekly`, () => {
             }
         })
 
-        console.log('ex.events', ex.events)
-        console.log('result', result)
+        //console.log('ex.events', ex.events)
+        //console.log('result', result)
 
         ex.events.map((x, i) => {
             expect(x.date).toBeInstanceOf(Date)

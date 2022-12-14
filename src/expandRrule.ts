@@ -40,9 +40,8 @@ export const expandRRule = (
     endRangePeriod: Date,
     minimalSecondsDuration: number = 60 * 5 //5 minutos
 ): IExpandResult => {
-    //ajustar todas as datas para UTC time zone 000 antes de qualquer coisa
-
-    //console.log(rRule)
+    // console.log('expandRRule rRule',rRule)
+    // console.log('expandRRule startRangePeriod', rRule)
 
     const r = validateAndAdjustRRule(
         rRule,
@@ -129,8 +128,24 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             dates = eachMonthOfInterval(interval)
             break
         case Frequency.YEARLY:
-            console.log('yearly interval', interval)
+            //console.log('yearly interval', interval)
             dates = eachYearOfInterval(interval)
+            break
+        default:
+    }
+
+    //adjust hour/minute/second
+    switch (r.frequency) {
+        case Frequency.DAILY:
+        case Frequency.WEEKLY:
+            const hour = r.dtStart.getHours()
+            //console.log(r.dtStart, hour)
+            const minute = r.dtStart.getMinutes()
+            const second = r.dtStart.getSeconds()
+
+            dates = dates.map((x) => {
+                return new Date(x.setUTCHours(hour, minute, second))
+            })
             break
         default:
     }
