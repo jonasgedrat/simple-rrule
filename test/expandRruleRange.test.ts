@@ -22,8 +22,6 @@ const frequencies = [
     Frequency.HOURLY,
     Frequency.DAILY,
     Frequency.WEEKLY,
-    //Frequency.MONTHLY,
-    //Frequency.YEARLY,
 ]
 
 // eslint-disable-next-line array-callback-return

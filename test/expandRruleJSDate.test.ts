@@ -1,3 +1,4 @@
+import { addDays, addHours, addMinutes } from 'date-fns'
 import { expandRRule } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
 import { toRRuleDateString } from '../src/rRuleDateStringFormat'
@@ -10,8 +11,8 @@ const hour = 0
 const minute = 0
 
 const today = new Date(year, month, day, hour, minute)
-const startPeriod = new Date(year - 2, month, day, hour, minute)
-const endPeriod = new Date(year + 10, month, day, hour, minute)
+let startPeriod = new Date(year - 2, month, day, hour, minute)
+let endPeriod = new Date(year + 10, month, day, hour, minute)
 
 const dtStart = `DTSTART:${toRRuleDateString(today)}`
 
@@ -27,8 +28,6 @@ const frequencies = [
     Frequency.HOURLY,
     Frequency.DAILY,
     Frequency.WEEKLY,
-    //Frequency.MONTHLY,
-    //Frequency.YEARLY,
 ]
 
 // eslint-disable-next-line array-callback-return
@@ -45,6 +44,27 @@ intervals.map((interval) => {
                 expect(rRule.interval).toEqual(interval)
                 expect(rRule.frequency).toEqual(frequency)
                 expect(rRule.count).toEqual(3)
+
+                //adjust date to performance
+                switch (frequency) {
+                    case Frequency.MINUTELY:
+                        startPeriod = addMinutes(today, -2)
+                        endPeriod = addMinutes(today, 10)
+                        break
+                    case Frequency.HOURLY:
+                        startPeriod = addHours(today, -2)
+                        endPeriod = addHours(today, 10)
+                        break
+                    case Frequency.DAILY:
+                        startPeriod = addDays(today, -2)
+                        endPeriod = addDays(today, 10)
+                        break
+                    case Frequency.WEEKLY:
+                        startPeriod = addDays(today, -2)
+                        endPeriod = addDays(today, 10 * 7)
+                        break
+                    default:
+                }
 
                 const ex = expandRRule(rRule, startPeriod, endPeriod)
 
