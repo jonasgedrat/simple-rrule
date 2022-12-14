@@ -1,34 +1,17 @@
 import { addDays, addHours, addMinutes } from 'date-fns'
 import { expandRRule } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
-import { toRRuleDateString } from '../src/rRuleDateStringFormat'
 import { Frequency, Weekday } from '../src/types'
+import { dtStart, intervals, today, d, frequencies } from './constants'
 
-const year = 2020
-const month = 1
-const day = 1
-const hour = 0
-const minute = 0
-
-const today = new Date(year, month, day, hour, minute)
-let startPeriod = new Date(year - 2, month, day, hour, minute)
-let endPeriod = new Date(year + 10, month, day, hour, minute)
-
-const dtStart = `DTSTART:${toRRuleDateString(today)}`
+let startPeriod = new Date()
+let endPeriod = new Date()
 
 test('expandRRule variables tests', () => {
     expect(today).toBeInstanceOf(Date)
     expect(startPeriod).toBeInstanceOf(Date)
     expect(startPeriod).toBeInstanceOf(Date)
 })
-
-const intervals = [1, 3]
-const frequencies = [
-    Frequency.MINUTELY,
-    Frequency.HOURLY,
-    Frequency.DAILY,
-    Frequency.WEEKLY,
-]
 
 // eslint-disable-next-line array-callback-return
 intervals.map((interval) => {
@@ -79,44 +62,44 @@ intervals.map((interval) => {
                         case Frequency.MINUTELY:
                             expect(e.date).toEqual(
                                 new Date(
-                                    year,
-                                    month,
-                                    day,
-                                    hour,
-                                    minute + i * interval
+                                    d.year,
+                                    d.month,
+                                    d.day,
+                                    d.hour,
+                                    d.minute + i * interval
                                 )
                             )
                             break
                         case Frequency.HOURLY:
                             expect(e.date).toEqual(
                                 new Date(
-                                    year,
-                                    month,
-                                    day,
-                                    hour + i * interval,
-                                    minute
+                                    d.year,
+                                    d.month,
+                                    d.day,
+                                    d.hour + i * interval,
+                                    d.minute
                                 )
                             )
                             break
                         case Frequency.DAILY:
                             expect(e.date).toEqual(
                                 new Date(
-                                    year,
-                                    month,
-                                    day + i * interval,
-                                    hour,
-                                    minute
+                                    d.year,
+                                    d.month,
+                                    d.day + i * interval,
+                                    d.hour,
+                                    d.minute
                                 )
                             )
                             break
                         case Frequency.WEEKLY:
                             expect(e.date).toEqual(
                                 new Date(
-                                    year,
-                                    month,
-                                    day + i * interval * 7,
-                                    hour,
-                                    minute
+                                    d.year,
+                                    d.month,
+                                    d.day + i * interval * 7,
+                                    d.hour,
+                                    d.minute
                                 )
                             )
                             break

@@ -1,29 +1,17 @@
-import { addDays, addHours, addMinutes, addYears, startOfDay } from 'date-fns'
+import { addDays, addHours, addMinutes } from 'date-fns'
 import { expandRRule } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
-import { toRRuleDateString } from '../src/rRuleDateStringFormat'
 import { Frequency, Weekday } from '../src/types'
+import { dtStart, frequencies, intervals, today } from './constants'
 
-const today = addDays(startOfDay(new Date()), -1)
-let startPeriod = addYears(today, -2)
-let endPeriod = addYears(today, 10)
-
-const dtStart = `DTSTART:${toRRuleDateString(today)}`
-// const dtUntil = `UNTIL=${toRRuleDateString(addMonths(today, 2))}`
+let startPeriod = new Date()
+let endPeriod = new Date()
 
 test('expandRRule variables tests', () => {
     expect(today).toBeInstanceOf(Date)
     expect(startPeriod).toBeInstanceOf(Date)
     expect(startPeriod).toBeInstanceOf(Date)
 })
-
-const intervals = [1, 2, 3]
-const frequencies = [
-    Frequency.MINUTELY,
-    Frequency.HOURLY,
-    Frequency.DAILY,
-    Frequency.WEEKLY,
-]
 
 // eslint-disable-next-line array-callback-return
 intervals.map((interval) => {
@@ -89,12 +77,6 @@ intervals.map((interval) => {
                                 addDays(today, i * interval * 7)
                             )
                             break
-                        // case Frequency.MONTHLY:
-                        //     expect(e.date).toEqual(addMonths(today, i * interval))
-                        //     break
-                        // case Frequency.YEARLY:
-                        //     expect(e.date).toEqual(addYears(today, i * interval))
-                        //     break
 
                         default:
                     }

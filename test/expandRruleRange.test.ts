@@ -1,28 +1,10 @@
 import { expandRRule } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
-import { toRRuleDateString } from '../src/rRuleDateStringFormat'
 import { Frequency, Weekday } from '../src/types'
-
-const year = 2020
-const month = 1
-const day = 1
-const hour = 0
-const minute = 0
-
-const today = new Date(year, month, day, hour, minute)
-
-const dtStart = `DTSTART:${toRRuleDateString(today)}`
+import { dtStart, intervals, d, frequencies } from './constants'
 
 const rangeStartInterval = 27
 const rangeEndInterval = 30
-
-const intervals = [3, 5]
-const frequencies = [
-    Frequency.MINUTELY,
-    Frequency.HOURLY,
-    Frequency.DAILY,
-    Frequency.WEEKLY,
-]
 
 // eslint-disable-next-line array-callback-return
 intervals.map((interval) => {
@@ -38,74 +20,74 @@ intervals.map((interval) => {
                 expect(rRule.interval).toEqual(interval)
                 expect(rRule.frequency).toEqual(frequency)
 
-                let startPeriod = new Date(year - 2, month, day, hour, minute)
-                let endPeriod = new Date(year + 10, month, day, hour, minute)
+                let startPeriod = new Date()
+                let endPeriod = new Date()
 
                 switch (frequency) {
                     case Frequency.MINUTELY:
                         startPeriod = new Date(
-                            year,
-                            month,
-                            day,
-                            hour,
-                            minute + rangeStartInterval * interval
+                            d.year,
+                            d.month,
+                            d.day,
+                            d.hour,
+                            d.minute + rangeStartInterval * interval
                         )
                         endPeriod = new Date(
-                            year,
-                            month,
-                            day,
-                            hour,
-                            minute + rangeEndInterval * interval
+                            d.year,
+                            d.month,
+                            d.day,
+                            d.hour,
+                            d.minute + rangeEndInterval * interval
                         )
                         break
                     case Frequency.HOURLY:
                         startPeriod = new Date(
-                            year,
-                            month,
-                            day,
-                            hour + rangeStartInterval * interval,
-                            minute
+                            d.year,
+                            d.month,
+                            d.day,
+                            d.hour + rangeStartInterval * interval,
+                            d.minute
                         )
                         endPeriod = new Date(
-                            year,
-                            month,
-                            day,
-                            hour + rangeEndInterval * interval,
-                            minute
+                            d.year,
+                            d.month,
+                            d.day,
+                            d.hour + rangeEndInterval * interval,
+                            d.minute
                         )
 
                         break
                     case Frequency.DAILY:
                         startPeriod = new Date(
-                            year,
-                            month,
-                            day + rangeStartInterval * interval,
-                            hour,
-                            minute
+                            d.year,
+                            d.month,
+                            d.day + rangeStartInterval * interval,
+                            d.hour,
+                            d.minute
                         )
                         endPeriod = new Date(
-                            year,
-                            month,
-                            day + rangeEndInterval * interval,
-                            hour,
-                            minute
+                            d.year,
+                            d.month,
+                            d.day + rangeEndInterval * interval,
+                            d.hour,
+                            d.minute
                         )
 
                         break
                     case Frequency.WEEKLY:
                         startPeriod = new Date(
-                            year,
-                            month,
-                            day + rangeStartInterval * interval * 7,
-                            hour,
-                            minute
+                            d.year,
+                            d.month,
+                            d.day + rangeStartInterval * interval * 7,
+                            d.hour,
+                            d.minute
                         )
                         endPeriod = new Date(
-                            year,
-                            month,
-                            day + rangeEndInterval * interval * 7,
-                            hour,
-                            minute
+                            d.year,
+                            d.month,
+                            d.day + rangeEndInterval * interval * 7,
+                            d.hour,
+                            d.minute
                         )
 
                         break
@@ -139,11 +121,11 @@ intervals.map((interval) => {
                     case Frequency.MINUTELY:
                         expect(ex.events[0].date.toISOString()).toEqual(
                             new Date(
-                                year,
-                                month,
-                                day,
-                                hour,
-                                minute +
+                                d.year,
+                                d.month,
+                                d.day,
+                                d.hour,
+                                d.minute +
                                     ex.events[0].index * interval -
                                     interval
                             ).toISOString()
@@ -152,11 +134,13 @@ intervals.map((interval) => {
                     case Frequency.HOURLY:
                         expect(ex.events[0].date.toISOString()).toEqual(
                             new Date(
-                                year,
-                                month,
-                                day,
-                                hour + ex.events[0].index * interval - interval,
-                                minute
+                                d.year,
+                                d.month,
+                                d.day,
+                                d.hour +
+                                    ex.events[0].index * interval -
+                                    interval,
+                                d.minute
                             ).toISOString()
                         )
 
@@ -164,11 +148,13 @@ intervals.map((interval) => {
                     case Frequency.DAILY:
                         expect(ex.events[0].date.toISOString()).toEqual(
                             new Date(
-                                year,
-                                month,
-                                day + ex.events[0].index * interval - interval,
-                                hour,
-                                minute
+                                d.year,
+                                d.month,
+                                d.day +
+                                    ex.events[0].index * interval -
+                                    interval,
+                                d.hour,
+                                d.minute
                             ).toISOString()
                         )
 
@@ -176,13 +162,13 @@ intervals.map((interval) => {
                     case Frequency.WEEKLY:
                         expect(ex.events[0].date.toISOString()).toEqual(
                             new Date(
-                                year,
-                                month,
-                                day +
+                                d.year,
+                                d.month,
+                                d.day +
                                     (ex.events[0].index * interval - interval) *
                                         7,
-                                hour,
-                                minute
+                                d.hour,
+                                d.minute
                             ).toISOString()
                         )
 
