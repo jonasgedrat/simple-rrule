@@ -66,7 +66,8 @@ intervals.map((interval) => {
                                     d.month,
                                     d.day,
                                     d.hour,
-                                    d.minute + i * interval
+                                    d.minute + i * interval,
+                                    d.second
                                 )
                             )
                             break
@@ -77,7 +78,8 @@ intervals.map((interval) => {
                                     d.month,
                                     d.day,
                                     d.hour + i * interval,
-                                    d.minute
+                                    d.minute,
+                                    d.second
                                 )
                             )
                             break
@@ -88,7 +90,8 @@ intervals.map((interval) => {
                                     d.month,
                                     d.day + i * interval,
                                     d.hour,
-                                    d.minute
+                                    d.minute,
+                                    d.second
                                 )
                             )
                             break
@@ -99,7 +102,8 @@ intervals.map((interval) => {
                                     d.month,
                                     d.day + i * interval * 7,
                                     d.hour,
-                                    d.minute
+                                    d.minute,
+                                    d.second
                                 )
                             )
                             break

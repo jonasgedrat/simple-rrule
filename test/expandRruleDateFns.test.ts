@@ -41,17 +41,14 @@ intervals.map((interval) => {
 
                 const ex = expandRRule(rRule, startPeriod, endPeriod)
 
-                console.log(
-                    'rRuleStart',
-                    rRule.dtStart,
-                    'startPeriod',
-                    startPeriod
-                )
-                // console.log('rRule', rRule)
+                // console.log(
+                //     'rRuleStart',
+                //     rRule.dtStart,
+                //     'startPeriod',
+                //     startPeriod
+                // )
 
-                console.log('ex.events', ex.events)
-
-                //console.log('result', result)
+                // console.log('ex.events', ex.events)
 
                 expect(ex).not.toBeUndefined()
                 expect(ex.events.length).toEqual(3)

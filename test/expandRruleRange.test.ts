@@ -10,7 +10,7 @@ const rangeEndInterval = 30
 intervals.map((interval) => {
     // eslint-disable-next-line array-callback-return
     frequencies.map((frequency) => {
-        test(`expandRRule JS Date frequency: ${frequency} interval: ${interval} `, () => {
+        test(`expandRRule Range frequency: ${frequency} interval: ${interval} `, () => {
             const rRuleString = `${dtStart}\nRRULE:FREQ=${frequency};INTERVAL=${interval};WKST=SU`
 
             const rRule = parseRecurrenceFromString(rRuleString, Weekday.Sunday)
@@ -30,14 +30,16 @@ intervals.map((interval) => {
                             d.month,
                             d.day,
                             d.hour,
-                            d.minute + rangeStartInterval * interval
+                            d.minute + rangeStartInterval * interval,
+                            d.second
                         )
                         endPeriod = new Date(
                             d.year,
                             d.month,
                             d.day,
                             d.hour,
-                            d.minute + rangeEndInterval * interval
+                            d.minute + rangeEndInterval * interval,
+                            d.second
                         )
                         break
                     case Frequency.HOURLY:
@@ -46,14 +48,16 @@ intervals.map((interval) => {
                             d.month,
                             d.day,
                             d.hour + rangeStartInterval * interval,
-                            d.minute
+                            d.minute,
+                            d.second
                         )
                         endPeriod = new Date(
                             d.year,
                             d.month,
                             d.day,
                             d.hour + rangeEndInterval * interval,
-                            d.minute
+                            d.minute,
+                            d.second
                         )
 
                         break
@@ -63,14 +67,16 @@ intervals.map((interval) => {
                             d.month,
                             d.day + rangeStartInterval * interval,
                             d.hour,
-                            d.minute
+                            d.minute,
+                            d.second
                         )
                         endPeriod = new Date(
                             d.year,
                             d.month,
                             d.day + rangeEndInterval * interval,
                             d.hour,
-                            d.minute
+                            d.minute,
+                            d.second
                         )
 
                         break
@@ -80,14 +86,16 @@ intervals.map((interval) => {
                             d.month,
                             d.day + rangeStartInterval * interval * 7,
                             d.hour,
-                            d.minute
+                            d.minute,
+                            d.second
                         )
                         endPeriod = new Date(
                             d.year,
                             d.month,
                             d.day + rangeEndInterval * interval * 7,
                             d.hour,
-                            d.minute
+                            d.minute,
+                            d.second
                         )
 
                         break
@@ -119,7 +127,7 @@ intervals.map((interval) => {
 
                 switch (frequency) {
                     case Frequency.MINUTELY:
-                        expect(ex.events[0].date.toISOString()).toEqual(
+                        expect(ex.events[0].date).toEqual(
                             new Date(
                                 d.year,
                                 d.month,
@@ -127,12 +135,13 @@ intervals.map((interval) => {
                                 d.hour,
                                 d.minute +
                                     ex.events[0].index * interval -
-                                    interval
-                            ).toISOString()
+                                    interval,
+                                d.second
+                            )
                         )
                         break
                     case Frequency.HOURLY:
-                        expect(ex.events[0].date.toISOString()).toEqual(
+                        expect(ex.events[0].date).toEqual(
                             new Date(
                                 d.year,
                                 d.month,
@@ -140,13 +149,14 @@ intervals.map((interval) => {
                                 d.hour +
                                     ex.events[0].index * interval -
                                     interval,
-                                d.minute
-                            ).toISOString()
+                                d.minute,
+                                d.second
+                            )
                         )
 
                         break
                     case Frequency.DAILY:
-                        expect(ex.events[0].date.toISOString()).toEqual(
+                        expect(ex.events[0].date).toEqual(
                             new Date(
                                 d.year,
                                 d.month,
@@ -154,13 +164,14 @@ intervals.map((interval) => {
                                     ex.events[0].index * interval -
                                     interval,
                                 d.hour,
-                                d.minute
-                            ).toISOString()
+                                d.minute,
+                                d.second
+                            )
                         )
 
                         break
                     case Frequency.WEEKLY:
-                        expect(ex.events[0].date.toISOString()).toEqual(
+                        expect(ex.events[0].date).toEqual(
                             new Date(
                                 d.year,
                                 d.month,
@@ -168,8 +179,9 @@ intervals.map((interval) => {
                                     (ex.events[0].index * interval - interval) *
                                         7,
                                 d.hour,
-                                d.minute
-                            ).toISOString()
+                                d.minute,
+                                d.second
+                            )
                         )
 
                         break

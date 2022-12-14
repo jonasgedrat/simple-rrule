@@ -50,7 +50,7 @@ export const expandRRule = (
         minimalSecondsDuration
     )
 
-    console.log('r', r)
+    // console.log('r', r)
 
     if (r.hasErrors) {
         return {
@@ -82,7 +82,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
         step: r.frequency === Frequency.WEEKLY ? r.interval * 7 : r.interval,
     }
 
-    console.log('interval', interval, 'step', step)
+    // console.log('interval', interval, 'step', step)
 
     switch (r.frequency) {
         case Frequency.SECONDLY:
@@ -169,7 +169,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
     const result: IDateEvents[] = dates
         .map((x, i) => {
-            console.log('date in expandoResult Map:', x)
+            // console.log('date in expandoResult Map:', x)
 
             return {
                 date: x,

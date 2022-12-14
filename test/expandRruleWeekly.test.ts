@@ -44,14 +44,12 @@ test(`expandRRule Weekly`, () => {
         const result = Array.from(Array(count).keys()).map((x) => {
             return {
                 date: new Date(
-                    Date.UTC(
-                        d.year,
-                        d.month,
-                        sequenceDays[x],
-                        d.hour,
-                        d.minute,
-                        d.second
-                    )
+                    d.year,
+                    d.month,
+                    sequenceDays[x],
+                    d.hour,
+                    d.minute,
+                    d.second
                 ),
                 index: x + 1,
             }
