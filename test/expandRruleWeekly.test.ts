@@ -4,7 +4,15 @@ import { parseRecurrenceFromString } from '../src/parseRrule'
 import { toRRuleDateString } from '../src/rRuleDateStringFormat'
 import { Frequency, Weekday } from '../src/types'
 
-const today = new Date('2022-12-01T03:00:00.000Z')
+// const today = new Date('2022-12-01T03:00:00.000Z')
+
+const year = 2022
+const month = 11
+const day = 1
+const hour = 12
+const minute = 0
+
+const today = new Date(year, month, day, hour, minute)
 
 const dtStart = `DTSTART:${toRRuleDateString(today)}`
 
@@ -28,12 +36,12 @@ test(`expandRRule Weekly`, () => {
         // 1	Fri,	02	Dec	2022	00:00:00	GMT
         // 2	Mon,	05	Dec	2022	00:00:00	GMT
         // 3	Wed,	07	Dec	2022	00:00:00	GMT
-        // 4	Fri,	09	Dec	2022	00:00:00	GMT
-        // 5	Mon,	12	Dec	2022	00:00:00	GMT
-        // 6	Wed,	14	Dec	2022	00:00:00	GMT
-        // 7	Fri,	16	Dec	2022	00:00:00	GMT
-        // 8	Mon,	19	Dec	2022	00:00:00	GMT
-        // 9	Wed,	21	Dec	2022	00:00:00	GMT
+        // 4	Fri,	09	Dec	2022	00:00:00	GMT---
+        // 5	Mon,	12	Dec	2022	00:00:00	GMT---
+        // 6	Wed,	14	Dec	2022	00:00:00	GMT---
+        // 7	Fri,	16	Dec	2022	00:00:00	GMT---
+        // 8	Mon,	19	Dec	2022	00:00:00	GMT---
+        // 9	Wed,	21	Dec	2022	00:00:00	GMT---
         // 10	Fri,	23	Dec	2022	00:00:00	GMT
         // 11	Mon,	26	Dec	2022	00:00:00	GMT
         // 12	Wed,	28	Dec	2022	00:00:00	GMT
@@ -68,7 +76,7 @@ test(`expandRRule Weekly`, () => {
         //     { date: '2022-12-21T03:00.000Z', index: 9 },
         // ]
 
-        //console.log(ex.events, result)
+        console.log(ex.events, result)
 
         ex.events.map((x, i) => {
             expect(x.date).toBeInstanceOf(Date)
