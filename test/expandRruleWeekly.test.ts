@@ -76,7 +76,7 @@ test(`expandRRule Weekly`, () => {
         //     { date: '2022-12-21T03:00.000Z', index: 9 },
         // ]
 
-        console.log(ex.events, result)
+        // console.log(ex.events, result)
 
         ex.events.map((x, i) => {
             expect(x.date).toBeInstanceOf(Date)
