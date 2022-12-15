@@ -1,4 +1,4 @@
-export const toRRuleDateString = function (_date: Date, utc = true) {
+export const toRRuleDateString = (_date: Date, utc = true): string => {
     return [
         _date.getUTCFullYear().toString().padStart(4, '0'),
         (_date.getUTCMonth() + 1).toString().padStart(2, '0'),
@@ -11,7 +11,7 @@ export const toRRuleDateString = function (_date: Date, utc = true) {
     ].join('')
 }
 
-export const fromRruleDateStringToDate = function (until: string) {
+export const fromRruleDateStringToDate = (until: string): Date => {
     const re = /^(\d{4})(\d{2})(\d{2})(T(\d{2})(\d{2})(\d{2})Z?)?$/
     const bits = re.exec(until)
 
