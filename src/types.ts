@@ -1,24 +1,4 @@
 import { addMinutes } from 'date-fns'
-
-export interface ISchedulerEditorSchema {
-    id: string
-    title: string
-    dtStart: Date
-    dtEnd: Date
-
-    frequency: Frequency
-    interval: number
-    count: number
-    until?: Date
-
-    byDay: string
-    byMonth: number
-    byMonthDay: number
-    bySetPos: number
-
-    wkst: Weekday
-}
-
 export interface IRrule {
     dtStart: Date
     dtEnd: Date
@@ -91,21 +71,6 @@ export const rRuleDefault: IRrule = {
     byMonth: undefined,
     byMonthDay: undefined,
     byYearDay: undefined,
-}
-
-export const schedulerEditorDefault: ISchedulerEditorSchema = {
-    id: '0',
-    title: '0',
-    dtStart: new Date(),
-    dtEnd: addMinutes(new Date(), 1),
-    frequency: Frequency.NEVER,
-    interval: 1,
-    count: 0,
-    byDay: '',
-    byMonth: 0,
-    byMonthDay: 0,
-    bySetPos: 0,
-    wkst: Weekday.Sunday,
 }
 
 export const rRuleFields = {

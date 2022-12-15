@@ -1,9 +1,10 @@
 import { getRRuleString } from '../src/getRrule'
 import { toRRuleDateString } from '../src/rRuleDateStringFormat'
-import { Frequency, schedulerEditorDefault, Weekday } from '../src/types'
+import { schedulerEditorDefaultValues } from '../src/schedulerEditorSchema'
+import { Frequency, Weekday } from '../src/types'
 
 let d = {
-    ...schedulerEditorDefault,
+    ...schedulerEditorDefaultValues,
     dtStart: new Date('2022-12-15T00:00:00.000Z'),
     dtEnd: new Date('2022-12-15T01:00:00.000Z'),
 }

@@ -1,6 +1,7 @@
 import { parseISO } from 'date-fns'
 import { trim } from 'lodash'
 import { isBetween } from './numbers'
+import { isValidRRule } from './rRuleSchema'
 
 import { Frequency, IRrule, rRuleDefault, rRuleFields, Weekday } from './types'
 
@@ -12,7 +13,7 @@ export const parseRecurrenceFromString = (
 
     const lines = recurrenceString.split('\n')
 
-    let result: IRrule = rRuleDefault
+    let rRule: IRrule = rRuleDefault
 
     lines.map((line) => {
         const lineKey = trim(line.split(':')[0])
@@ -21,25 +22,27 @@ export const parseRecurrenceFromString = (
         if (lineKey === rRuleFields.dtStart) {
             const dtStart = parseISO(lineValue)
             if (dtStart) {
-                result.dtStart = dtStart
+                rRule.dtStart = dtStart
             }
         }
 
         if (lineKey === rRuleFields.dtEnd) {
             const dtEnd = parseISO(lineValue)
             if (dtEnd) {
-                result.dtEnd = dtEnd
+                rRule.dtEnd = dtEnd
             }
         }
 
         if (lineKey === rRuleFields.RRule) {
             const _parseRRule = parseRRule(line, weekStartsOn)
-            result = { ...result, ..._parseRRule }
+            rRule = { ...rRule, ..._parseRRule }
         }
         return true
     })
 
-    return result
+    isValidRRule(rRule)
+
+    return rRule
 }
 
 const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {

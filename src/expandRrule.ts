@@ -1,3 +1,4 @@
+import { isValidRRule } from './rRuleSchema'
 import {
     addDays,
     addHours,
@@ -57,6 +58,8 @@ export const expandRRule = (
 ): IExpandResult => {
     // console.log('expandRRule rRule',rRule)
     // console.log('expandRRule startRangePeriod', rRule)
+
+    isValidRRule(rRule)
 
     const r = validateAndAdjustRRule(
         rRule,

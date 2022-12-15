@@ -1,8 +1,16 @@
 {
     "cSpell.words": [
         "BYDAY",
+        "BYEARDAY",
+        "BYHOUR",
+        "BYMINUTE",
+        "bymonth",
+        "bymonthday",
+        "bysetpos",
         "DTEND",
         "DTSTART",
+        "Gedrat",
+        "tsdx",
         "wkst"
     ]
 }

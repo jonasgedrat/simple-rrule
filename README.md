@@ -159,4 +159,3 @@ const result = expandRRule(getRRuleString(rrule), startRangePeriod, endRangePeri
 </table>
 
 ---
-

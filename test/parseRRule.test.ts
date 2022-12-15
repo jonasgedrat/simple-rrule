@@ -1,10 +1,11 @@
 import { Frequency } from './../src/types'
 import { parseRecurrenceFromString } from './../src/parseRrule'
 import { toRRuleDateString } from '../src/rRuleDateStringFormat'
-import { schedulerEditorDefault, Weekday } from '../src/types'
+import { Weekday } from '../src/types'
+import { schedulerEditorDefaultValues } from '../src/schedulerEditorSchema'
 
 let d = {
-    ...schedulerEditorDefault,
+    ...schedulerEditorDefaultValues,
     dtStart: new Date('2022-12-15T00:00:00.000Z'),
     dtEnd: new Date('2022-12-15T01:00:00.000Z'),
 }
