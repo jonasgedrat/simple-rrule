@@ -1,18 +1,61 @@
 import { getRRuleString } from '../src/getRrule'
-import { Frequency, schedulerEditorDefault } from '../src/types'
+import { toRRuleDateString } from '../src/rRuleDateStringFormat'
+import { Frequency, schedulerEditorDefault, Weekday } from '../src/types'
 
 let d = {
     ...schedulerEditorDefault,
-    dtStart: new Date(Date.UTC(2020, 11, 15)),
-    dtEnd: new Date(2020, 11, 15, 1, 15),
+    dtStart: new Date('2022-12-15T00:00:00.000Z'),
+    dtEnd: new Date('2022-12-15T01:00:00.000Z'),
 }
 
+export const dtStart = `DTSTART:${toRRuleDateString(
+    d.dtStart
+)}\nDTEND:${toRRuleDateString(d.dtEnd)}\n`
+
 test(`getRRuleString`, () => {
-    expect(
-        getRRuleString({
-            ...d,
-            frequency: Frequency.WEEKLY,
-            until: new Date(2010, 1, 1, 0, 0, 0),
-        })
-    ).toEqual('RRULE:FREQ=WEEKLY;UNTIL=20100101T000000Z')
+    const expectations: [string, string][] = [
+        [
+            getRRuleString({
+                ...d,
+                frequency: Frequency.WEEKLY,
+                until: new Date('2022-12-20T01:00:00.000Z'),
+            }),
+            `${dtStart}RRULE:FREQ=WEEKLY;INTERVAL=1;UNTIL=20221220T010000Z;WKST=SU`,
+        ],
+        [
+            getRRuleString({
+                ...d,
+                frequency: Frequency.DAILY,
+            }),
+            `${dtStart}RRULE:FREQ=DAILY;INTERVAL=1;WKST=SU`,
+        ],
+        [
+            getRRuleString({
+                ...d,
+                interval: 3,
+                frequency: Frequency.WEEKLY,
+            }),
+            `${dtStart}RRULE:FREQ=WEEKLY;INTERVAL=3;WKST=SU`,
+        ],
+        [
+            getRRuleString({
+                ...d,
+                byDay: 'SU,MO,FR',
+                frequency: Frequency.WEEKLY,
+            }),
+            `${dtStart}RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=SU,MO,FR;WKST=SU`,
+        ],
+        [
+            getRRuleString({
+                ...d,
+                frequency: Frequency.YEARLY,
+                wkst: Weekday.Saturday,
+            }),
+            `${dtStart}RRULE:FREQ=YEARLY;INTERVAL=1;WKST=SA`,
+        ],
+    ]
+
+    expectations.map((i) => {
+        expect(i[0]).toEqual(i[1])
+    })
 })
