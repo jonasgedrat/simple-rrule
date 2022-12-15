@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "streetsidesoftware.code-spell-checker",   
+  ],
+  "unwantedRecommendations": [
+    "johnpapa.vscode-peacock" // not used, still tries to apply it's settings
+  ]
+}

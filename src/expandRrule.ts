@@ -53,7 +53,7 @@ export const expandRRule = (
     rRule: IRrule,
     startRangePeriod: Date,
     endRangePeriod: Date,
-    minimalSecondsDuration: number = 60 * 5 //5 minutos
+    minimalSecondsDuration: number = 60 * 5 //5 minutes
 ): IExpandResult => {
     // console.log('expandRRule rRule',rRule)
     // console.log('expandRRule startRangePeriod', rRule)
@@ -101,7 +101,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
     switch (r.frequency) {
         case Frequency.SECONDLY:
-            //nao implementado
+            //not implemented
             break
         case Frequency.MINUTELY:
             dates = eachMinuteOfInterval(interval, step)
@@ -133,8 +133,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
                 dates = resultWeekly
             } else {
-                //caso nao tenha nenhum dia sa semana selecionado
-                //retorna evento semanal pelo dia da DTSTART
                 dates = eachDayOfInterval(interval, step)
             }
 
@@ -184,7 +182,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
     const result: IDateEvents[] = dates
         .map((x, i) => {
-            // console.log('date in expandoResult Map:', x)
+            // console.log('date in expandResult Map:', x)
 
             return {
                 date: x,
@@ -246,7 +244,6 @@ const validateAndAdjustRRule = (
             `is greater than End date ${rRule.dtStart}`
     }
 
-    //limitar se tiver until
     if (!!rRule.until && rRule.until < result.startRangePeriod) {
         result.hasErrors = true
         result.errorMessages +=
@@ -271,19 +268,15 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
     let eventCountsFromDtStart = 0
     switch (r.frequency) {
         case Frequency.SECONDLY:
-            //nao implementado
+            //not implemented
             break
         case Frequency.MINUTELY:
             durationInFrequency = differenceInMinutes(
-                //final do primeiro evento
                 addDays(r.dtStart, r.interval),
-                //inicio do primeiro evento
                 r.dtStart
             )
             durationFromStart = differenceInMinutes(
-                //data inicial do scheduler
                 r.startRangePeriod,
-                //inicio do primeiro evento
                 r.dtStart
             )
             eventCountsFromDtStart = Math.ceil(
@@ -297,17 +290,10 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
             break
         case Frequency.HOURLY:
             durationInFrequency = differenceInHours(
-                //final do primeiro evento
                 addDays(r.dtStart, r.interval),
-                //inicio do primeiro evento
                 r.dtStart
             )
-            durationFromStart = differenceInHours(
-                //data inicial do scheduler
-                r.startRangePeriod,
-                //inicio do primeiro evento
-                r.dtStart
-            )
+            durationFromStart = differenceInHours(r.startRangePeriod, r.dtStart)
             eventCountsFromDtStart = Math.ceil(
                 durationFromStart / durationInFrequency
             )
@@ -318,17 +304,10 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
             break
         case Frequency.DAILY:
             durationInFrequency = differenceInDays(
-                //final do primeiro evento
                 addDays(r.dtStart, r.interval),
-                //inicio do primeiro evento
                 r.dtStart
             )
-            durationFromStart = differenceInDays(
-                //data inicial do scheduler
-                r.startRangePeriod,
-                //inicio do primeiro evento
-                r.dtStart
-            )
+            durationFromStart = differenceInDays(r.startRangePeriod, r.dtStart)
             eventCountsFromDtStart = Math.ceil(
                 durationFromStart / durationInFrequency
             )
@@ -340,17 +319,10 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
             break
         case Frequency.WEEKLY:
             durationInFrequency = differenceInDays(
-                //final do primeiro evento
                 addDays(r.dtStart, r.interval * 7),
-                //inicio do primeiro evento
                 r.dtStart
             )
-            durationFromStart = differenceInWeeks(
-                //data inicial do scheduler
-                r.startRangePeriod,
-                //inicio do primeiro evento
-                r.dtStart
-            )
+            durationFromStart = differenceInWeeks(r.startRangePeriod, r.dtStart)
 
             eventCountsFromDtStart = Math.ceil(
                 durationFromStart / durationInFrequency
@@ -364,9 +336,7 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
             break
         case Frequency.MONTHLY:
             eventCountsFromDtStart = differenceInMonths(
-                //data inicial do scheduler
                 r.startRangePeriod,
-                //inicio do primeiro evento
                 r.dtStart
             )
 
@@ -380,9 +350,7 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
             break
         case Frequency.YEARLY:
             eventCountsFromDtStart = differenceInYears(
-                //data inicial do scheduler
                 r.startRangePeriod,
-                //inicio do primeiro evento
                 r.dtStart
             )
 
@@ -403,7 +371,6 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
         return result
     }
 
-    //count inicial dos eventos
     result.startIndexCount = eventCountsFromDtStart
 
     // console.log('result', result)
