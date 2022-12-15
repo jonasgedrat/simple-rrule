@@ -25,6 +25,8 @@
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test",
+    "test:watch": "tsdx test --watch",
+    "test:coverage": "tsdx test --coverage",
     "format": "prettier --write \"**/*.(js|ts)\"",
     "lint": "tsdx lint",
     "prepare": "tsdx build",

@@ -1,3 +1,9 @@
-export * as Types from './types'
-export * as expandRRule from './expandRrule'
-export * as getRRuleString from './getRrule'
+// export * as Types from './types'
+export {
+    IDateEvents,
+    IExpandResult,
+    expandRRuleFromString,
+    expandRRule,
+} from './expandRrule'
+export { getRRuleString } from './getRrule'
+export { parseRecurrenceFromString } from './parseRrule'

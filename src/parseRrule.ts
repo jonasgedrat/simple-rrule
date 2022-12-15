@@ -4,6 +4,44 @@ import { isBetween } from './numbers'
 
 import { Frequency, IRrule, rRuleDefault, rRuleFields, Weekday } from './types'
 
+export const parseRecurrenceFromString = (
+    recurrenceString: string = '',
+    weekStartsOn: Weekday
+): IRrule | undefined => {
+    if (trim(recurrenceString) === '') return undefined
+
+    const lines = recurrenceString.split('\n')
+
+    let result: IRrule = rRuleDefault
+
+    lines.map((line) => {
+        const lineKey = trim(line.split(':')[0])
+        const lineValue = trim(line.split(':')[1])
+
+        if (lineKey === rRuleFields.dtStart) {
+            const dtStart = parseISO(lineValue)
+            if (dtStart) {
+                result.dtStart = dtStart
+            }
+        }
+
+        if (lineKey === rRuleFields.dtEnd) {
+            const dtEnd = parseISO(lineValue)
+            if (dtEnd) {
+                result.dtEnd = dtEnd
+            }
+        }
+
+        if (lineKey === rRuleFields.RRule) {
+            const _parseRRule = parseRRule(line, weekStartsOn)
+            result = { ...result, ..._parseRRule }
+        }
+        return true
+    })
+
+    return result
+}
+
 const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
     if (rRuleString === '') return undefined
 
@@ -99,44 +137,6 @@ const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
     if (!result.interval) {
         result.interval = 1
     }
-
-    return result
-}
-
-export const parseRecurrenceFromString = (
-    recurrenceString: string = '',
-    weekStartsOn: Weekday
-): IRrule | undefined => {
-    if (trim(recurrenceString) === '') return undefined
-
-    const lines = recurrenceString.split('\n')
-
-    let result: IRrule = rRuleDefault
-
-    lines.map((line) => {
-        const lineKey = trim(line.split(':')[0])
-        const lineValue = trim(line.split(':')[1])
-
-        if (lineKey === rRuleFields.dtStart) {
-            const dtStart = parseISO(lineValue)
-            if (dtStart) {
-                result.dtStart = dtStart
-            }
-        }
-
-        if (lineKey === rRuleFields.dtEnd) {
-            const dtEnd = parseISO(lineValue)
-            if (dtEnd) {
-                result.dtEnd = dtEnd
-            }
-        }
-
-        if (lineKey === rRuleFields.RRule) {
-            const _parseRRule = parseRRule(line, weekStartsOn)
-            result = { ...result, ..._parseRRule }
-        }
-        return true
-    })
 
     return result
 }

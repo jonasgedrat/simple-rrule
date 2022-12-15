@@ -22,7 +22,9 @@ import {
     isBefore,
     setDate,
 } from 'date-fns'
-import { Frequency, IRrule, IRuleExtended } from './types'
+import { parseRecurrenceFromString } from './parseRrule'
+
+import { Frequency, IRrule, IRuleExtended, Weekday } from './types'
 
 export interface IDateEvents {
     date: Date
@@ -32,6 +34,19 @@ export interface IDateEvents {
 export interface IExpandResult {
     r: IRuleExtended
     events: IDateEvents[]
+}
+
+export const expandRRuleFromString = (
+    rRuleString: string,
+    startRangePeriod: Date,
+    endRangePeriod: Date,
+    wkst: Weekday = Weekday.Sunday
+): IExpandResult | undefined => {
+    const rRule = parseRecurrenceFromString(rRuleString, wkst)
+    if (rRule) {
+        return expandRRule(rRule, startRangePeriod, endRangePeriod)
+    }
+    return undefined
 }
 
 export const expandRRule = (

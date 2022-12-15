@@ -93,6 +93,21 @@ export const rRuleDefault: IRrule = {
     byYearDay: undefined,
 }
 
+export const schedulerEditorDefault: ISchedulerEditorSchema = {
+    id: '0',
+    title: '0',
+    dtStart: new Date(),
+    dtEnd: addMinutes(new Date(), 1),
+    frequency: Frequency.NEVER,
+    interval: 1,
+    count: 0,
+    byDay: '',
+    byMonth: 0,
+    byMonthDay: 0,
+    bySetPos: 0,
+    wkst: Weekday.Sunday,
+}
+
 export const rRuleFields = {
     RRule: 'RRULE',
     frequency: 'FREQ',
