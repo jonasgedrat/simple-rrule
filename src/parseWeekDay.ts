@@ -1,5 +1,6 @@
 import { Weekday } from './types'
 
+//todo can be removed
 export const parseWeekDay = (weekDay: Weekday): 0 | 1 | 2 | 3 | 4 | 5 | 6 => {
     let result: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0
     switch (weekDay) {
