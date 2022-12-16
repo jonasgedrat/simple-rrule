@@ -15,23 +15,23 @@ type SchemaType<T> = T extends 'schedulerEditor'
     ? Yup.InferType<typeof VALIDATORS['rRule']>
     : never
 
-export async function schemaValidator<T extends ValidateBodySchemaParam>(
-    schema: T,
-    body: Record<string, unknown>
-): Promise<SchemaType<T>> {
-    try {
-        await VALIDATORS[schema].validate(body)
-        return body as SchemaType<T>
-    } catch (err) {
-        console.error(`\nValidation error on ${schema} schema`, body, err, '\n')
-        const error = {
-            err: 'E_MALFORMED_BODY',
-            stack: (err as Error).message,
-            status: 400,
-        }
-        throw error
-    }
-}
+// export async function schemaValidator<T extends ValidateBodySchemaParam>(
+//     schema: T,
+//     body: Record<string, unknown>
+// ): Promise<SchemaType<T>> {
+//     try {
+//         await VALIDATORS[schema].validate(body)
+//         return body as SchemaType<T>
+//     } catch (err) {
+//         console.error(`\nValidation error on ${schema} schema`, body, err, '\n')
+//         const error = {
+//             err: 'E_MALFORMED_BODY',
+//             stack: (err as Error).message,
+//             status: 400,
+//         }
+//         throw error
+//     }
+// }
 
 export function schemaValidatorSync<T extends ValidateBodySchemaParam>(
     schema: T,
