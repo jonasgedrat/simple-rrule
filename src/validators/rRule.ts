@@ -2,7 +2,7 @@ import { addHours, addSeconds } from 'date-fns'
 import * as Yup from 'yup'
 import { Frequency, Weekday } from '../types'
 
-export const rRuleValidator = Yup.object({
+const rRuleValidator = Yup.object({
     dtStart: Yup.date().default(new Date()).required(),
     dtEnd: Yup.date()
         .default(addHours(new Date(), 1))
@@ -27,28 +27,11 @@ export const rRuleValidator = Yup.object({
     wkst: Yup.mixed<Weekday>().default(Weekday.Sunday),
 })
 
-// export declare type IRrule = Yup.InferType<typeof rRuleValidator>
+interface IRrule extends Yup.InferType<typeof rRuleValidator> {}
 
-export const rRuleDefaultValues = rRuleValidator.cast({})
+const rRuleDefaultValues: IRrule = rRuleValidator.cast({})
 
-export interface IRrule {
-    dtStart: Date
-    dtEnd: Date
-
-    frequency: Frequency
-    interval: number
-    count: number
-    until?: Date
-
-    byDay?: string
-    byMonth?: number
-    byMonthDay?: number
-    bySetPos?: number
-
-    wkst: Weekday
-}
-
-export interface IRuleExtended extends IRrule {
+interface IRuleExtended extends IRrule {
     count: number
     startRangePeriod: Date
     endRangePeriodOrUntil: Date
@@ -59,3 +42,22 @@ export interface IRuleExtended extends IRrule {
     startIndexCount: number
     firstEventInRangePeriod: Date
 }
+
+const validateRrule = (rRule: IRrule): IRrule => {
+    try {
+        rRuleValidator.validateSync(rRule)
+        return rRule
+    } catch (err) {
+        console.error(`\nValidation error on rRule schema`, rRule, err, '\n')
+        const error = {
+            err: 'E_MALFORMED_BODY',
+            stack: (err as Error).message,
+            status: 400,
+        }
+        throw error
+    }
+}
+
+export { rRuleValidator, rRuleDefaultValues, validateRrule }
+
+export type { IRrule, IRuleExtended }

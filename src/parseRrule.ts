@@ -3,8 +3,7 @@ import { trim } from 'lodash'
 import { isBetween } from './numbers'
 
 import { Frequency, rRuleFields, Weekday } from './types'
-import { IRrule, rRuleDefaultValues } from './validators/rRule'
-import { schemaValidatorSync } from './validators/schemaValidator'
+import { IRrule, rRuleDefaultValues, validateRrule } from './validators/rRule'
 
 export const parseRecurrenceFromString = (
     recurrenceString: string = '',
@@ -41,7 +40,7 @@ export const parseRecurrenceFromString = (
         return true
     })
 
-    const result = schemaValidatorSync('schedulerEditor', rRule)
+    const result = validateRrule(rRule)
 
     return result
 }

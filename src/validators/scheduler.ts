@@ -2,7 +2,7 @@ import * as Yup from 'yup'
 import { addHours, addSeconds } from 'date-fns'
 import { Frequency, Weekday } from '../types'
 
-export const schedulerEditorValidator = Yup.object({
+const schedulerEditorValidator = Yup.object({
     id: Yup.string().required().default('0'),
     title: Yup.string().min(2).default('--').required(),
     dtStart: Yup.date().default(new Date()).required(),
@@ -30,8 +30,38 @@ export const schedulerEditorValidator = Yup.object({
     wkst: Yup.mixed<Weekday>().default(Weekday.Sunday),
 })
 
-export declare type ISchedulerEditor = Yup.InferType<
-    typeof schedulerEditorValidator
->
+interface ISchedulerEditor
+    extends Yup.InferType<typeof schedulerEditorValidator> {}
 
-export const schedulerEditorDefaultValues = schedulerEditorValidator.cast({})
+const schedulerEditorDefaultValues: ISchedulerEditor =
+    schedulerEditorValidator.cast({})
+
+const validateSchedulerEditor = (
+    schedulerEditor: ISchedulerEditor
+): ISchedulerEditor => {
+    try {
+        schedulerEditorValidator.validateSync(schedulerEditor)
+        return schedulerEditor
+    } catch (err) {
+        console.error(
+            `\nValidation error on schedulerEditor schema`,
+            schedulerEditor,
+            err,
+            '\n'
+        )
+        const error = {
+            err: 'E_MALFORMED_BODY',
+            stack: (err as Error).message,
+            status: 400,
+        }
+        throw error
+    }
+}
+
+export {
+    schedulerEditorValidator,
+    schedulerEditorDefaultValues,
+    validateSchedulerEditor,
+}
+
+export type { ISchedulerEditor }

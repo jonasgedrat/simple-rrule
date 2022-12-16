@@ -24,8 +24,7 @@ import {
 } from 'date-fns'
 
 import { Frequency } from './types'
-import { IRrule, IRuleExtended } from './validators/rRule'
-import { schemaValidatorSync } from './validators/schemaValidator'
+import { IRrule, IRuleExtended, validateRrule } from './validators/rRule'
 
 export interface IDateEvents {
     date: Date
@@ -46,7 +45,7 @@ export const expandRRule = (
     // console.log('expandRRule rRule',rRule)
     // console.log('expandRRule startRangePeriod', rRule)
 
-    const rRule = schemaValidatorSync('schedulerEditor', rRulePayload)
+    const rRule = validateRrule(rRulePayload)
 
     const r = validateAndAdjustRRule(
         rRule,
