@@ -27,9 +27,26 @@ export const rRuleValidator = Yup.object({
     wkst: Yup.mixed<Weekday>().default(Weekday.Sunday),
 })
 
-export declare type IRrule = Yup.InferType<typeof rRuleValidator>
+// export declare type IRrule = Yup.InferType<typeof rRuleValidator>
 
 export const rRuleDefaultValues = rRuleValidator.cast({})
+
+export interface IRrule {
+    dtStart: Date
+    dtEnd: Date
+
+    frequency: Frequency
+    interval: number
+    count: number
+    until?: Date
+
+    byDay?: string
+    byMonth?: number
+    byMonthDay?: number
+    bySetPos?: number
+
+    wkst: Weekday
+}
 
 export interface IRuleExtended extends IRrule {
     count: number
