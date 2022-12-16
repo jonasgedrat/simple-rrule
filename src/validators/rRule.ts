@@ -30,3 +30,15 @@ export const rRuleValidator = Yup.object({
 export declare type IRrule = Yup.InferType<typeof rRuleValidator>
 
 export const rRuleDefaultValues = rRuleValidator.cast({})
+
+export interface IRuleExtended extends IRrule {
+    count: number
+    startRangePeriod: Date
+    endRangePeriodOrUntil: Date
+    secondsDuration: number
+    hasErrors: boolean
+    errorMessages: string
+    eventsCount: number
+    startIndexCount: number
+    firstEventInRangePeriod: Date
+}

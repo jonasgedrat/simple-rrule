@@ -1,17 +1,3 @@
-import { IRrule } from './validators/rRule'
-
-export interface IRuleExtended extends IRrule {
-    count: number
-    startRangePeriod: Date
-    endRangePeriodOrUntil: Date
-    secondsDuration: number
-    hasErrors: boolean
-    errorMessages: string
-    eventsCount: number
-    startIndexCount: number
-    firstEventInRangePeriod: Date
-}
-
 export enum Frequency {
     NEVER = 'NEVER',
     YEARLY = 'YEARLY',

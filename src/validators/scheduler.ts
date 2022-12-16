@@ -1,10 +1,10 @@
-import { addHours, addSeconds } from 'date-fns'
 import * as Yup from 'yup'
+import { addHours, addSeconds } from 'date-fns'
 import { Frequency, Weekday } from '../types'
 
 export const schedulerEditorValidator = Yup.object({
     id: Yup.string().required().default('0'),
-    title: Yup.string().min(2).default('').required(),
+    title: Yup.string().min(2).default('--').required(),
     dtStart: Yup.date().default(new Date()).required(),
     dtEnd: Yup.date()
         .default(addHours(new Date(), 1))

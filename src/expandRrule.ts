@@ -23,8 +23,8 @@ import {
     setDate,
 } from 'date-fns'
 
-import { Frequency, IRuleExtended } from './types'
-import { IRrule } from './validators/rRule'
+import { Frequency } from './types'
+import { IRrule, IRuleExtended } from './validators/rRule'
 import { schemaValidatorSync } from './validators/schemaValidator'
 
 export interface IDateEvents {
