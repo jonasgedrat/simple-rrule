@@ -1,6 +1,9 @@
 {
   "recommendations": [
     "streetsidesoftware.code-spell-checker",   
+    "esbenp.prettier-vscode",
+    "firsttris.vscode-jest-runner",
+    "dbaeumer.vscode-eslint"
   ],
   "unwantedRecommendations": [
     "johnpapa.vscode-peacock" // not used, still tries to apply it's settings

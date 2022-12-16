@@ -1,7 +1,7 @@
 import { getRRuleString } from '../src/getRrule'
 import { toRRuleDateString } from '../src/rRuleDateStringFormat'
-import { schedulerEditorDefaultValues } from '../src/schedulerEditorSchema'
 import { Frequency, Weekday } from '../src/types'
+import { schedulerEditorDefaultValues } from '../src/validators/scheduler'
 
 let d = {
     ...schedulerEditorDefaultValues,

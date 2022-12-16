@@ -1,14 +1,15 @@
 import { toRRuleDateString } from './rRuleDateStringFormat'
-import { ISchedulerEditorSchema } from './schedulerEditorSchema'
 
 import { rRuleFields, Frequency } from './types'
+import { ISchedulerEditor } from './validators/scheduler'
+import { schemaValidatorSync } from './validators/schemaValidator'
 
-export const getRRuleString = (f: ISchedulerEditorSchema) => {
-    if (f.frequency === Frequency.NEVER) {
+export const getRRuleString = (payload: ISchedulerEditor) => {
+    if (payload.frequency === Frequency.NEVER) {
         return ''
     }
 
-    //console.log('serializeRule rRule', f)
+    const f = schemaValidatorSync('schedulerEditor', payload)
 
     let rRuleString = `${rRuleFields.frequency}=${f.frequency.toUpperCase()}`
     const start = `${rRuleFields.dtStart}:${toRRuleDateString(f.dtStart)}`
@@ -40,7 +41,7 @@ export const getRRuleString = (f: ISchedulerEditorSchema) => {
     }
 
     if (f.wkst) {
-        rRuleString += `;${rRuleFields.weekStartOn}=${f.wkst}`
+        rRuleString += `;${rRuleFields.wkst}=${f.wkst}`
     }
 
     rRuleString = `${start}\n${end}${rRuleFields.RRule}:${rRuleString}`

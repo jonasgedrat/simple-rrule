@@ -1,16 +1,15 @@
 import { addHours, addSeconds } from 'date-fns'
-import { InferType } from 'yup'
 import * as Yup from 'yup'
-import { Frequency, Weekday } from './types'
+import { Frequency, Weekday } from '../types'
 
-export const schedulerEditorSchema = Yup.object({
+export const schedulerEditorValidator = Yup.object({
     id: Yup.string().required().default('0'),
     title: Yup.string().min(2).default('').required(),
     dtStart: Yup.date().default(new Date()).required(),
     dtEnd: Yup.date()
         .default(addHours(new Date(), 1))
         .min(Yup.ref('dtStart'))
-        .when('dtStart', (dtStart, schema) => {
+        .when('dtStart', (dtStart: Date, schema: Yup.DateSchema<Date>) => {
             if (dtStart) {
                 return schema.min(addSeconds(dtStart, 15))
             }
@@ -31,10 +30,8 @@ export const schedulerEditorSchema = Yup.object({
     wkst: Yup.mixed<Weekday>().default(Weekday.Sunday),
 })
 
-export declare type ISchedulerEditorSchema = InferType<
-    typeof schedulerEditorSchema
+export declare type ISchedulerEditor = Yup.InferType<
+    typeof schedulerEditorValidator
 >
 
-// type SchedulerEditorFieldNames = keyof ISchedulerEditorSchema
-
-export const schedulerEditorDefaultValues = schedulerEditorSchema.cast({})
+export const schedulerEditorDefaultValues = schedulerEditorValidator.cast({})

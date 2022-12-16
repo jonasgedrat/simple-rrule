@@ -2,7 +2,7 @@ import { Frequency } from './../src/types'
 import { parseRecurrenceFromString } from './../src/parseRrule'
 import { toRRuleDateString } from '../src/rRuleDateStringFormat'
 import { Weekday } from '../src/types'
-import { schedulerEditorDefaultValues } from '../src/schedulerEditorSchema'
+import { schedulerEditorDefaultValues } from '../src/validators/scheduler'
 
 let d = {
     ...schedulerEditorDefaultValues,

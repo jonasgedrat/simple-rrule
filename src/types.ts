@@ -1,23 +1,4 @@
-import { addMinutes } from 'date-fns'
-export interface IRrule {
-    dtStart: Date
-    dtEnd: Date
-    weekStartOn: Weekday
-
-    frequency: Frequency
-    interval: number
-    count?: number
-    until?: Date
-
-    bySecond?: number
-    byMinute?: number
-    byHour?: number
-    byDay?: string
-    byMonth?: number
-    byMonthDay?: number
-    byYearDay?: number
-    bySetPos?: number
-}
+import { IRrule } from './validators/rRule'
 
 export interface IRuleExtended extends IRrule {
     count: number
@@ -52,33 +33,12 @@ export enum Weekday {
     Saturday = 'SA',
 }
 
-export const rRuleDefault: IRrule = {
-    frequency: Frequency.NEVER,
-    dtStart: new Date(),
-    dtEnd: addMinutes(new Date(), 60),
-    weekStartOn: Weekday.Sunday,
-
-    interval: 1,
-    count: undefined,
-    until: undefined,
-
-    bySetPos: undefined,
-
-    bySecond: undefined,
-    byMinute: undefined,
-    byHour: undefined,
-    byDay: undefined,
-    byMonth: undefined,
-    byMonthDay: undefined,
-    byYearDay: undefined,
-}
-
 export const rRuleFields = {
     RRule: 'RRULE',
     frequency: 'FREQ',
     dtStart: 'DTSTART',
     dtEnd: 'DTEND',
-    weekStartOn: 'WKST',
+    wkst: 'WKST',
 
     interval: 'INTERVAL',
     count: 'COUNT',

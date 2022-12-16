@@ -1,9 +1,10 @@
 import { parseISO } from 'date-fns'
 import { trim } from 'lodash'
 import { isBetween } from './numbers'
-import { isValidRRule } from './rRuleSchema'
 
-import { Frequency, IRrule, rRuleDefault, rRuleFields, Weekday } from './types'
+import { Frequency, rRuleFields, Weekday } from './types'
+import { IRrule, rRuleDefaultValues } from './validators/rRule'
+import { schemaValidatorSync } from './validators/schemaValidator'
 
 export const parseRecurrenceFromString = (
     recurrenceString: string = '',
@@ -13,7 +14,7 @@ export const parseRecurrenceFromString = (
 
     const lines = recurrenceString.split('\n')
 
-    let rRule: IRrule = rRuleDefault
+    let rRule: IRrule = rRuleDefaultValues
 
     lines.map((line) => {
         const lineKey = trim(line.split(':')[0])
@@ -40,9 +41,9 @@ export const parseRecurrenceFromString = (
         return true
     })
 
-    isValidRRule(rRule)
+    const result = schemaValidatorSync('schedulerEditor', rRule)
 
-    return rRule
+    return result
 }
 
 const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
@@ -60,8 +61,8 @@ const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
             case rRuleFields.frequency:
                 result.frequency = value as Frequency
                 break
-            case rRuleFields.weekStartOn:
-                result.weekStartOn = value ? (value as Weekday) : weekStartsOn
+            case rRuleFields.wkst:
+                result.wkst = value ? (value as Weekday) : weekStartsOn
                 break
             case rRuleFields.interval:
                 result.interval = parseInt(value)
@@ -72,20 +73,7 @@ const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
             case rRuleFields.until:
                 result.until = parseISO(value)
                 break
-            case rRuleFields.byMinute:
-                _v = isBetween(value, 0, 59)
-                if (_v) {
-                    result.byMinute = _v
-                }
-                _v = undefined
-                break
-            case rRuleFields.byHour:
-                _v = isBetween(value, 0, 23)
-                if (_v) {
-                    result.byHour = _v
-                }
-                _v = undefined
-                break
+
             case rRuleFields.byDay:
                 result.byDay = value
                 _v = undefined
@@ -94,13 +82,6 @@ const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
                 _v = isBetween(value, 1, 31)
                 if (_v) {
                     result.byMonthDay = _v
-                }
-                _v = undefined
-                break
-            case rRuleFields.byYearDay:
-                _v = isBetween(value, 1, 365)
-                if (_v) {
-                    result.byYearDay = _v
                 }
                 _v = undefined
                 break
@@ -133,8 +114,8 @@ const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
         return undefined
     }
 
-    if (result.weekStartOn === undefined) {
-        result.weekStartOn = weekStartsOn
+    if (result.wkst === undefined) {
+        result.wkst = weekStartsOn
     }
 
     if (!result.interval) {

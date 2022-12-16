@@ -1,4 +1,3 @@
-import { isValidRRule } from './rRuleSchema'
 import {
     addDays,
     addHours,
@@ -23,9 +22,10 @@ import {
     isBefore,
     setDate,
 } from 'date-fns'
-import { parseRecurrenceFromString } from './parseRrule'
 
-import { Frequency, IRrule, IRuleExtended, Weekday } from './types'
+import { Frequency, IRuleExtended } from './types'
+import { IRrule } from './validators/rRule'
+import { schemaValidatorSync } from './validators/schemaValidator'
 
 export interface IDateEvents {
     date: Date
@@ -37,21 +37,8 @@ export interface IExpandResult {
     events: IDateEvents[]
 }
 
-export const expandRRuleFromString = (
-    rRuleString: string,
-    startRangePeriod: Date,
-    endRangePeriod: Date,
-    wkst: Weekday = Weekday.Sunday
-): IExpandResult | undefined => {
-    const rRule = parseRecurrenceFromString(rRuleString, wkst)
-    if (rRule) {
-        return expandRRule(rRule, startRangePeriod, endRangePeriod)
-    }
-    return undefined
-}
-
 export const expandRRule = (
-    rRule: IRrule,
+    rRulePayload: IRrule,
     startRangePeriod: Date,
     endRangePeriod: Date,
     minimalSecondsDuration: number = 60 * 5 //5 minutes
@@ -59,7 +46,7 @@ export const expandRRule = (
     // console.log('expandRRule rRule',rRule)
     // console.log('expandRRule startRangePeriod', rRule)
 
-    isValidRRule(rRule)
+    const rRule = schemaValidatorSync('schedulerEditor', rRulePayload)
 
     const r = validateAndAdjustRRule(
         rRule,

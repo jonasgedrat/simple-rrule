@@ -10,10 +10,13 @@ const rangeEndInterval = 30
 intervals.map((interval) => {
     // eslint-disable-next-line array-callback-return
     frequencies.map((frequency) => {
-        test(`expandRRule Range frequency: ${frequency} interval: ${interval} `, () => {
+        test(`expandRRule Range frequency: ${frequency} interval: ${interval} `, async () => {
             const rRuleString = `${dtStart}\nRRULE:FREQ=${frequency};INTERVAL=${interval};WKST=SU`
 
-            const rRule = parseRecurrenceFromString(rRuleString, Weekday.Sunday)
+            const rRule = await parseRecurrenceFromString(
+                rRuleString,
+                Weekday.Sunday
+            )
             expect(rRule).not.toBeUndefined()
 
             if (rRule) {
@@ -103,7 +106,7 @@ intervals.map((interval) => {
                     default:
                 }
 
-                const ex = expandRRule(rRule, startPeriod, endPeriod)
+                const ex = await expandRRule(rRule, startPeriod, endPeriod)
 
                 expect(ex).not.toBeUndefined()
 
