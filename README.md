@@ -11,15 +11,15 @@ RFC](https://tools.ietf.org/html/rfc5545) (with partial implementation)
 
 ---
 
-[![NPM version][npm-image]][npm-url]
-[![Build Status][ci-image]][ci-url]
-[![js-standard-style][js-standard-image]][js-standard-url]
-[![Downloads][downloads-image]][downloads-url]
+[![npm version](https://img.shields.io/npm/v/coverage-badges-cli.svg)](https://www.npmjs.com/package/simple-rrule)
 
-[![Build & Deploy](https://github.com/jaywcjlove/coverage-badges-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/jaywcjlove/coverage-badges-cli/actions/workflows/ci.yml)
-[![Coverage Status](https://jaywcjlove.github.io/coverage-badges-cli/badges.svg)](https://jaywcjlove.github.io/coverage-badges-cli/lcov-report/)
-[![npm version](https://img.shields.io/npm/v/coverage-badges-cli.svg)](https://www.npmjs.com/package/coverage-badges-cli)
-[![Download NPM](https://img.shields.io/npm/dm/coverage-badges-cli.svg?style=flat)](https://www.npmjs.com/package/coverage-badges-cli/)
+[![Download NPM](https://img.shields.io/npm/dm/coverage-badges-cli.svg?style=flat)](https://www.npmjs.com/package/simple-rrule/)
+
+![GitHub contributors](https://img.shields.io/github/contributors/jonasgedrat/simple-rrule)
+
+![Coveralls](https://img.shields.io/coverallsCoverage/github/jonasgedrat/simple-rrule)
+
+---
 
 rrule.js supports recurrence rules as defined in the [iCalendar
 RFC](https://tools.ietf.org/html/rfc5545), with a few important

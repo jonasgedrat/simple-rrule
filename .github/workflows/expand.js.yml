@@ -28,7 +28,8 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
             - run: npm ci
-            - run: npm test --ci --coverage --maxWorkers=2
+            - run: npm test
+            # - run: npm test --ci --coverage --maxWorkers=2
 
     publish-npm: #publish only main branch
         runs-on: ubuntu-latest
