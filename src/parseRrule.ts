@@ -1,5 +1,4 @@
 import { parseISO } from 'date-fns'
-import { trim } from 'lodash'
 import { isBetween } from './numbers'
 
 import { Frequency, rRuleFields, Weekday } from './types'
@@ -9,15 +8,15 @@ export const parseRecurrenceFromString = (
     recurrenceString: string = '',
     weekStartsOn: Weekday
 ): IRrule | undefined => {
-    if (trim(recurrenceString) === '') return undefined
+    if (recurrenceString.trim() === '') return undefined
 
     const lines = recurrenceString.split('\n')
 
     let rRule: IRrule = rRuleDefaultValues
 
     lines.map((line) => {
-        const lineKey = trim(line.split(':')[0])
-        const lineValue = trim(line.split(':')[1])
+        const lineKey = line.split(':')[0].trim()
+        const lineValue = line.split(':')[1].trim()
 
         if (lineKey === rRuleFields.dtStart) {
             const dtStart = parseISO(lineValue)
@@ -54,7 +53,7 @@ const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
     let _v: number | undefined = undefined
 
     fields.map((field) => {
-        const value = trim(field.split('=')[1])
+        const value = field.split('=')[1].trim()
 
         switch (field.split('=')[0]) {
             case rRuleFields.frequency:

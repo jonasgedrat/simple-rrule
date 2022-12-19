@@ -33,9 +33,8 @@
     "analyze": "size-limit --why",
     "semantic-release": "semantic-release --branches main"
   },
-  "peerDependencies": {
-    "date-fns": "^2.29.3",
-    "lodash": "^4.17.21",
+  "dependencies": {
+    "date-fns": "^2.29.3",    
     "yup": "^0.32.11"
   },
   "devDependencies": {
