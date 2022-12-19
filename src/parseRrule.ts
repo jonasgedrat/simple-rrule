@@ -6,7 +6,7 @@ import { IRrule, rRuleDefaultValues, validateRrule } from './validators/rRule'
 
 export const parseRecurrenceFromString = (
     recurrenceString: string = '',
-    weekStartsOn: Weekday
+    weekStartsOn: Weekday = Weekday.Sunday
 ): IRrule | undefined => {
     if (recurrenceString.trim() === '') return undefined
 

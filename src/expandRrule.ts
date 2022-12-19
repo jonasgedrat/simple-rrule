@@ -23,8 +23,9 @@ import {
     setDate,
 } from 'date-fns'
 
-import { Frequency } from './types'
+import { Frequency, Weekday } from './types'
 import { IRrule, IRuleExtended, validateRrule } from './validators/rRule'
+import { parseRecurrenceFromString } from './parseRrule'
 
 export interface IDateEvents {
     date: Date
@@ -70,6 +71,16 @@ export const expandRRule = (
 
     // console.log(result)
     return result
+}
+
+export const expandRRuleFromString = (
+    rRuleString: string,
+    startRangePeriod: Date,
+    endRangePeriod: Date
+): IExpandResult => {
+    const rRule2 = parseRecurrenceFromString(rRuleString, Weekday.Sunday)
+
+    return expandRRule(rRule2!!, startRangePeriod, endRangePeriod)
 }
 
 const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
