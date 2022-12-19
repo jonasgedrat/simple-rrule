@@ -11,6 +11,26 @@ RFC](https://tools.ietf.org/html/rfc5545) (with partial implementation)
 
 ---
 
+[![NPM version][npm-image]][npm-url]
+[![Build Status][ci-image]][ci-url]
+[![js-standard-style][js-standard-image]][js-standard-url]
+[![Downloads][downloads-image]][downloads-url]
+
+[![Build & Deploy](https://github.com/jaywcjlove/coverage-badges-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/jaywcjlove/coverage-badges-cli/actions/workflows/ci.yml)
+[![Coverage Status](https://jaywcjlove.github.io/coverage-badges-cli/badges.svg)](https://jaywcjlove.github.io/coverage-badges-cli/lcov-report/)
+[![npm version](https://img.shields.io/npm/v/coverage-badges-cli.svg)](https://www.npmjs.com/package/coverage-badges-cli)
+[![Download NPM](https://img.shields.io/npm/dm/coverage-badges-cli.svg?style=flat)](https://www.npmjs.com/package/coverage-badges-cli/)
+
+rrule.js supports recurrence rules as defined in the [iCalendar
+RFC](https://tools.ietf.org/html/rfc5545), with a few important
+[differences](#differences-from-icalendar-rfc). It is a partial port of the
+`rrule` module from the excellent
+[python-dateutil](http://labix.org/python-dateutil/) library. On top of
+that, it supports parsing and serialization of recurrence rules from and
+to natural language.
+
+---
+
 ### Quick Start
 
 Includes optional TypeScript types

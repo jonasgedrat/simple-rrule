@@ -26,12 +26,10 @@ import {
 import { Frequency, Weekday } from './types'
 import { IRrule, IRuleExtended, validateRrule } from './validators/rRule'
 import { parseRecurrenceFromString } from './parseRrule'
-
 export interface IDateEvents {
     date: Date
     index: number
 }
-
 export interface IExpandResult {
     r: IRuleExtended
     events: IDateEvents[]
@@ -167,6 +165,8 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             break
         case Frequency.DAILY:
         case Frequency.WEEKLY:
+        case Frequency.MONTHLY:
+        case Frequency.YEARLY:
             dates = dates.map((x) => {
                 return new Date(
                     x.setUTCHours(

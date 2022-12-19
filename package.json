@@ -26,6 +26,7 @@
     "build": "tsdx build",
     "commit":"git-cz",
     "test": "tsdx test",
+    "coverage": "tsdx test --coverage",
     "format": "prettier --write \"**/*.(js|ts)\"",
     "lint": "tsdx lint",
     "prepare": "tsdx build",

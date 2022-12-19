@@ -1,4 +1,4 @@
-import { parseISO } from 'date-fns'
+import { addHours, parseISO } from 'date-fns'
 import { isBetween } from './numbers'
 
 import { Frequency, rRuleFields, Weekday } from './types'
@@ -22,6 +22,8 @@ export const parseRecurrenceFromString = (
             const dtStart = parseISO(lineValue)
             if (dtStart) {
                 rRule.dtStart = dtStart
+                //1 hour for duration by default
+                rRule.dtEnd = addHours(dtStart, 1)
             }
         }
 
@@ -36,6 +38,7 @@ export const parseRecurrenceFromString = (
             const _parseRRule = parseRRule(line, weekStartsOn)
             rRule = { ...rRule, ..._parseRRule }
         }
+
         return true
     })
 
