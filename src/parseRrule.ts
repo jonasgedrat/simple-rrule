@@ -94,8 +94,8 @@ const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
                 _v = undefined
                 break
             case rRuleFields.bySetPos:
-                _v = isBetween(value, 1, 365)
-                if (_v) {
+                _v = Number(value)
+                if ([-1, 1, 2, 3, 4].includes(_v)) {
                     result.bySetPos = _v
                 }
                 _v = undefined

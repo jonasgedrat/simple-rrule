@@ -11,12 +11,12 @@ RFC](https://tools.ietf.org/html/rfc5545) (with partial implementation)
 
 ---
 
-[![npm version](https://img.shields.io/npm/v/coverage-badges-cli.svg)](https://www.npmjs.com/package/simple-rrule)
-[![Download NPM](https://img.shields.io/npm/dm/coverage-badges-cli.svg?style=flat)](https://www.npmjs.com/package/simple-rrule/)
+![GitHub](https://img.shields.io/github/license/jonasgedrat/simple-rrule)
+![npm](https://img.shields.io/npm/dy/simple-rrule)
+![GitHub all releases](https://img.shields.io/github/downloads/jonasgedrat/simple-rrule/total)
+![npm bundle size](https://img.shields.io/bundlephobia/min/simple-rrule)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/simple-rrule)
 ![GitHub contributors](https://img.shields.io/github/contributors/jonasgedrat/simple-rrule)
-[![MIT License][license-shield]][license-url]
-[![Release][release-shield]][release-url]
-![Maintenance][maintained-shield]
 
 ---
 
