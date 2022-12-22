@@ -1,3 +1,4 @@
+import { isBySetPosValid } from './validators/util'
 import { addHours, parseISO } from 'date-fns'
 import { isBetween } from './numbers'
 
@@ -95,7 +96,7 @@ const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
                 break
             case rRuleFields.bySetPos:
                 _v = Number(value)
-                if ([-1, 1, 2, 3, 4].includes(_v)) {
+                if (isBySetPosValid(_v)) {
                     result.bySetPos = _v
                 }
                 _v = undefined

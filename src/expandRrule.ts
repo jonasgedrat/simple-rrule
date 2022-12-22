@@ -1,4 +1,4 @@
-import { getBySetPos } from './getWeeklyDays'
+import { getBySetPos } from './getEventsBySetPos'
 import {
     addDays,
     addHours,
@@ -28,6 +28,7 @@ import {
 import { Frequency, Weekday } from './types'
 import { IRrule, IRuleExtended, validateRrule } from './validators/rRule'
 import { parseRecurrenceFromString } from './parseRrule'
+import { isWeekDayValid } from './validators/util'
 export interface IDateEvents {
     date: Date
     index: number
@@ -107,6 +108,12 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 let resultWeekly: Date[] = []
 
                 const weekDays = r.byDay?.split(',')
+
+                //throw error is weekDay is not valid
+                weekDays.map((d) => {
+                    isWeekDayValid(d)
+                })
+
                 r.startIndexCount = r.startIndexCount * weekDays.length
 
                 const eachDay = eachDayOfInterval(interval, {
