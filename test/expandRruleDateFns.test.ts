@@ -44,15 +44,6 @@ intervals.map((interval) => {
 
                 const ex = await expandRRule(rRule, startPeriod, endPeriod)
 
-                // console.log(
-                //     'rRuleStart',
-                //     rRule.dtStart,
-                //     'startPeriod',
-                //     startPeriod
-                // )
-
-                // console.log('ex.events', ex.events)
-
                 expect(ex).not.toBeUndefined()
                 expect(ex.events.length).toEqual(3)
                 expect(ex.events[0].date).toBeInstanceOf(Date)

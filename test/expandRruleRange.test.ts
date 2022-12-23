@@ -115,19 +115,6 @@ intervals.map((interval) => {
                 expect(ex.events[0].index).toEqual(rangeStartInterval + 1)
                 expect(lastEvent?.index).toEqual(rangeEndInterval + 1)
 
-                // console.log(ex.events)
-
-                // if (frequency === Frequency.WEEKLY) {
-                // console.log(
-                //     `first event frequency: ${frequency} interval: ${interval}:`,
-                //     ex.events[0]
-                // )
-                // console.log(
-                //     `last event frequency: ${frequency} interval: ${interval}:`,
-                //     lastEvent
-                // )
-                // }
-
                 switch (frequency) {
                     case Frequency.MINUTELY:
                         expect(ex.events[0].date).toEqual(

@@ -1,4 +1,5 @@
-import { getBySetPos } from './getEventsBySetPos'
+import { getBySetPos, eachMonthOfIntervalWithTime } from './util'
+
 import {
     addDays,
     addHours,
@@ -16,7 +17,6 @@ import {
     eachDayOfInterval,
     eachHourOfInterval,
     eachMinuteOfInterval,
-    eachMonthOfInterval,
     eachYearOfInterval,
     format,
     Interval,
@@ -79,6 +79,9 @@ export const expandRRuleFromString = (
 const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
     let dates: Date[] = []
 
+    const isBySetPos =
+        r.bySetPos !== 0 && r.byDay !== '' && r.frequency === Frequency.MONTHLY
+
     if (isBefore(r.endRangePeriodOrUntil, r.firstEventInRangePeriod)) return []
 
     const interval: Interval = {
@@ -135,32 +138,49 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
             break
         case Frequency.MONTHLY:
-            if (r.bySetPos !== 0 && r.byDay !== '') {
+            dates = eachMonthOfIntervalWithTime(
+                new Date(interval.start),
+                new Date(interval.end)
+            )
+
+            if (isBySetPos) {
                 //first day of month
                 interval.start = startOfMonth(r.dtStart)
 
-                dates = eachMonthOfInterval(interval)
-
                 dates = dates.reduce((acc: Date[], curr) => {
-                    const result = getBySetPos(curr, r, acc.length | 0)
-                    if (result) acc.push(result)
+                    const result = getBySetPos(
+                        curr,
+                        r.byDay,
+                        r.bySetPos,
+                        r.count,
+                        acc.length | 0
+                    )
+
+                    if (result) {
+                        if (
+                            result.getTime() >= r.dtStart.getTime() &&
+                            result.getTime() <=
+                                r.endRangePeriodOrUntil.getTime()
+                        ) {
+                            acc.push(result)
+                        }
+                    }
                     return acc
                 }, [])
 
-                //console.log(dates)
                 break
             }
             if (r.bySetPos === 0 && r.byMonthDay && r.byMonthDay > 0) {
-                dates = eachMonthOfInterval(interval)
+                // dates = eachMonthOfInterval(interval)
                 dates = dates.map((x) => setDate(x, r.byMonthDay))
+
                 break
             }
 
-            dates = eachMonthOfInterval(interval)
+            //dates = eachMonthOfInterval(interval)
             break
 
         case Frequency.YEARLY:
-            //console.log('yearly interval', interval)
             dates = eachYearOfInterval(interval)
             break
         default:
@@ -199,8 +219,13 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
     const result: IDateEvents[] = dates
         .map((x, i) => {
-            // console.log('date in expandResult Map:', x)
-
+            if (isBySetPos) {
+                //return all events since dtStart
+                return {
+                    date: x,
+                    index: i + 1,
+                }
+            }
             return {
                 date: x,
                 index: r.startIndexCount + i + 1,
@@ -215,8 +240,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             }
             return filterResult
         })
-
-    //console.log(result)
 
     return result
 }
@@ -390,6 +413,5 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
 
     result.startIndexCount = eventCountsFromDtStart
 
-    // console.log('result', result)
     return result
 }

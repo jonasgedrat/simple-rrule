@@ -29,6 +29,4 @@ export const frequencies = [
     Frequency.WEEKLY,
 ]
 
-//console.log('today', today)
-
 export const dtStart = `DTSTART:${toRRuleDateString(today)}`

@@ -30,8 +30,6 @@ test(`expandRRule Weekly`, async () => {
         expect(rRule.interval).toEqual(1)
         expect(rRule.frequency).toEqual(Frequency.WEEKLY)
 
-        //console.log('rRule', rRule)
-
         const startPeriod = addDays(rRule.dtStart, 7)
         const endPeriod = addDays(rRule.dtStart, 14)
 
@@ -54,9 +52,6 @@ test(`expandRRule Weekly`, async () => {
                 index: x + 1,
             }
         })
-
-        //console.log('ex.events', ex.events)
-        //console.log('result', result)
 
         ex.events.map((x, i) => {
             expect(x.date).toBeInstanceOf(Date)
