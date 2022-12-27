@@ -1,4 +1,8 @@
-import { getBySetPos, eachMonthOfIntervalWithTime } from './util'
+import {
+    getBySetPos,
+    eachMonthOfIntervalWithTime,
+    eachYearOfIntervalWithTime,
+} from './util'
 
 import {
     addDays,
@@ -17,12 +21,10 @@ import {
     eachDayOfInterval,
     eachHourOfInterval,
     eachMinuteOfInterval,
-    eachYearOfInterval,
     format,
-    Interval,
     isBefore,
     setDate,
-    startOfMonth,
+    setMonth,
 } from 'date-fns'
 
 import { Frequency, Weekday } from './types'
@@ -36,6 +38,11 @@ export interface IDateEvents {
 export interface IExpandResult {
     r: IRuleExtended
     events: IDateEvents[]
+}
+
+type Interval = {
+    start: Date
+    end: Date
 }
 
 export const expandRRule = (
@@ -80,7 +87,13 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
     let dates: Date[] = []
 
     const isBySetPos =
-        r.bySetPos !== 0 && r.byDay !== '' && r.frequency === Frequency.MONTHLY
+        (r.bySetPos !== 0 &&
+            r.byDay !== '' &&
+            r.frequency === Frequency.MONTHLY) ||
+        (r.bySetPos !== 0 &&
+            r.byMonth !== 0 &&
+            r.byDay !== '' &&
+            r.frequency === Frequency.YEARLY)
 
     if (isBefore(r.endRangePeriodOrUntil, r.firstEventInRangePeriod)) return []
 
@@ -138,16 +151,10 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
             break
         case Frequency.MONTHLY:
-            dates = eachMonthOfIntervalWithTime(
-                new Date(interval.start),
-                new Date(interval.end)
-            )
+            dates = eachMonthOfIntervalWithTime(interval.start, interval.end)
 
             if (isBySetPos) {
-                //first day of month
-                interval.start = startOfMonth(r.dtStart)
-
-                dates = dates.reduce((acc: Date[], curr) => {
+                dates = dates.reduce((acc: Date[], curr: Date) => {
                     const result = getBySetPos(
                         curr,
                         r.byDay,
@@ -167,21 +174,60 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                     }
                     return acc
                 }, [])
-
+                r.startIndexCount = 0
+                r.firstEventInRangePeriod = dates[0]
                 break
             }
-            if (r.bySetPos === 0 && r.byMonthDay && r.byMonthDay > 0) {
-                // dates = eachMonthOfInterval(interval)
+
+            if (r.bySetPos === 0 && r.byMonthDay > 0) {
                 dates = dates.map((x) => setDate(x, r.byMonthDay))
-
                 break
             }
-
-            //dates = eachMonthOfInterval(interval)
             break
 
         case Frequency.YEARLY:
-            dates = eachYearOfInterval(interval)
+            if (isBySetPos) {
+                dates = eachYearOfIntervalWithTime(
+                    new Date(interval.start.setMonth(r.byMonth - 1)),
+                    interval.end
+                )
+
+                dates = dates.reduce((acc: Date[], curr: Date) => {
+                    const result = getBySetPos(
+                        curr,
+                        r.byDay,
+                        r.bySetPos,
+                        r.count,
+                        acc.length | 0
+                    )
+
+                    if (result) {
+                        if (
+                            result.getTime() >= r.dtStart.getTime() &&
+                            result.getTime() <=
+                                r.endRangePeriodOrUntil.getTime()
+                        ) {
+                            acc.push(result)
+                        }
+                    }
+                    return acc
+                }, [])
+                r.startIndexCount = 0
+                r.firstEventInRangePeriod = dates[0]
+                break
+            }
+
+            dates = eachYearOfIntervalWithTime(interval.start, interval.end)
+
+            if (r.bySetPos === 0 && r.byMonth > 0 && r.byMonthDay > 0) {
+                dates = dates.map((x) =>
+                    setMonth(setDate(x, r.byMonthDay), r.byMonth - 1)
+                )
+                r.startIndexCount = 0
+                r.firstEventInRangePeriod = dates[0]
+                break
+            }
+
             break
         default:
     }
@@ -219,13 +265,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
     const result: IDateEvents[] = dates
         .map((x, i) => {
-            if (isBySetPos) {
-                //return all events since dtStart
-                return {
-                    date: x,
-                    index: i + 1,
-                }
-            }
             return {
                 date: x,
                 index: r.startIndexCount + i + 1,

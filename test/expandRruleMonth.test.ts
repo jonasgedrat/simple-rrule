@@ -86,39 +86,6 @@ test(`expand rRule Month monthDay 31`, () => {
     }
 })
 
-test(`expand rRule Month bySetPos with count`, () => {
-    const rRule =
-        'DTSTART:20221216T100000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=2;BYDAY=WE;COUNT=6;WKST=SU'
-
-    const r = expandRRuleFromString(
-        rRule,
-        new Date('2022-12-15T10:00:00.000Z'),
-        new Date('2023-12-31T10:00:00.000Z')
-    )
-    expect(r).not.toBeUndefined()
-    if (r) {
-        expect(r.events.length).toEqual(6)
-
-        expect(r.events[0].date.toISOString()).toEqual(
-            '2023-01-11T10:00:00.000Z'
-        )
-        expect(r.events[1].date.toISOString()).toEqual(
-            '2023-02-08T10:00:00.000Z'
-        )
-        expect(r.events[2].date.toISOString()).toEqual(
-            '2023-03-08T10:00:00.000Z'
-        )
-        expect(r.events[3].date.toISOString()).toEqual(
-            '2023-04-12T10:00:00.000Z'
-        )
-        expect(r.events[4].date.toISOString()).toEqual(
-            '2023-05-10T10:00:00.000Z'
-        )
-        expect(r.events[5].date.toISOString()).toEqual(
-            '2023-06-14T10:00:00.000Z'
-        )
-    }
-})
 test(`expand rRule Month bySetPos with count range`, () => {
     const rRule =
         'DTSTART:20221216T100000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=2;BYDAY=WE;COUNT=6;WKST=SU'
@@ -150,6 +117,65 @@ test(`expand rRule Month bySetPos with count range`, () => {
     }
 })
 
+test(`expand rRule Month bySetPos with until Date with range`, () => {
+    const rRule =
+        'DTSTART:20221216T100000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=2;BYDAY=WE;UNTIL=20230411T100000Z;WKST=SU'
+
+    const r = expandRRuleFromString(
+        rRule,
+        new Date('2023-02-02T10:00:00.000Z'),
+        new Date('2023-12-31T10:00:00.000Z')
+    )
+
+    expect(r).not.toBeUndefined()
+    if (r) {
+        expect(r.events.length).toEqual(2)
+
+        expect(r.events[0].index).toEqual(2)
+        expect(r.events[0].date.toISOString()).toEqual(
+            '2023-02-08T10:00:00.000Z'
+        )
+        expect(r.events[1].date.toISOString()).toEqual(
+            '2023-03-08T10:00:00.000Z'
+        )
+    }
+})
+
+test(`expand rRule Month bySetPos with count`, () => {
+    const rRule =
+        'DTSTART:20221216T100000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=2;BYDAY=WE;COUNT=6;WKST=SU'
+
+    const r = expandRRuleFromString(
+        rRule,
+        new Date('2022-12-15T10:00:00.000Z'),
+        new Date('2023-12-31T10:00:00.000Z')
+    )
+
+    expect(r).not.toBeUndefined()
+    if (r) {
+        expect(r.events.length).toEqual(6)
+
+        expect(r.events[0].date.toISOString()).toEqual(
+            '2023-01-11T10:00:00.000Z'
+        )
+        expect(r.events[1].date.toISOString()).toEqual(
+            '2023-02-08T10:00:00.000Z'
+        )
+        expect(r.events[2].date.toISOString()).toEqual(
+            '2023-03-08T10:00:00.000Z'
+        )
+        expect(r.events[3].date.toISOString()).toEqual(
+            '2023-04-12T10:00:00.000Z'
+        )
+        expect(r.events[4].date.toISOString()).toEqual(
+            '2023-05-10T10:00:00.000Z'
+        )
+        expect(r.events[5].date.toISOString()).toEqual(
+            '2023-06-14T10:00:00.000Z'
+        )
+    }
+})
+
 test(`expand rRule Month bySetPos with until Date`, () => {
     const rRule =
         'DTSTART:20221216T100000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=2;BYDAY=WE;UNTIL=20230411T100000Z;WKST=SU'
@@ -171,29 +197,6 @@ test(`expand rRule Month bySetPos with until Date`, () => {
             '2023-02-08T10:00:00.000Z'
         )
         expect(r.events[2].date.toISOString()).toEqual(
-            '2023-03-08T10:00:00.000Z'
-        )
-    }
-})
-test(`expand rRule Month bySetPos with until Date with range`, () => {
-    const rRule =
-        'DTSTART:20221216T100000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=2;BYDAY=WE;UNTIL=20230411T100000Z;WKST=SU'
-
-    const r = expandRRuleFromString(
-        rRule,
-        new Date('2023-02-02T10:00:00.000Z'),
-        new Date('2023-12-31T10:00:00.000Z')
-    )
-
-    expect(r).not.toBeUndefined()
-    if (r) {
-        expect(r.events.length).toEqual(2)
-
-        expect(r.events[0].index).toEqual(2)
-        expect(r.events[0].date.toISOString()).toEqual(
-            '2023-02-08T10:00:00.000Z'
-        )
-        expect(r.events[1].date.toISOString()).toEqual(
             '2023-03-08T10:00:00.000Z'
         )
     }

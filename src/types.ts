@@ -36,10 +36,7 @@ export const rRuleFields = {
 
     bySetPos: 'BYSETPOS',
 
-    byMinute: 'BYMINUTE',
-    byHour: 'BYHOUR',
     byDay: 'BYDAY',
     byMonthDay: 'BYMONTHDAY',
     byMonth: 'BYMONTH',
-    byYearDay: 'BYEARDAY',
 }

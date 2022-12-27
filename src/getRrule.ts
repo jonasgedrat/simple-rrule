@@ -42,6 +42,14 @@ export const getRRuleString = (payload: ISchedulerEditor) => {
         rRuleString += `;${rRuleFields.byDay}=${f.byDay}`
     }
 
+    if (f.byMonth !== 0) {
+        rRuleString += `;${rRuleFields.byMonth}=${f.byMonth}`
+    }
+
+    if (f.byMonthDay !== 0) {
+        rRuleString += `;${rRuleFields.byMonthDay}=${f.byMonthDay}`
+    }
+
     if (f.wkst) {
         rRuleString += `;${rRuleFields.wkst}=${f.wkst}`
     }

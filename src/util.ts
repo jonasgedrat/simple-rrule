@@ -4,8 +4,6 @@ import { days, isBySetPosValid, isWeekDayValid } from './validators/util'
 
 export const getBySetPos = (
     currDate: Date,
-    // dtStart: Date,
-    // endRangePeriodOrUntil: Date,
     byDay: ByDay,
     bySetPos: BySetPos,
     maxCount: number,
@@ -18,7 +16,6 @@ export const getBySetPos = (
     }
 
     const firstDayOfMonth = currDate
-    firstDayOfMonth.setHours(0, 0, 0, 0)
     firstDayOfMonth.setDate(1)
 
     const month = firstDayOfMonth.getMonth()
@@ -41,9 +38,6 @@ export const getBySetPos = (
             ? weekDaysInMonth.slice(-1)[0] //last WeekDay in month
             : weekDaysInMonth[bySetPos - 1]
 
-    // if (isBefore(result, dtStart)) return undefined
-    // if (isBefore(endRangePeriodOrUntil, result)) return undefined
-
     return result
 }
 
@@ -63,6 +57,27 @@ export const eachMonthOfIntervalWithTime = (startDate: Date, endDate: Date) => {
         dates.push(currentDate)
         count++
         currentDate = addMonths(startDate, count)
+    }
+
+    return dates
+}
+
+export const eachYearOfIntervalWithTime = (startDate: Date, endDate: Date) => {
+    const endTime = endDate.getTime()
+    const dates = []
+
+    // Throw an exception if start date is after end date or if any date is `Invalid Date`
+    if (!(startDate.getTime() <= endTime)) {
+        throw new RangeError('Invalid interval')
+    }
+
+    let currentDate = startDate
+    let count = 0
+
+    while (currentDate.getTime() <= endTime) {
+        dates.push(currentDate)
+        count++
+        currentDate = addMonths(startDate, count * 12)
     }
 
     return dates
