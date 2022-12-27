@@ -8,13 +8,10 @@ import { dtStart, frequencies, intervals } from './constants'
 intervals.map((interval) => {
     // eslint-disable-next-line array-callback-return
     frequencies.map((frequency) => {
-        test(`expandRRule date-fns frequency: ${frequency} interval: ${interval} count: 3`, async () => {
+        test(`expandRRule date-fns frequency: ${frequency} interval: ${interval} count: 3`, () => {
             const rRuleString = `${dtStart}\nRRULE:FREQ=${frequency};INTERVAL=${interval};COUNT=3;WKST=SU`
 
-            const rRule = await parseRecurrenceFromString(
-                rRuleString,
-                Weekday.Sunday
-            )
+            const rRule = parseRecurrenceFromString(rRuleString, Weekday.Sunday)
             expect(rRule).not.toBeUndefined()
 
             if (rRule) {
@@ -42,7 +39,7 @@ intervals.map((interval) => {
                     default:
                 }
 
-                const ex = await expandRRule(rRule, startPeriod, endPeriod)
+                const ex = expandRRule(rRule, startPeriod, endPeriod)
 
                 expect(ex).not.toBeUndefined()
                 expect(ex.events.length).toEqual(3)

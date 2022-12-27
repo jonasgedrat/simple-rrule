@@ -20,10 +20,10 @@ import { count, dtStart, d } from './constants'
 // 11	Fri,	25	Nov	2022	13:30:00
 // 12	Mon,	28	Nov	2022	13:30:00
 
-test(`expandRRule Weekly`, async () => {
+test(`expandRRule Weekly`, () => {
     const rRuleString = `${dtStart}\nRRULE:FREQ=${Frequency.WEEKLY};INTERVAL=1;COUNT=${count};BYDAY=MO,WE,FR;WKST=SU`
 
-    const rRule = await parseRecurrenceFromString(rRuleString, Weekday.Sunday)
+    const rRule = parseRecurrenceFromString(rRuleString, Weekday.Sunday)
     expect(rRule).not.toBeUndefined()
 
     if (rRule) {
@@ -34,7 +34,7 @@ test(`expandRRule Weekly`, async () => {
         const endPeriod = addDays(rRule.dtStart, 14)
 
         //2 weeks after 1 week - 3 events per week result 6 events
-        const ex = await expandRRule(rRule, startPeriod, endPeriod)
+        const ex = expandRRule(rRule, startPeriod, endPeriod)
 
         expect(ex).not.toBeUndefined()
 

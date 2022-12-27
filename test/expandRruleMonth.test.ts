@@ -100,9 +100,6 @@ test(`expand rRule Month bySetPos with count range`, () => {
     if (r) {
         expect(r.events.length).toEqual(4)
 
-        // expect(r.events[0].date.toISOString()).toEqual('2023-01-11T10:00:00.000Z')
-        // expect(r.events[1].date.toISOString()).toEqual('2023-02-08T10:00:00.000Z')
-        // expect(r.events[2].date.toISOString()).toEqual('2023-03-08T10:00:00.000Z')
         expect(r.events[0].date.toISOString()).toEqual(
             '2023-04-12T10:00:00.000Z'
         )

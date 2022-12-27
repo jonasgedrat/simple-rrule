@@ -1,7 +1,5 @@
 # simple-rrule.js
 
-## BETA VERSION
-
 **Simple recurrence rules to get scheduler events for calendar dates.**
 
 simple-rrule.js expands recurrence dates from a rrule string.
@@ -40,37 +38,69 @@ $ yarn add simple-rrule
 $ npm install simple-rrule
 ```
 
-#### Example: get events with rrule string
+#### Example 1
 
 ```es6
-import { expandRRule } from 'simple-rrule'
+import { expandRRuleFromString } from 'simple-rrule'
 
-const rRule = 'DTSTART:20221214T072400Z\nRRULE:FREQ=DAILY;INTERVAL=1;WKST=SU'
+const rRule =
+    'DTSTART:20221215T100000Z\nRRULE:FREQ=YEARLY;BYDAY=MO;BYMONTH=1;BYSETPOS=2;COUNT=5;WKST=SU'
+const rRule = `DTSTART:DTSTART:20221215T100000Z\nRRULE:FREQ=DAILY;INTERVAL=1;COUNT=3;WKST=SU`
 
-const startRangePeriod = new Date(2023, 1, 1)
-const endRangePeriod = new Date(2023, 2, 1)
-
-const result = expandRRule(rRule, startRangePeriod, endRangePeriod)
+const r = expandRRuleFromString(rRule, today, addDays(today, 3))
 ```
 
-#### Example: get events from ISchedulerEditorSchema
+#### Example 2
 
 ```es6
-import { expandRRule, getRRuleString, ISchedulerEditorSchema, Frequency  } from 'simple-rrule'
+import { parseRecurrenceFromString, expandRRule, WeekDay } from 'simple-rrule'
+const rRule =
+    'DTSTART:20221216T100000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=2;BYDAY=WE;UNTIL=20230411T100000Z;WKST=SU'
 
-//Get with rrule string
-const rrule: ISchedulerEditorSchema = {
-    dtStart: new Date{2022, 12, 1, 10 ,30},
-    dtEnd: new Date{2022, 12, 1, 10, 45},//Event duration = 15 minutes
-    frequency: Frequency.DAILY,
-    interval:1
+const rRule = await parseRecurrenceFromString(rRule, Weekday.Sunday)
+console.log(rRule)
 
-}
-//range period to extract dates
-const startRangePeriod = new Date(2023, 1, 1)
-const startRangePeriod = new Date(2023, 2, 1)
+const r = expandRRule(
+    rRule,
+    new Date('2023-02-02T10:00:00.000Z'),
+    new Date('2023-12-31T10:00:00.000Z')
+)
+```
 
-const result = expandRRule(getRRuleString(rrule), startRangePeriod, endRangePeriod)
+#### Example 3
+
+```es6
+import { expandRRuleFromString } from 'simple-rrule'
+
+const rRule =
+    'DTSTART:20221215T100000Z\nRRULE:FREQ=YEARLY;BYDAY=MO;BYMONTH=1;BYSETPOS=2;COUNT=5;WKST=SU'
+
+const r = expandRRuleFromString(
+    rRule,
+    new Date('2023-01-28T10:00:00.000Z'),
+    new Date('2025-05-31T10:00:00.000Z')
+)
+//result
+//   { date: 2024-01-08T10:00:00.000Z, index: 1 },---
+//   { date: 2025-01-13T10:00:00.000Z, index: 2 },---
+```
+
+#### Example 4
+
+```es6
+import { expandRRuleFromString } from 'simple-rrule'
+
+const rRule =
+    'DTSTART:20221215T100000Z\nRRULE:FREQ=YEARLY;BYDAY=MO;BYMONTH=1;BYSETPOS=2;COUNT=5;WKST=SU'
+
+const r = expandRRuleFromString(
+    rRule,
+    new Date('2023-01-28T10:00:00.000Z'),
+    new Date('2025-05-31T10:00:00.000Z')
+)
+//result
+//   { date: 2024-01-08T10:00:00.000Z, index: 1 },---
+//   { date: 2025-01-13T10:00:00.000Z, index: 2 },---
 ```
 
 ### rrule string fields
