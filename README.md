@@ -80,9 +80,6 @@ const r = expandRRuleFromString(
     new Date('2023-01-28T10:00:00.000Z'),
     new Date('2025-05-31T10:00:00.000Z')
 )
-//result
-//   { date: 2024-01-08T10:00:00.000Z, index: 1 },---
-//   { date: 2025-01-13T10:00:00.000Z, index: 2 },---
 ```
 
 #### Example 4
@@ -98,10 +95,9 @@ const r = expandRRuleFromString(
     new Date('2023-01-28T10:00:00.000Z'),
     new Date('2025-05-31T10:00:00.000Z')
 )
-//result
-//   { date: 2024-01-08T10:00:00.000Z, index: 1 },---
-//   { date: 2025-01-13T10:00:00.000Z, index: 2 },---
 ```
+
+# Good examples in 'test' folder.
 
 ### rrule string fields
 
