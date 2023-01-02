@@ -11,20 +11,36 @@ export const toRRuleDateString = (_date: Date, utc = true): string => {
     ].join('')
 }
 
-export const fromRruleDateStringToDate = (until: string): Date => {
-    const re = /^(\d{4})(\d{2})(\d{2})(T(\d{2})(\d{2})(\d{2})Z?)?$/
-    const bits = re.exec(until)
+export const fromRruleDateStringToDate = (dtString: string): Date => {
+    //only 1000-1999/2000-1999 years
+    //months 01 to 12
+    //days 01 to 31
+    //hours 01 to 23
+    //minutes 01 to 59
+    //seconds 01 to 59
+    //milliseconds not implemented
 
-    if (!bits) throw new Error(`Invalid UNTIL value: ${until}`)
+    //validation
+    const re =
+        /^([12]\d{3})(0[1-9]|1[0-2])((0[1-9])|([1-2][0-9])|(3[01]))T([01]\d|2[0-3])(0\d|[1-5]\d)(0\d|[1-5]\d)?([0-9]+)Z$/
 
-    return new Date(
-        Date.UTC(
-            parseInt(bits[1], 10),
-            parseInt(bits[2], 10) - 1,
-            parseInt(bits[3], 10),
-            parseInt(bits[5], 10) || 0,
-            parseInt(bits[6], 10) || 0,
-            parseInt(bits[7], 10) || 0
-        )
-    )
+    const match = dtString.match(re)
+    if (!match)
+        throw new Error(`Invalid fromRruleDateStringToDate value: ${dtString}`)
+
+    //example: '20221215T152030Z or '20221215T1520300000Z''
+    const year = dtString.substring(0, 4)
+    const month = dtString.substring(4, 6)
+    const day = dtString.substring(6, 8)
+    const hour = dtString.substring(9, 11)
+    const minute = dtString.substring(11, 13)
+    const second = dtString.substring(13, 15)
+
+    const isoString = `${year}-${month}-${day}T${hour}:${minute}:${second}.000Z`
+
+    const result = new Date(isoString)
+
+    //console.log(result, isoString)
+
+    return result
 }

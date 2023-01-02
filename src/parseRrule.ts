@@ -4,6 +4,7 @@ import { isBetween } from './numbers'
 
 import { Frequency, rRuleFields, Weekday } from './types'
 import { IRrule, rRuleDefaultValues, validateRrule } from './validators/rRule'
+import { fromRruleDateStringToDate } from './rRuleDateStringFormat'
 
 export const parseRecurrenceFromString = (
     recurrenceString: string = '',
@@ -11,16 +12,22 @@ export const parseRecurrenceFromString = (
 ): IRrule | undefined => {
     if (recurrenceString.trim() === '') return undefined
 
-    const lines = recurrenceString.split('\n')
+    const str2 = recurrenceString.replace(/\n|\r/g, '|')
+
+    //console.log(str2.split('|'))
+
+    const lines = str2.split('|')
 
     let rRule: IRrule = rRuleDefaultValues
+
+    //console.log(lines)
 
     lines.map((line) => {
         const lineKey = line.split(':')[0].trim()
         const lineValue = line.split(':')[1].trim()
 
         if (lineKey === rRuleFields.dtStart) {
-            const dtStart = parseISO(lineValue)
+            const dtStart = fromRruleDateStringToDate(lineValue)
             if (dtStart) {
                 rRule.dtStart = dtStart
                 //1 hour for duration by default
@@ -29,7 +36,7 @@ export const parseRecurrenceFromString = (
         }
 
         if (lineKey === rRuleFields.dtEnd) {
-            const dtEnd = parseISO(lineValue)
+            const dtEnd = fromRruleDateStringToDate(lineValue)
             if (dtEnd) {
                 rRule.dtEnd = dtEnd
             }
