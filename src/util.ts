@@ -54,7 +54,9 @@ export const eachMonthOfIntervalWithTime = (startDate: Date, endDate: Date) => {
     let count = 0
 
     while (currentDate.getTime() <= endTime) {
-        dates.push(currentDate)
+        if (currentDate.getTime() >= startDate.getTime()) {
+            dates.push(currentDate)
+        }
         count++
         currentDate = addMonths(startDate, count)
     }
@@ -75,7 +77,9 @@ export const eachYearOfIntervalWithTime = (startDate: Date, endDate: Date) => {
     let count = 0
 
     while (currentDate.getTime() <= endTime) {
-        dates.push(currentDate)
+        if (currentDate.getTime() >= startDate.getTime()) {
+            dates.push(currentDate)
+        }
         count++
         currentDate = addMonths(startDate, count * 12)
     }

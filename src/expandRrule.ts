@@ -175,7 +175,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                     return acc
                 }, [])
                 r.startIndexCount = 0
-                r.firstEventInRangePeriod = dates[0]
 
                 break
             }
@@ -190,15 +189,11 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             break
 
         case Frequency.YEARLY:
+            dates = eachYearOfIntervalWithTime(r.dtStart, interval.end)
             if (isBySetPos) {
-                dates = eachYearOfIntervalWithTime(
-                    new Date(interval.start.setMonth(r.byMonth - 1)),
-                    interval.end
-                )
-
                 dates = dates.reduce((acc: Date[], curr: Date) => {
                     const result = getBySetPos(
-                        curr,
+                        setMonth(curr, r.byMonth - 1), //set month
                         r.byDay,
                         r.bySetPos,
                         r.count,
@@ -217,18 +212,16 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                     return acc
                 }, [])
                 r.startIndexCount = 0
-                r.firstEventInRangePeriod = dates[0]
+
                 break
             }
-
-            dates = eachYearOfIntervalWithTime(interval.start, interval.end)
 
             if (r.bySetPos === 0 && r.byMonth > 0 && r.byMonthDay > 0) {
                 dates = dates.map((x) =>
                     setMonth(setDate(x, r.byMonthDay), r.byMonth - 1)
                 )
                 r.startIndexCount = 0
-                r.firstEventInRangePeriod = dates[0]
+
                 break
             }
 
@@ -267,26 +260,51 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
         default:
     }
 
-    // console.log(dates)
+    console.log('start', r.dtStart)
+    console.log('only dates', dates)
 
-    const result: IDateEvents[] = dates
-        .map((x, i) => {
-            return {
-                date: x,
-                index: r.startIndexCount + i + 1,
-            }
-        })
-        .filter((y) => {
-            let filterResult = false
-            filterResult = y.date >= r.startRangePeriod
+    let result: IDateEvents[] = []
 
-            if (r.count > 0 && y.index > r.count) {
-                filterResult = false
-            }
-            return filterResult
-        })
+    switch (r.frequency) {
+        case Frequency.MONTHLY:
+        case Frequency.YEARLY:
+            let index = 0
+            result = dates.reduce((acc: IDateEvents[], curr) => {
+                index++
+                if (
+                    curr.getTime() >= r.dtStart.getTime() &&
+                    curr.getTime() >= r.startRangePeriod.getTime()
+                ) {
+                    acc.push({
+                        date: curr,
+                        index: index,
+                    })
+                }
+                return acc
+            }, [])
 
-    // console.log(result)
+            break
+
+        default:
+            result = dates.map((x, i) => {
+                return {
+                    date: x,
+                    index: r.startIndexCount + i + 1,
+                }
+            })
+    }
+
+    result = result.filter((y) => {
+        let filterResult = false
+        filterResult = y.date >= r.startRangePeriod
+
+        if (r.count > 0 && y.index > r.count) {
+            filterResult = false
+        }
+        return filterResult
+    })
+
+    // console.log('filtered result', result, r)
 
     return result
 }
