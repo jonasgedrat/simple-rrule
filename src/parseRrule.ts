@@ -21,8 +21,6 @@ export const parseRecurrenceFromString = (
 
     const lines2 = lines[0].split('|').filter((x) => x !== '') //'DTSTART:20221215T000000Z', 'DTEND:20221215T010000Z'
 
-    // console.log(lines[1], lines2, rRulePartsArray)
-
     let rRule: IRrule = rRuleDefaultValues
 
     lines2.map((line) => {
@@ -61,45 +59,48 @@ const parseRRule = (fields: string[] = [], weekStartsOn: Weekday) => {
     let _v: number | undefined = undefined
 
     fields.map((field) => {
-        const value = field.split('=')[1]
+        const fieldValue = field.split('=')[1]
+        const fieldKey = field.split('=')[0]
 
-        switch (field.split('=')[0]) {
+        switch (fieldKey) {
             case rRuleFields.frequency:
-                result.frequency = value as Frequency
+                result.frequency = fieldValue as Frequency
                 break
             case rRuleFields.wkst:
-                result.wkst = value ? (value as Weekday) : weekStartsOn
+                result.wkst = fieldValue
+                    ? (fieldValue.substring(0, 2) as Weekday)
+                    : weekStartsOn
                 break
             case rRuleFields.interval:
-                result.interval = parseInt(value)
+                result.interval = parseInt(fieldValue)
                 break
             case rRuleFields.count:
-                result.count = parseInt(value)
+                result.count = parseInt(fieldValue)
                 break
             case rRuleFields.until:
-                result.until = parseISO(value)
+                result.until = parseISO(fieldValue)
                 break
 
             case rRuleFields.byDay:
-                result.byDay = value
+                result.byDay = fieldValue
                 _v = undefined
                 break
             case rRuleFields.byMonthDay:
-                _v = isBetween(value, 1, 31)
+                _v = isBetween(fieldValue, 1, 31)
                 if (_v) {
                     result.byMonthDay = _v
                 }
                 _v = undefined
                 break
             case rRuleFields.byMonth:
-                _v = isBetween(value, 1, 12)
+                _v = isBetween(fieldValue, 1, 12)
                 if (_v) {
                     result.byMonth = _v
                 }
                 _v = undefined
                 break
             case rRuleFields.bySetPos:
-                _v = Number(value)
+                _v = Number(fieldValue)
                 if (isBySetPosValid(_v)) {
                     result.bySetPos = _v
                 }
