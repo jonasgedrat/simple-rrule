@@ -30,6 +30,7 @@ test(`expand rRule MonthDay`, () => {
         expect(r.events[0].date.getDate()).toEqual(15)
     }
 })
+
 test(`expand rRule MonthDay with range `, () => {
     const rRule = `DTSTART:${toRRuleDateString(
         today
@@ -68,14 +69,24 @@ test(`expand rRule Month with range`, () => {
 
     const r = expandRRuleFromString(
         rRule,
+        addMonths(today, 2),
+        addMonths(today, 7)
+    )
+    const r2 = expandRRuleFromString(
+        rRule,
         addMonths(today, 3),
         addMonths(today, 7)
     )
 
     expect(r).not.toBeUndefined()
     if (r) {
-        expect(r.events.length).toEqual(3)
-        expect(r.events[0].index).toEqual(4)
+        expect(r.events.length).toEqual(4)
+        expect(r.events[0].index).toEqual(3)
+
+        const index = 5
+        const d1 = r.events.find((x) => x.index === index)
+        const d2 = r2.events.find((x) => x.index === index)
+        expect(d1?.date).toEqual(d2?.date)
     }
 })
 

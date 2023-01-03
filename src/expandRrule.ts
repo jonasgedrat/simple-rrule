@@ -151,9 +151,9 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
             break
         case Frequency.MONTHLY:
-            if (isBySetPos) {
-                dates = eachMonthOfIntervalWithTime(r.dtStart, interval.end)
+            dates = eachMonthOfIntervalWithTime(r.dtStart, interval.end)
 
+            if (isBySetPos) {
                 dates = dates.reduce((acc: Date[], curr: Date) => {
                     const result = getBySetPos(
                         curr,
@@ -179,10 +179,11 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 break
             }
 
-            dates = eachMonthOfIntervalWithTime(interval.start, interval.end)
+            // dates = eachMonthOfIntervalWithTime(interval.start, interval.end)
 
             if (r.bySetPos === 0 && r.byMonthDay > 0) {
                 dates = dates.map((x) => setDate(x, r.byMonthDay))
+                r.startIndexCount = 0
                 break
             }
 
@@ -190,6 +191,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
         case Frequency.YEARLY:
             dates = eachYearOfIntervalWithTime(r.dtStart, interval.end)
+
             if (isBySetPos) {
                 dates = dates.reduce((acc: Date[], curr: Date) => {
                     const result = getBySetPos(
@@ -221,7 +223,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                     setMonth(setDate(x, r.byMonthDay), r.byMonth - 1)
                 )
                 r.startIndexCount = 0
-
                 break
             }
 
@@ -260,8 +261,8 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
         default:
     }
 
-    console.log('start', r.dtStart)
-    console.log('only dates', dates)
+    // console.log('start', r.dtStart)
+    // console.log('only dates', dates)
 
     let result: IDateEvents[] = []
 
