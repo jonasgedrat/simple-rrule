@@ -11,20 +11,23 @@ export const parseRecurrenceFromString = (
     weekStartsOn: Weekday = Weekday.Sunday
 ): IRrule | undefined => {
     if (recurrenceString.trim() === '') return undefined
+    if (recurrenceString.replaceAll(/\s/g, '') === '') return undefined
 
-    const str2 = recurrenceString.replace(/\n|\r/g, '|')
+    const str2 = recurrenceString.replace(/\n|\r/g, '|').replaceAll(/\s/g, '')
 
-    //console.log(str2.split('|'))
+    const lines = str2.split('RRULE:')
 
-    const lines = str2.split('|')
+    const rRulePartsArray = lines[1].split(';').filter((x) => x !== '') //'FREQ=WEEKLY', 'INTERVAL=1', 'UNTIL=20221215T152030Z', 'WKST=SU'
+
+    const lines2 = lines[0].split('|').filter((x) => x !== '') //'DTSTART:20221215T000000Z', 'DTEND:20221215T010000Z'
+
+    // console.log(lines[1], lines2, rRulePartsArray)
 
     let rRule: IRrule = rRuleDefaultValues
 
-    //console.log(lines)
-
-    lines.map((line) => {
-        const lineKey = line.split(':')[0].trim()
-        const lineValue = line.split(':')[1].trim()
+    lines2.map((line) => {
+        const lineKey = line.split(':')[0]
+        const lineValue = line.split(':')[1]
 
         if (lineKey === rRuleFields.dtStart) {
             const dtStart = fromRruleDateStringToDate(lineValue)
@@ -42,29 +45,23 @@ export const parseRecurrenceFromString = (
             }
         }
 
-        if (lineKey === rRuleFields.RRule) {
-            const _parseRRule = parseRRule(line, weekStartsOn)
-            rRule = { ...rRule, ..._parseRRule }
-        }
-
         return true
     })
+
+    const _parseRRule = parseRRule(rRulePartsArray, weekStartsOn)
+    rRule = { ...rRule, ..._parseRRule }
 
     const result = validateRrule(rRule)
 
     return result
 }
 
-const parseRRule = (rRuleString: string = '', weekStartsOn: Weekday) => {
-    if (rRuleString === '') return undefined
-
-    const fields = rRuleString.split(':')[1].split(';')
-
+const parseRRule = (fields: string[] = [], weekStartsOn: Weekday) => {
     let result: Partial<IRrule> = {}
     let _v: number | undefined = undefined
 
     fields.map((field) => {
-        const value = field.split('=')[1].trim()
+        const value = field.split('=')[1]
 
         switch (field.split('=')[0]) {
             case rRuleFields.frequency:
