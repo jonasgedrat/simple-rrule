@@ -133,6 +133,8 @@ test(`expand rRule Year byMonth bySetPos`, () => {
         new Date('2030-05-31T10:00:00.000Z')
     )
 
+    console.log(r)
+
     //   { date: 2023-01-09T10:00:00.000Z, index: 1 },
     //   { date: 2024-01-08T10:00:00.000Z, index: 2 },
     //   { date: 2025-01-13T10:00:00.000Z, index: 3 },

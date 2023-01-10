@@ -179,8 +179,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 break
             }
 
-            // dates = eachMonthOfIntervalWithTime(interval.start, interval.end)
-
             if (r.bySetPos === 0 && r.byMonthDay > 0) {
                 dates = dates.map((x) => setDate(x, r.byMonthDay))
                 r.startIndexCount = 0
@@ -190,33 +188,50 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             break
 
         case Frequency.YEARLY:
-            dates = eachYearOfIntervalWithTime(r.dtStart, interval.end)
-
             if (isBySetPos) {
-                dates = dates.reduce((acc: Date[], curr: Date) => {
-                    const result = getBySetPos(
-                        setMonth(curr, r.byMonth - 1), //set month
+                let currentYear = r.dtStart.getFullYear()
+                //infinite loop
+                while (true) {
+                    const dt = getBySetPos(
+                        new Date(
+                            currentYear,
+                            r.byMonth - 1,
+                            1, //first day of month
+                            r.dtStart.getHours(),
+                            r.dtStart.getMinutes()
+                        ),
                         r.byDay,
                         r.bySetPos,
                         r.count,
-                        acc.length | 0
+                        dates.length
                     )
 
-                    if (result) {
+                    if (dt) {
                         if (
-                            result.getTime() >= r.dtStart.getTime() &&
-                            result.getTime() <=
-                                r.endRangePeriodOrUntil.getTime()
+                            dt.getTime() <= r.endRangePeriodOrUntil.getTime() &&
+                            dt.getTime() >= r.dtStart.getTime()
                         ) {
-                            acc.push(result)
+                            dates.push(dt)
+                        }
+
+                        if (dt.getTime() >= r.endRangePeriodOrUntil.getTime()) {
+                            break
+                        }
+
+                        if (r.count > 0 && r.count <= dates.length) {
+                            break
                         }
                     }
-                    return acc
-                }, [])
+
+                    currentYear++
+                }
+
                 r.startIndexCount = 0
 
                 break
             }
+
+            dates = eachYearOfIntervalWithTime(r.dtStart, interval.end)
 
             if (r.bySetPos === 0 && r.byMonth > 0 && r.byMonthDay > 0) {
                 dates = dates.map((x) =>
