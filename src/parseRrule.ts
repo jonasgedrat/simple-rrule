@@ -1,10 +1,11 @@
 import { isBySetPosValid } from './validators/util'
-import { addHours, parseISO } from 'date-fns'
 import { isBetween } from './numbers'
 
 import { Frequency, rRuleFields, Weekday } from './types'
 import { IRrule, rRuleDefaultValues, validateRrule } from './validators/rRule'
 import { fromRruleDateStringToDate } from './rRuleDateStringFormat'
+import { addHours } from './dates/addDatesHelper'
+import parseISO from 'date-fns/parseISO'
 
 export const parseRecurrenceFromString = (
     recurrenceString: string = '',

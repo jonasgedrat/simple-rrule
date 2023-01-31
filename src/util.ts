@@ -1,5 +1,5 @@
+import { addMonths } from './dates/addDatesHelper'
 import { ByDay, BySetPos } from './types'
-import { addMonths } from 'date-fns'
 import { days, isBySetPosValid, isWeekDayValid } from './validators/util'
 
 export const getBySetPos = (
@@ -41,7 +41,12 @@ export const getBySetPos = (
     return result
 }
 
-export const eachMonthOfIntervalWithTime = (startDate: Date, endDate: Date) => {
+export const eachMonthOfIntervalWithTime = (
+    startDate: Date,
+    endDate: Date,
+    byMonthDay: number = 0,
+    maxCount: number = 0
+) => {
     const endTime = endDate.getTime()
     const dates = []
 
@@ -50,21 +55,35 @@ export const eachMonthOfIntervalWithTime = (startDate: Date, endDate: Date) => {
         throw new RangeError('Invalid interval')
     }
 
-    let currentDate = startDate
+    let currentDate = new Date(startDate)
+    if (byMonthDay > 0 && byMonthDay <= 31) {
+        currentDate.setDate(byMonthDay)
+    }
+
     let count = 0
 
     while (currentDate.getTime() <= endTime) {
         if (currentDate.getTime() >= startDate.getTime()) {
             dates.push(currentDate)
         }
+
         count++
+
+        if (maxCount > 0 && count >= maxCount) {
+            break
+        }
+
         currentDate = addMonths(startDate, count)
     }
 
     return dates
 }
 
-export const eachYearOfIntervalWithTime = (startDate: Date, endDate: Date) => {
+export const eachYearOfIntervalWithTime = (
+    startDate: Date,
+    endDate: Date,
+    byMonthDay: number = 0
+) => {
     const endTime = endDate.getTime()
     const dates = []
 
@@ -74,6 +93,9 @@ export const eachYearOfIntervalWithTime = (startDate: Date, endDate: Date) => {
     }
 
     let currentDate = startDate
+    if (byMonthDay > 0 && byMonthDay <= 31) {
+        currentDate.setDate(byMonthDay)
+    }
     let count = 0
 
     while (currentDate.getTime() <= endTime) {
@@ -81,6 +103,7 @@ export const eachYearOfIntervalWithTime = (startDate: Date, endDate: Date) => {
             dates.push(currentDate)
         }
         count++
+
         currentDate = addMonths(startDate, count * 12)
     }
 

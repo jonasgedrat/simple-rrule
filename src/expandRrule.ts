@@ -4,6 +4,10 @@ import {
     eachYearOfIntervalWithTime,
 } from './util'
 
+import { Frequency, Weekday } from './types'
+import { IRrule, IRuleExtended, validateRrule } from './validators/rRule'
+import { parseRecurrenceFromString } from './parseRrule'
+import { isWeekDayValid } from './validators/util'
 import {
     addDays,
     addHours,
@@ -11,6 +15,8 @@ import {
     addMonths,
     addSeconds,
     addYears,
+} from './dates/addDatesHelper'
+import {
     differenceInDays,
     differenceInHours,
     differenceInMinutes,
@@ -18,19 +24,11 @@ import {
     differenceInSeconds,
     differenceInWeeks,
     differenceInYears,
-    eachDayOfInterval,
-    eachHourOfInterval,
-    eachMinuteOfInterval,
-    format,
-    isBefore,
-    setDate,
-    setMonth,
-} from 'date-fns'
-
-import { Frequency, Weekday } from './types'
-import { IRrule, IRuleExtended, validateRrule } from './validators/rRule'
-import { parseRecurrenceFromString } from './parseRrule'
-import { isWeekDayValid } from './validators/util'
+} from './dates/differenceHelper'
+import { eachDateOfInterval } from './dates/eachDateHelper'
+import { setByMonthByDay } from './dates/setByMonthByDay'
+import { getWeekDayName } from './dates/getWeekDayName'
+import { isBefore } from './dates/isBefore'
 export interface IDateEvents {
     date: Date
     index: number
@@ -111,13 +109,35 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             //not implemented
             break
         case Frequency.MINUTELY:
-            dates = eachMinuteOfInterval(interval, step)
+            // dates = eachMinuteOfInterval(interval, step)
+            dates = eachDateOfInterval(
+                interval.start,
+                interval.end,
+                0,
+                'minutes',
+                step.step
+            )
             break
         case Frequency.HOURLY:
-            dates = eachHourOfInterval(interval, step)
+            // dates = eachHourOfInterval(interval, step)
+            dates = eachDateOfInterval(
+                interval.start,
+                interval.end,
+                0,
+                'hours',
+                step.step
+            )
             break
         case Frequency.DAILY:
-            dates = eachDayOfInterval(interval, step)
+            // dates = eachDayOfInterval(interval, step)
+            dates = eachDateOfInterval(
+                interval.start,
+                interval.end,
+                0,
+                'days',
+                step.step
+            )
+
             break
         case Frequency.WEEKLY:
             if (r.byDay && r.byDay.length > 0) {
@@ -132,12 +152,20 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
                 r.startIndexCount = r.startIndexCount * weekDays.length
 
-                const eachDay = eachDayOfInterval(interval, {
-                    step: r.interval,
-                })
+                // const eachDay = eachDayOfInterval(interval, {
+                //     step: r.interval,
+                // })
+                const eachDay = eachDateOfInterval(
+                    interval.start,
+                    interval.end,
+                    0,
+                    'days',
+                    step.step
+                )
 
                 eachDay.map((day) => {
-                    const dayOfWeek = format(day, 'EEEEEE').toLocaleUpperCase()
+                    const dayOfWeek = getWeekDayName(day)
+
                     if (weekDays?.includes(dayOfWeek)) {
                         resultWeekly.push(day)
                     }
@@ -146,13 +174,18 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
                 dates = resultWeekly
             } else {
-                dates = eachDayOfInterval(interval, step)
+                // dates = eachDayOfInterval(interval, step)
+                dates = eachDateOfInterval(
+                    interval.start,
+                    interval.end,
+                    0,
+                    'days',
+                    step.step
+                )
             }
 
             break
         case Frequency.MONTHLY:
-            dates = eachMonthOfIntervalWithTime(r.dtStart, interval.end)
-
             if (isBySetPos) {
                 dates = dates.reduce((acc: Date[], curr: Date) => {
                     const result = getBySetPos(
@@ -179,8 +212,14 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 break
             }
 
+            dates = eachMonthOfIntervalWithTime(
+                r.dtStart,
+                interval.end,
+                r.byMonthDay
+            )
+
             if (r.bySetPos === 0 && r.byMonthDay > 0) {
-                dates = dates.map((x) => setDate(x, r.byMonthDay))
+                dates = dates.map((x) => new Date(x.setDate(r.byMonthDay)))
                 r.startIndexCount = 0
                 break
             }
@@ -231,11 +270,15 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 break
             }
 
-            dates = eachYearOfIntervalWithTime(r.dtStart, interval.end)
+            dates = eachYearOfIntervalWithTime(
+                r.dtStart,
+                interval.end,
+                r.byMonthDay
+            )
 
             if (r.bySetPos === 0 && r.byMonth > 0 && r.byMonthDay > 0) {
                 dates = dates.map((x) =>
-                    setMonth(setDate(x, r.byMonthDay), r.byMonth - 1)
+                    setByMonthByDay(x, r.byMonthDay, r.byMonth)
                 )
                 r.startIndexCount = 0
                 break
@@ -285,8 +328,22 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
         case Frequency.MONTHLY:
         case Frequency.YEARLY:
             let index = 0
+
             result = dates.reduce((acc: IDateEvents[], curr) => {
                 index++
+
+                // console.log(
+                //     'curr',
+                //     curr,
+                //     curr.getTime(),
+                //     'dtStart',
+                //     r.dtStart,
+                //     r.dtStart.getTime(),
+                //     'startRangePeriod',
+                //     r.startRangePeriod,
+                //     r.startRangePeriod.getTime()
+                // )
+
                 if (
                     curr.getTime() >= r.dtStart.getTime() &&
                     curr.getTime() >= r.startRangePeriod.getTime()

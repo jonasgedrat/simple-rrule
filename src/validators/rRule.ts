@@ -1,5 +1,5 @@
-import { addHours, addSeconds } from 'date-fns'
 import * as Yup from 'yup'
+import { addHours, addSeconds } from '../dates/addDatesHelper'
 import { Frequency, Weekday } from '../types'
 
 const rRuleValidator = Yup.object({
