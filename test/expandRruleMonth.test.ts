@@ -1,4 +1,4 @@
-import { addMonths } from 'date-fns'
+import { addMonths } from '../src/dates/addDatesHelper'
 import { toRRuleDateString } from '../src/rRuleDateStringFormat'
 import { expandRRuleFromString } from './../src/expandRrule'
 import { today } from './constants'
