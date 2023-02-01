@@ -1,7 +1,7 @@
-import { getRRuleString } from './../src/getRrule'
-import { Frequency } from './../src/types'
-import { parseRecurrenceFromString } from './../src/parseRrule'
-import { toRRuleDateString } from '../src/rRuleDateStringFormat'
+import { getRRuleString } from '../src/getRrule'
+import { Frequency } from '../src/types'
+import { parseRecurrenceFromString } from '../src/parseRrule'
+import { toRRuleDateString } from '../src/dates'
 import { Weekday } from '../src/types'
 import { schedulerEditorDefaultValues } from '../src/validators/scheduler'
 

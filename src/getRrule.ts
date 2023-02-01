@@ -1,5 +1,4 @@
-import { toRRuleDateString } from './rRuleDateStringFormat'
-
+import { toRRuleDateString } from './dates'
 import { rRuleFields, Frequency } from './types'
 import {
     ISchedulerEditor,

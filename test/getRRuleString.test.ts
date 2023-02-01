@@ -1,5 +1,5 @@
 import { getRRuleString } from '../src/getRrule'
-import { toRRuleDateString } from '../src/rRuleDateStringFormat'
+import { toRRuleDateString } from '../src/dates'
 import { Frequency, Weekday } from '../src/types'
 import { schedulerEditorDefaultValues } from '../src/validators/scheduler'
 

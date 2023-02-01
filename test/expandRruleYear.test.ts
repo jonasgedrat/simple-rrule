@@ -1,4 +1,4 @@
-import { expandRRuleFromString } from './../src/expandRrule'
+import { expandRRuleFromString } from '../src/expandRrule'
 
 test(`expand rRule Year`, () => {
     const rRule =
@@ -104,7 +104,7 @@ test(`expand rRule Year byMonth and byMonthDay in range`, () => {
 
 test(`expand rRule Year byMonth and byMonthDay  until`, () => {
     const rRule =
-        'DTSTART:20221215T100000Z\nRRULE:FREQ=YEARLY;BYMONTHDAY=20;BYMONTH=1;UNTIL=20240115T100000Z;WKST=SU'
+        'DTSTART:20221215T123456Z\nRRULE:FREQ=YEARLY;BYMONTHDAY=20;BYMONTH=1;UNTIL=20240115T100000Z;WKST=SU'
 
     const r = expandRRuleFromString(
         rRule,
@@ -118,7 +118,7 @@ test(`expand rRule Year byMonth and byMonthDay  until`, () => {
         expect(r.events[0].index).toEqual(2)
 
         expect(r.events[0].date.toISOString()).toEqual(
-            '2023-01-20T10:00:00.000Z'
+            '2023-01-20T12:34:56.000Z'
         )
     }
 })

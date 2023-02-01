@@ -1,4 +1,4 @@
-import { addMonths } from './dates/addDatesHelper'
+import { addMonths } from './dates'
 import { ByDay, BySetPos } from './types'
 import { days, isBySetPosValid, isWeekDayValid } from './validators/util'
 
@@ -15,7 +15,7 @@ export const getBySetPos = (
         return undefined
     }
 
-    const firstDayOfMonth = currDate
+    const firstDayOfMonth = new Date(currDate)
     firstDayOfMonth.setDate(1)
 
     const month = firstDayOfMonth.getMonth()
@@ -55,10 +55,12 @@ export const eachMonthOfIntervalWithTime = (
         throw new RangeError('Invalid interval')
     }
 
-    let currentDate = new Date(startDate)
-    if (byMonthDay > 0 && byMonthDay <= 31) {
-        currentDate.setDate(byMonthDay)
-    }
+    const _startDateBase =
+        byMonthDay > 0 && byMonthDay <= 31
+            ? new Date(startDate.setDate(byMonthDay))
+            : new Date(startDate)
+
+    let currentDate = new Date(_startDateBase)
 
     let count = 0
 
@@ -73,7 +75,7 @@ export const eachMonthOfIntervalWithTime = (
             break
         }
 
-        currentDate = addMonths(startDate, count)
+        currentDate = addMonths(_startDateBase, count)
     }
 
     return dates
@@ -92,7 +94,8 @@ export const eachYearOfIntervalWithTime = (
         throw new RangeError('Invalid interval')
     }
 
-    let currentDate = startDate
+    let currentDate = new Date(startDate)
+
     if (byMonthDay > 0 && byMonthDay <= 31) {
         currentDate.setDate(byMonthDay)
     }

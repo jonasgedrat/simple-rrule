@@ -1,4 +1,4 @@
-import { addDays } from '../src/dates/addDatesHelper'
+import { addDays } from '../src/dates'
 import { expandRRule } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
 import { Frequency, Weekday } from '../src/types'

@@ -1,6 +1,5 @@
-import { addMonths } from '../src/dates/addDatesHelper'
-import { toRRuleDateString } from '../src/rRuleDateStringFormat'
-import { expandRRuleFromString } from './../src/expandRrule'
+import { addMonths, toRRuleDateString } from '../src/dates'
+import { expandRRuleFromString } from '../src/expandRrule'
 import { today } from './constants'
 
 test(`expand rRule Month`, () => {
@@ -50,12 +49,12 @@ test(`expand rRule MonthDay with range `, () => {
     expect(r).not.toBeUndefined()
 
     if (r) {
-        expect(r.events.length).toEqual(3)
+        expect(r.events.length).toEqual(2)
         expect(r.events[0].index).toEqual(3)
         expect(r.events[0].date.getDate()).toEqual(15)
         expect(r2.events[0].date.getDate()).toEqual(15)
 
-        const index = 5
+        const index = 4
         const d1 = r.events.find((x) => x.index === index)
         const d2 = r2.events.find((x) => x.index === index)
         expect(d1?.date).toEqual(d2?.date)
@@ -100,12 +99,18 @@ test(`expand rRule Month monthDay 31`, () => {
         new Date('2023-05-31T10:00:00.000Z')
     )
 
+    //   { date: 2022-12-31T10:00:00.000Z, index: 1 },
+    //   { date: 2023-01-31T10:00:00.000Z, index: 2 },
+    //   { date: 2023-02-28T10:00:00.000Z, index: 3 },
+    //   { date: 2023-03-31T10:00:00.000Z, index: 4 },
+    //   { date: 2023-04-30T10:00:00.000Z, index: 5 }
+
     expect(r).not.toBeUndefined()
     if (r) {
         expect(r.events.length).toEqual(5)
-        expect(r.events[2].date.getDate()).toEqual(3) //february with 28 days
+        expect(r.events[2].date.getDate()).toEqual(28) //february with 28 days
         expect(r.events[3].date.getDate()).toEqual(31) //march ok
-        expect(r.events[4].date.getDate()).toEqual(1) //april with 30 days
+        expect(r.events[4].date.getDate()).toEqual(30) //april with 30 days
     }
 })
 

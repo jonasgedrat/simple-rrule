@@ -24,9 +24,9 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "commit":"git-cz",
-    "test": "tsdx test",    
-    "coverage": "tsdx test --coverage",    
+    "commit": "git-cz",
+    "test": "tsdx test",
+    "coverage": "tsdx test --coverage",
     "format": "prettier --write \"**/*.(js|ts)\"",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
@@ -34,12 +34,11 @@
     "analyze": "size-limit --why",
     "semantic-release": "semantic-release --branches main"
   },
-  "dependencies": {
-    "date-fns": "^2.29.3",    
+  "dependencies": {   
+    "dayjs": "^1.11.7",
     "yup": "^0.32.11"
   },
-  "devDependencies": {
-    "@types/date-fns": "^2.6.0",
+  "devDependencies": {   
     "@types/lodash": "^4.14.191",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^8.0.2",

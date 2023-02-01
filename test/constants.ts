@@ -1,4 +1,4 @@
-import { toRRuleDateString } from '../src/rRuleDateStringFormat'
+import { toRRuleDateString } from '../src/dates'
 import { Frequency } from '../src/types'
 
 export const d = {

@@ -4,13 +4,13 @@ import {
     addMinutes,
     addMonths,
     addSeconds,
+    addWeeks,
     addYears,
 } from './addDatesHelper'
 
 export const eachDateOfInterval = (
     startDate: Date,
     endDate: Date,
-    maxCount: number = 0,
     dateUnitType:
         | 'milliseconds'
         | 'seconds'
@@ -20,7 +20,8 @@ export const eachDateOfInterval = (
         | 'weeks'
         | 'months'
         | 'years',
-    step: number = 1
+    step: number = 1,
+    maxCount: number = 0
 ): Date[] => {
     const endTime = endDate.getTime()
     const dates = []
@@ -45,25 +46,25 @@ export const eachDateOfInterval = (
 
         switch (dateUnitType) {
             case 'seconds':
-                currentDate = addSeconds(currentDate, count * step)
+                currentDate = addSeconds(startDate, count * step)
                 break
             case 'minutes':
-                currentDate = addMinutes(currentDate, count * step)
+                currentDate = addMinutes(startDate, count * step)
                 break
             case 'hours':
-                currentDate = addHours(currentDate, count * step)
+                currentDate = addHours(startDate, count * step)
                 break
             case 'days':
-                currentDate = addDays(currentDate, count * step)
+                currentDate = addDays(startDate, count * step)
                 break
             case 'weeks':
-                currentDate = addDays(currentDate, count * 7 * step)
+                currentDate = addWeeks(startDate, count * step)
                 break
             case 'months':
-                currentDate = addMonths(currentDate, count * step)
+                currentDate = addMonths(startDate, count * step)
                 break
             case 'years':
-                currentDate = addYears(currentDate, count * step)
+                currentDate = addYears(startDate, count * step)
                 break
 
             default:

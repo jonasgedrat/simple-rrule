@@ -1,7 +1,5 @@
 # simple-rrule.js
 
-Production Version 1.1.0+
-
 **Simple recurrence rules to get scheduler events for calendar dates.**
 
 simple-rrule.js expands recurrence dates from a rrule string.

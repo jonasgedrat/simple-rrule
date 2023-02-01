@@ -15,8 +15,6 @@ import {
     addMonths,
     addSeconds,
     addYears,
-} from './dates/addDatesHelper'
-import {
     differenceInDays,
     differenceInHours,
     differenceInMinutes,
@@ -24,11 +22,13 @@ import {
     differenceInSeconds,
     differenceInWeeks,
     differenceInYears,
-} from './dates/differenceHelper'
-import { eachDateOfInterval } from './dates/eachDateHelper'
-import { setByMonthByDay } from './dates/setByMonthByDay'
-import { getWeekDayName } from './dates/getWeekDayName'
-import { isBefore } from './dates/isBefore'
+    eachDateOfInterval,
+    getWeekDayName,
+    isBefore,
+    setByDay,
+    setByMonth,
+} from './dates'
+
 export interface IDateEvents {
     date: Date
     index: number
@@ -113,7 +113,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             dates = eachDateOfInterval(
                 interval.start,
                 interval.end,
-                0,
                 'minutes',
                 step.step
             )
@@ -123,7 +122,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             dates = eachDateOfInterval(
                 interval.start,
                 interval.end,
-                0,
                 'hours',
                 step.step
             )
@@ -133,7 +131,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             dates = eachDateOfInterval(
                 interval.start,
                 interval.end,
-                0,
                 'days',
                 step.step
             )
@@ -158,7 +155,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 const eachDay = eachDateOfInterval(
                     interval.start,
                     interval.end,
-                    0,
                     'days',
                     step.step
                 )
@@ -178,7 +174,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 dates = eachDateOfInterval(
                     interval.start,
                     interval.end,
-                    0,
                     'days',
                     step.step
                 )
@@ -186,6 +181,13 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
             break
         case Frequency.MONTHLY:
+            //generate all dates from dtStart
+            dates = eachMonthOfIntervalWithTime(
+                r.dtStart,
+                interval.end,
+                r.byMonthDay
+            )
+
             if (isBySetPos) {
                 dates = dates.reduce((acc: Date[], curr: Date) => {
                     const result = getBySetPos(
@@ -212,14 +214,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 break
             }
 
-            dates = eachMonthOfIntervalWithTime(
-                r.dtStart,
-                interval.end,
-                r.byMonthDay
-            )
-
             if (r.bySetPos === 0 && r.byMonthDay > 0) {
-                dates = dates.map((x) => new Date(x.setDate(r.byMonthDay)))
                 r.startIndexCount = 0
                 break
             }
@@ -278,7 +273,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
             if (r.bySetPos === 0 && r.byMonth > 0 && r.byMonthDay > 0) {
                 dates = dates.map((x) =>
-                    setByMonthByDay(x, r.byMonthDay, r.byMonth)
+                    setByMonth(setByDay(x, r.byMonthDay), r.byMonth)
                 )
                 r.startIndexCount = 0
                 break
@@ -287,40 +282,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             break
         default:
     }
-
-    //adjust hour/minute/second
-    switch (r.frequency) {
-        case Frequency.MINUTELY:
-            dates = dates.map((x) => {
-                return new Date(x.setSeconds(r.dtStart.getSeconds()))
-            })
-            break
-        case Frequency.HOURLY:
-            dates = dates.map((x) => {
-                const rH = new Date(x.setMinutes(r.dtStart.getMinutes()))
-                return new Date(rH.setSeconds(r.dtStart.getSeconds()))
-            })
-            break
-        case Frequency.DAILY:
-        case Frequency.WEEKLY:
-        case Frequency.MONTHLY:
-        case Frequency.YEARLY:
-            dates = dates.map((x) => {
-                return new Date(
-                    x.setUTCHours(
-                        r.dtStart.getUTCHours(),
-                        r.dtStart.getMinutes(),
-                        r.dtStart.getSeconds()
-                    )
-                )
-            })
-
-            break
-        default:
-    }
-
-    // console.log('start', r.dtStart)
-    // console.log('only dates', dates)
 
     let result: IDateEvents[] = []
 
@@ -331,19 +292,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
             result = dates.reduce((acc: IDateEvents[], curr) => {
                 index++
-
-                // console.log(
-                //     'curr',
-                //     curr,
-                //     curr.getTime(),
-                //     'dtStart',
-                //     r.dtStart,
-                //     r.dtStart.getTime(),
-                //     'startRangePeriod',
-                //     r.startRangePeriod,
-                //     r.startRangePeriod.getTime()
-                // )
-
                 if (
                     curr.getTime() >= r.dtStart.getTime() &&
                     curr.getTime() >= r.startRangePeriod.getTime()
@@ -376,8 +324,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
         }
         return filterResult
     })
-
-    // console.log('filtered result', result, r)
 
     return result
 }

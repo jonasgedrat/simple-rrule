@@ -40,7 +40,5 @@ export const fromRruleDateStringToDate = (dtString: string): Date => {
 
     const result = new Date(isoString)
 
-    //console.log(result, isoString)
-
     return result
 }

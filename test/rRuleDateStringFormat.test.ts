@@ -1,5 +1,5 @@
-import { fromRruleDateStringToDate } from './../src/rRuleDateStringFormat'
-import { toRRuleDateString } from '../src/rRuleDateStringFormat'
+import { fromRruleDateStringToDate, toRRuleDateString } from '../src/dates'
+
 const dateString = '2022-12-15T15:20:30.000Z'
 
 test('rRuleDateStringFormat', () => {
@@ -16,6 +16,7 @@ test('rRuleDateStringFormat', () => {
     expect(dateResult.toISOString()).toEqual(dateString)
     expect(dateResult).toEqual(originDate)
 })
+
 test('rRuleDateStringFormat non regular with milliseconds', () => {
     const dateResult = fromRruleDateStringToDate('20221215T152030123Z')
 

@@ -3,9 +3,7 @@ import { isBetween } from './numbers'
 
 import { Frequency, rRuleFields, Weekday } from './types'
 import { IRrule, rRuleDefaultValues, validateRrule } from './validators/rRule'
-import { fromRruleDateStringToDate } from './rRuleDateStringFormat'
-import { addHours } from './dates/addDatesHelper'
-import parseISO from 'date-fns/parseISO'
+import { addHours, fromRruleDateStringToDate } from './dates'
 
 export const parseRecurrenceFromString = (
     recurrenceString: string = '',
@@ -79,7 +77,7 @@ const parseRRule = (fields: string[] = [], weekStartsOn: Weekday) => {
                 result.count = parseInt(fieldValue)
                 break
             case rRuleFields.until:
-                result.until = parseISO(fieldValue)
+                result.until = fromRruleDateStringToDate(fieldValue)
                 break
 
             case rRuleFields.byDay:
