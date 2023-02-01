@@ -181,7 +181,6 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
             break
         case Frequency.MONTHLY:
-            //generate all dates from dtStart
             dates = eachMonthOfIntervalWithTime(
                 r.dtStart,
                 interval.end,
@@ -215,6 +214,8 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             }
 
             if (r.bySetPos === 0 && r.byMonthDay > 0) {
+                //dates = dates.map(x=>x>=)
+
                 r.startIndexCount = 0
                 break
             }

@@ -55,10 +55,11 @@ export const eachMonthOfIntervalWithTime = (
         throw new RangeError('Invalid interval')
     }
 
-    const _startDateBase =
-        byMonthDay > 0 && byMonthDay <= 31
-            ? new Date(startDate.setDate(byMonthDay))
-            : new Date(startDate)
+    const _startDateBase = new Date(startDate)
+
+    if (byMonthDay > 0 && byMonthDay <= 31) {
+        _startDateBase.setDate(byMonthDay)
+    }
 
     let currentDate = new Date(_startDateBase)
 
@@ -94,11 +95,14 @@ export const eachYearOfIntervalWithTime = (
         throw new RangeError('Invalid interval')
     }
 
-    let currentDate = new Date(startDate)
+    const _startDateBase = new Date(startDate)
 
     if (byMonthDay > 0 && byMonthDay <= 31) {
-        currentDate.setDate(byMonthDay)
+        _startDateBase.setDate(byMonthDay)
     }
+
+    let currentDate = new Date(_startDateBase)
+
     let count = 0
 
     while (currentDate.getTime() <= endTime) {
@@ -107,7 +111,7 @@ export const eachYearOfIntervalWithTime = (
         }
         count++
 
-        currentDate = addMonths(startDate, count * 12)
+        currentDate = addMonths(_startDateBase, count * 12)
     }
 
     return dates
