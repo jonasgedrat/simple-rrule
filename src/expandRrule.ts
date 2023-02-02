@@ -38,11 +38,6 @@ export interface IExpandResult {
     events: IDateEvents[]
 }
 
-type Interval = {
-    start: Date
-    end: Date
-}
-
 export const expandRRule = (
     rRulePayload: IRrule,
     startRangePeriod: Date,
@@ -95,44 +90,32 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
     if (isBefore(r.endRangePeriodOrUntil, r.firstEventInRangePeriod)) return []
 
-    const interval: Interval = {
-        start: r.firstEventInRangePeriod,
-        end: r.endRangePeriodOrUntil,
-    }
-
-    const step = {
-        step: r.frequency === Frequency.WEEKLY ? r.interval * 7 : r.interval,
-    }
-
     switch (r.frequency) {
         case Frequency.SECONDLY:
             //not implemented
             break
         case Frequency.MINUTELY:
-            // dates = eachMinuteOfInterval(interval, step)
             dates = eachDateOfInterval(
-                interval.start,
-                interval.end,
+                r.firstEventInRangePeriod,
+                r.endRangePeriodOrUntil,
                 'minutes',
-                step.step
+                r.interval
             )
             break
         case Frequency.HOURLY:
-            // dates = eachHourOfInterval(interval, step)
             dates = eachDateOfInterval(
-                interval.start,
-                interval.end,
+                r.firstEventInRangePeriod,
+                r.endRangePeriodOrUntil,
                 'hours',
-                step.step
+                r.interval
             )
             break
         case Frequency.DAILY:
-            // dates = eachDayOfInterval(interval, step)
             dates = eachDateOfInterval(
-                interval.start,
-                interval.end,
+                r.firstEventInRangePeriod,
+                r.endRangePeriodOrUntil,
                 'days',
-                step.step
+                r.interval
             )
 
             break
@@ -149,14 +132,11 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
                 r.startIndexCount = r.startIndexCount * weekDays.length
 
-                // const eachDay = eachDayOfInterval(interval, {
-                //     step: r.interval,
-                // })
                 const eachDay = eachDateOfInterval(
-                    interval.start,
-                    interval.end,
+                    r.firstEventInRangePeriod,
+                    r.endRangePeriodOrUntil,
                     'days',
-                    step.step
+                    r.interval
                 )
 
                 eachDay.map((day) => {
@@ -170,12 +150,11 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
                 dates = resultWeekly
             } else {
-                // dates = eachDayOfInterval(interval, step)
                 dates = eachDateOfInterval(
-                    interval.start,
-                    interval.end,
-                    'days',
-                    step.step
+                    r.firstEventInRangePeriod,
+                    r.endRangePeriodOrUntil,
+                    'weeks',
+                    r.interval
                 )
             }
 
@@ -183,7 +162,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
         case Frequency.MONTHLY:
             dates = eachMonthOfIntervalWithTime(
                 r.dtStart,
-                interval.end,
+                r.endRangePeriodOrUntil,
                 r.byMonthDay
             )
 
@@ -268,7 +247,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
             dates = eachYearOfIntervalWithTime(
                 r.dtStart,
-                interval.end,
+                r.endRangePeriodOrUntil,
                 r.byMonthDay
             )
 

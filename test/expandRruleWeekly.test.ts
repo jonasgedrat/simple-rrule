@@ -1,8 +1,38 @@
 import { addDays } from '../src/dates'
-import { expandRRule } from '../src/expandRrule'
+import { expandRRule, expandRRuleFromString } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
 import { Frequency, Weekday } from '../src/types'
 import { count, dtStart, d } from './constants'
+
+test(`expand rRule Weekly from string with range`, () => {
+    const rRule = `DTSTART:20221115T080000Z\nDTEND:20221115T090000Z\nRRULE:FREQ=WEEKLY;UNTIL=20221126T080000Z;BYDAY=MO,TH;WKST=SU`
+    const r = expandRRuleFromString(
+        rRule,
+        new Date('2022-10-01T13:30:45.000Z'),
+        new Date('2022-12-31T13:30:45.000Z')
+    )
+    const r2 = expandRRuleFromString(
+        rRule,
+        new Date('2022-11-22T13:30:45.000Z'),
+        new Date('2022-12-31T13:30:45.000Z')
+    )
+    //console.log(r)
+    //  { date: 2022-11-17T08:00:00.000Z, index: 1 },
+    //  { date: 2022-11-21T08:00:00.000Z, index: 2 },
+    //  { date: 2022-11-24T08:00:00.000Z, index: 3 }
+
+    expect(r).not.toBeUndefined()
+    expect(r2).not.toBeUndefined()
+    if (r) {
+        expect(r.events.length).toEqual(3)
+        expect(r.events[0].index).toEqual(1)
+        expect(r.events[0].date).toEqual(new Date('2022-11-17T08:00:00.000Z'))
+        expect(r.events[1].date).toEqual(new Date('2022-11-21T08:00:00.000Z'))
+        expect(r.events[2].date).toEqual(new Date('2022-11-24T08:00:00.000Z'))
+        expect(r.events[2].date).toEqual(new Date(r2.events[0].date))
+        expect(r.events[2].index).toEqual(r2.events[0].index)
+    }
+})
 
 // DTSTART:20221102T133000Z
 // RRULE:FREQ=WEEKLY;COUNT=12;INTERVAL=1;WKST=SU;BYDAY=MO,WE,FR
