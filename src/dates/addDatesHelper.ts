@@ -4,11 +4,6 @@ import {
     secondsInMinute,
 } from '../constants'
 
-// export const addMonths3 = (date: Date, months: number): Date => {
-//     const _dayjs = dayjs(date)
-//     return _dayjs.add(months, 'month').toDate()
-// }
-
 const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear()
     const monthIndex = date.getMonth()
@@ -29,13 +24,9 @@ export const addMonths = (date: Date, months: number) => {
     return newDate
 }
 
-// export const addYears = (date: Date, years: number): Date => {
-//     const _dayjs = dayjs(date)
-//     return _dayjs.add(years, 'year').toDate()
-// }
-export const addYears = (date: Date, years: number) =>
-    addMonths(date, years * 12)
-
+export const addYears = (date: Date, years: number) => {
+    return addMonths(date, years * 12)
+}
 export const addWeeks = (date: Date, weeks: number): Date => {
     return addHours(date, 24 * weeks * 7)
 }

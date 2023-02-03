@@ -458,6 +458,8 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
                 r.dtStart
             )
 
+            console.log(r, eventCountsFromDtStart)
+
             if (eventCountsFromDtStart > 0) {
                 result.firstEventInRangePeriod = addYears(
                     r.dtStart,

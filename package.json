@@ -34,8 +34,7 @@
     "analyze": "size-limit --why",
     "semantic-release": "semantic-release --branches main"
   },
-  "dependencies": {   
-    "dayjs": "^1.11.7",
+  "dependencies": {
     "yup": "^0.32.11"
   },
   "devDependencies": {
