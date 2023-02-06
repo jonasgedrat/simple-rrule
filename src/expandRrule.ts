@@ -194,6 +194,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
             if (r.bySetPos === 0 && r.byMonthDay > 0) {
                 //dates = dates.map(x=>x>=)
+                //set monthDay
 
                 r.startIndexCount = 0
                 break
@@ -457,8 +458,6 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
                 r.startRangePeriod,
                 r.dtStart
             )
-
-            console.log(r, eventCountsFromDtStart)
 
             if (eventCountsFromDtStart > 0) {
                 result.firstEventInRangePeriod = addYears(
