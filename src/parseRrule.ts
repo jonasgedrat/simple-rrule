@@ -48,6 +48,10 @@ export const parseRecurrenceFromString = (
     const _parseRRule = parseRRule(rRulePartsArray, weekStartsOn)
     rRule = { ...rRule, ..._parseRRule }
 
+    if (rRule.frequency.toString() === 'DAILY||') {
+        rRule.frequency === Frequency.DAILY
+    }
+
     const result = validateRrule(rRule)
 
     return result
