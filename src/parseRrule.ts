@@ -67,6 +67,10 @@ const parseRRule = (fields: string[] = [], weekStartsOn: Weekday) => {
 
         switch (fieldKey) {
             case rRuleFields.frequency:
+                if (fieldValue.includes('||')) {
+                    console.log()
+                }
+
                 result.frequency = fieldValue as Frequency
                 break
             case rRuleFields.wkst:
