@@ -4,6 +4,7 @@ import { isBetween } from './numbers'
 import { Frequency, rRuleFields, Weekday } from './types'
 import { IRrule, rRuleDefaultValues, validateRrule } from './validators/rRule'
 import { addHours, fromRruleDateStringToDate } from './dates'
+import { removeLastPipe } from './util'
 
 export const parseRecurrenceFromString = (
     recurrenceString: string = '',
@@ -12,14 +13,22 @@ export const parseRecurrenceFromString = (
     if (recurrenceString.trim() === '') return undefined
     if (recurrenceString.replaceAll(/\s/g, '') === '') return undefined
 
-    const str2 = recurrenceString.replace(/\n|\r/g, '|').replaceAll(/\s/g, '')
+    const str2 = recurrenceString
+        .replace(/\n|\r/g, '|')
+        .replaceAll(/\s/g, '')
+        .replaceAll('||', '|')
 
     const lines = str2.split('RRULE:')
 
-    const rRulePartsArray = lines[1].split(';').filter((x) => x !== '') //'FREQ=WEEKLY', 'INTERVAL=1', 'UNTIL=20221215T152030Z', 'WKST=SU'
+    const rRulePartsArray = removeLastPipe(lines[1])
+        .split(';')
+        .filter((x) => x !== '')
+    //'FREQ=WEEKLY', 'INTERVAL=1', 'UNTIL=20221215T152030Z', 'WKST=SU'
 
-    const lines2 = lines[0].split('|').filter((x) => x !== '') //'DTSTART:20221215T000000Z', 'DTEND:20221215T010000Z'
-
+    const lines2 = removeLastPipe(lines[0])
+        .split('|')
+        .filter((x) => x !== '')
+    //'DTSTART:20221215T000000Z', 'DTEND:20221215T010000Z'
     let rRule: IRrule = rRuleDefaultValues
 
     lines2.map((line) => {
@@ -47,11 +56,7 @@ export const parseRecurrenceFromString = (
 
     const _parseRRule = parseRRule(rRulePartsArray, weekStartsOn)
     rRule = { ...rRule, ..._parseRRule }
-
-    if (rRule.frequency.toString() === 'DAILY||') {
-        rRule.frequency === Frequency.DAILY
-    }
-
+    
     const result = validateRrule(rRule)
 
     return result
