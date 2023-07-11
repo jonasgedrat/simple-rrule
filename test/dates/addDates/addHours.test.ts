@@ -29,4 +29,3 @@ describe('addHours', () => {
         expect(isNaN(result as any)).toBeTruthy()
     })
 })
-

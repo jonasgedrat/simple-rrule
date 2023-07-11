@@ -4,7 +4,7 @@ import {
     eachYearOfIntervalWithTime,
 } from './util'
 
-import { Frequency, Weekday } from './types'
+import { ByDay, BySetPos, Frequency, Weekday } from './types'
 import { IRrule, IRuleExtended, validateRrule } from './validators/rRule'
 import { parseRecurrenceFromString } from './parseRrule'
 import { isWeekDayValid } from './validators/util'
@@ -23,6 +23,8 @@ import {
     differenceInWeeks,
     differenceInYears,
     eachDateOfInterval,
+    getStartOfWeekWithoutChangeTime,
+    getWeekDayFromDate,
     getWeekDayName,
     isBefore,
     setByDay,
@@ -127,7 +129,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
                 //throw error is weekDay is not valid
                 weekDays.map((d) => {
-                    isWeekDayValid(d)
+                    isWeekDayValid(d as ByDay)
                 })
 
                 r.startIndexCount = r.startIndexCount * weekDays.length
@@ -170,8 +172,8 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 dates = dates.reduce((acc: Date[], curr: Date) => {
                     const result = getBySetPos(
                         curr,
-                        r.byDay,
-                        r.bySetPos,
+                        r.byDay as ByDay,
+                        r.bySetPos as BySetPos,
                         r.count,
                         acc.length | 0
                     )
@@ -215,8 +217,8 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                             r.dtStart.getHours(),
                             r.dtStart.getMinutes()
                         ),
-                        r.byDay,
-                        r.bySetPos,
+                        r.byDay as ByDay,
+                        r.bySetPos as BySetPos,
                         r.count,
                         dates.length
                     )
@@ -423,10 +425,19 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
 
             break
         case Frequency.WEEKLY:
+            if (r.byDay.length > 1) {
+                setWeeklyFirstEvent(r)
+                result.firstEventInRangePeriod = r.firstEventInRangePeriod
+                break
+            }
+
+            //if not byDay then the first event is dtStart
+
             durationInFrequency = differenceInDays(
                 addDays(r.dtStart, r.interval * 7),
                 r.dtStart
             )
+
             durationFromStart = differenceInWeeks(r.startRangePeriod, r.dtStart)
 
             eventCountsFromDtStart = Math.ceil(
@@ -479,4 +490,31 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
     result.startIndexCount = eventCountsFromDtStart
 
     return result
+}
+
+const setWeeklyFirstEvent = (r: IRuleExtended) => {
+    if (!r.byDay) return
+    const weekDays = r.byDay?.split(',')
+    if (weekDays.length === 0) return
+
+    r.firstEventInRangePeriod = getStartOfWeekWithoutChangeTime(
+        r.dtStart,
+        r.wkst
+    )
+
+    const _dtStart = new Date(r.dtStart).getTime()
+
+    let fDt = new Date(r.firstEventInRangePeriod)
+    let count = 0
+
+    while (true) {
+        const t = addDays(fDt, count)
+        ++count
+        const weekDay = getWeekDayFromDate(t)
+        if (t.getTime() >= _dtStart && weekDays.includes(weekDay)) {
+            r.firstEventInRangePeriod = t
+            break
+        }
+        if (count > 100) break
+    }
 }

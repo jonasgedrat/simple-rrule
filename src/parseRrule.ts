@@ -56,7 +56,7 @@ export const parseRecurrenceFromString = (
 
     const _parseRRule = parseRRule(rRulePartsArray, weekStartsOn)
     rRule = { ...rRule, ..._parseRRule }
-    
+
     const result = validateRrule(rRule)
 
     return result

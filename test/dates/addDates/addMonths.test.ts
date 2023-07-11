@@ -44,4 +44,3 @@ describe('addMonths', () => {
         expect(isNaN(result)).toBeTruthy()
     })
 })
-

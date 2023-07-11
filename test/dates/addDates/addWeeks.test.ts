@@ -17,4 +17,3 @@ describe('addWeeks', () => {
         expect(date).toEqual(new Date(2014, 8, 1))
     })
 })
-

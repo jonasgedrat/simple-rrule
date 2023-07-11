@@ -9,9 +9,12 @@ export enum Frequency {
     SECONDLY = 'SECONDLY',
 }
 
-export type ByDay = 'SU' | 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA' | string
+export type ByDay = 'SU' | 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA'
 
-export type BySetPos = -1 | 0 | 1 | 2 | 3 | 4 | number
+export type Day = 0 | 1 | 2 | 3 | 4 | 5 | 6
+export type Month = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11
+
+export type BySetPos = -1 | 0 | 1 | 2 | 3 | 4
 
 export enum Weekday {
     Sunday = 'SU',

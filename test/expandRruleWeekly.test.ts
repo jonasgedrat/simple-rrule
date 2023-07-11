@@ -4,22 +4,76 @@ import { parseRecurrenceFromString } from '../src/parseRrule'
 import { Frequency, Weekday } from '../src/types'
 import { count, dtStart, d } from './constants'
 
+test(`expand rRule first date Weekly from string with range `, () => {
+    const rRule = `DTSTART:20230712T080000Z\nDTEND:20230712T090000Z\nRRULE:FREQ=WEEKLY;UNTIL=20241126T080000Z;BYDAY=MO,TH,SU;WKST=SU`
+    const r = expandRRuleFromString(
+        rRule,
+        new Date('2023-07-17T00:00:45.000Z'),
+        new Date('2023-07-24T13:30:45.000Z')
+    )
+    const r2 = expandRRuleFromString(
+        rRule,
+        new Date('2023-07-16T00:00:45.000Z'),
+        new Date('2023-07-31T13:30:45.000Z')
+    )
+
+    // console.table(r.events)
+    // console.table(r2.events)
+
+    //   │    0    │ 2023-07-17T08:00:00.000Z │   3   │
+    //   │    1    │ 2023-07-20T08:00:00.000Z │   4   │
+    //   │    2    │ 2023-07-23T08:00:00.000Z │   5   │
+    //   │    3    │ 2023-07-24T08:00:00.000Z │   6   │
+
+    //   │    0    │ 2023-07-16T08:00:00.000Z │   2   │
+    //   │    1    │ 2023-07-17T08:00:00.000Z │   3   │
+    //   │    2    │ 2023-07-20T08:00:00.000Z │   4   │
+    //   │    3    │ 2023-07-23T08:00:00.000Z │   5   │
+    //   │    4    │ 2023-07-24T08:00:00.000Z │   6   │
+    //   │    5    │ 2023-07-27T08:00:00.000Z │   7   │
+    //   │    6    │ 2023-07-30T08:00:00.000Z │   8   │
+    //   │    7    │ 2023-07-31T08:00:00.000Z │   9   │
+
+    expect(r).not.toBeUndefined()
+    expect(r2).not.toBeUndefined()
+    if (r) {
+        expect(r.events.length).toEqual(4)
+        expect(r.events[0].date).toEqual(new Date('2023-07-17T08:00:00.000Z'))
+        expect(r.events[1].date).toEqual(new Date('2023-07-20T08:00:00.000Z'))
+        expect(r.events[2].date).toEqual(new Date('2023-07-23T08:00:00.000Z'))
+        expect(r.events[2].date).toEqual(new Date(r2.events[3].date))
+        expect(r.events[2].index).toEqual(r2.events[3].index)
+    }
+})
+
+test(`expand rRule  Weekly from string with interval `, () => {
+    const rRule = `DTSTART:20230704T080000Z\nDTEND:20230704T090000Z\nRRULE:FREQ=WEEKLY;UNTIL=20241126T080000Z;BYDAY=MO,TU,WE,FR;INTERVAL=2;WKST=SU`
+    const r = expandRRuleFromString(
+        rRule,
+        new Date('2023-07-06T00:00:45.000Z'),
+        new Date('2023-07-24T13:30:45.000Z')
+    )
+
+    //console.table(r.events)
+    // console.table(r2.events)
+
+    expect(r).not.toBeUndefined()
+})
+
 test(`expand rRule Weekly from string with range`, () => {
     const rRule = `DTSTART:20221115T080000Z\nDTEND:20221115T090000Z\nRRULE:FREQ=WEEKLY;UNTIL=20221126T080000Z;BYDAY=MO,TH;WKST=SU`
     const r = expandRRuleFromString(
         rRule,
-        new Date('2022-10-01T13:30:45.000Z'),
+        new Date('2021-10-01T13:30:45.000Z'),
         new Date('2022-12-31T13:30:45.000Z')
     )
     const r2 = expandRRuleFromString(
         rRule,
-        new Date('2022-11-22T13:30:45.000Z'),
+        new Date('2022-11-21T08:00:01.000Z'),
         new Date('2022-12-31T13:30:45.000Z')
     )
-    //console.log(r)
-    //  { date: 2022-11-17T08:00:00.000Z, index: 1 },
-    //  { date: 2022-11-21T08:00:00.000Z, index: 2 },
-    //  { date: 2022-11-24T08:00:00.000Z, index: 3 }
+    // console.table(r.events)
+    // console.table(r2.events)
 
     expect(r).not.toBeUndefined()
     expect(r2).not.toBeUndefined()

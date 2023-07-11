@@ -1,6 +1,5 @@
 import { expandRRuleFromString } from '../src/expandRrule'
 
-
 const _startDate = new Date('2022-12-01T13:30:45.000Z')
 const _endDate = new Date('2022-12-31T13:30:45.001Z')
 
