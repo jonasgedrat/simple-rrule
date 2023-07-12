@@ -1,4 +1,6 @@
 {
+    "editor.formatOnSave": true,
+    "cSpell.ignoreRegExpList": ["/[(\\/\\/)|(\\/\\*)].*$/gm"],
     "cSpell.words": [
         "BYDAY",
         "BYEARDAY",

@@ -1,7 +1,7 @@
 import { isBySetPosValid } from './validators/util'
 import { isBetween } from './numbers'
 
-import { Frequency, rRuleFields, Weekday } from './types'
+import { BySetPos, Frequency, rRuleFields, Weekday } from './types'
 import { IRrule, rRuleDefaultValues, validateRrule } from './validators/rRule'
 import { addHours, fromRruleDateStringToDate } from './dates'
 import { removeLastPipe } from './util'
@@ -22,6 +22,7 @@ export const parseRecurrenceFromString = (
 
     const rRulePartsArray = removeLastPipe(lines[1])
         .split(';')
+        .map((x) => x.replaceAll('|', '').replaceAll(/\s/g, ''))
         .filter((x) => x !== '')
     //'FREQ=WEEKLY', 'INTERVAL=1', 'UNTIL=20221215T152030Z', 'WKST=SU'
 
@@ -113,7 +114,7 @@ const parseRRule = (fields: string[] = [], weekStartsOn: Weekday) => {
                 break
             case rRuleFields.bySetPos:
                 _v = Number(fieldValue)
-                if (isBySetPosValid(_v)) {
+                if (isBySetPosValid(_v as BySetPos)) {
                     result.bySetPos = _v
                 }
                 _v = undefined

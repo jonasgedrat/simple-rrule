@@ -132,24 +132,34 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                     isWeekDayValid(d as ByDay)
                 })
 
-                r.startIndexCount = r.startIndexCount * weekDays.length
+                let starPeriodDate = new Date(r.firstEventInRangePeriod)
+                let pastEvents = 0
 
-                const eachDay = eachDateOfInterval(
-                    r.firstEventInRangePeriod,
-                    r.endRangePeriodOrUntil,
-                    'days',
-                    r.interval
-                )
+                //semana anterior que teve evento
+                while (
+                    addDays(starPeriodDate, r.interval * 7) < r.startRangePeriod
+                ) {
+                    starPeriodDate = addDays(starPeriodDate, r.interval * 7)
+                    pastEvents = pastEvents + weekDays.length
+                }
 
-                eachDay.map((day) => {
-                    const dayOfWeek = getWeekDayName(day)
+                //crio os eventos a partir da ultima semana que teve eventos
+                while (starPeriodDate < r.endRangePeriodOrUntil) {
+                    let inWeekDate = new Date(starPeriodDate)
 
-                    if (weekDays?.includes(dayOfWeek)) {
-                        resultWeekly.push(day)
+                    for (let i = 1; i <= 7; i++) {
+                        if (weekDays?.includes(getWeekDayName(inWeekDate))) {
+                            resultWeekly.push(new Date(inWeekDate))
+                        }
+                        inWeekDate = addDays(inWeekDate, 1)
                     }
-                    return undefined
-                })
 
+                    starPeriodDate = new Date(
+                        addDays(starPeriodDate, r.interval * 7)
+                    )
+                }
+
+                r.startIndexCount = pastEvents
                 dates = resultWeekly
             } else {
                 dates = eachDateOfInterval(
