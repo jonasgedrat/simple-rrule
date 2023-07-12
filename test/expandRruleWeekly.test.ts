@@ -1,10 +1,40 @@
-import { addDays } from '../src/dates'
+import { addDays, addWeeks } from '../src/dates'
 import { expandRRule, expandRRuleFromString } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
 import { Frequency, Weekday } from '../src/types'
 import { count, dtStart, d } from './constants'
 
-test(`expand rRule first date Weekly from string with range and interval `, () => {
+//test
+test(`expand rRule weekly intervals and ranges `, () => {
+    for (let i = 2; i <= 14; i++) {
+        const rRule = `DTSTART:20230602T080000Z\nDTEND:20230702T090000Z\nRRULE:
+    FREQ=WEEKLY;
+    INTERVAL=${i};    
+    BYDAY=MO,TH,SU;WKST=SU`
+
+        const r = expandRRuleFromString(
+            rRule,
+            new Date(`2023-07-06T00:00:45.000Z`),
+            addWeeks(new Date(`2023-07-25T00:00:45.000Z`), i + 7)
+        )
+        const r2 = expandRRuleFromString(
+            rRule,
+            addWeeks(new Date(`2023-07-25T00:00:45.000Z`), i),
+            addWeeks(new Date(`2023-07-25T00:00:45.000Z`), i + i)
+        )
+
+        expect(r).not.toBeUndefined()
+        expect(r2).not.toBeUndefined()
+        if (r) {
+            r2.events.map((x) => {
+                const o = r.events.find((y) => y.index === x.index)
+                expect(o?.date).toEqual(x.date)
+            })
+        }
+    }
+})
+
+test(`expand rRule Weekly from string with range and interval `, () => {
     const rRule = `DTSTART:20230602T080000Z\nDTEND:20230702T090000Z\nRRULE:
     FREQ=WEEKLY;
     INTERVAL=3;
