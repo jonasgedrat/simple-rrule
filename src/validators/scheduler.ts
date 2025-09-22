@@ -1,61 +1,47 @@
-import * as yup from 'yup'
+import * as z from 'zod'
 import { addHours } from '../dates'
 import { Frequency, Weekday } from '../types'
 
-const schedulerEditorValidator = yup.object({
-    id: yup.string().required().default('0'),
-    title: yup.string().min(2).default('--').required(),
-    dtStart: yup.date().default(new Date()).required(),
-    dtEnd: yup
-        .date()
-        .default(addHours(new Date(), 1))
-        .min(yup.ref('dtStart'))
-        .when('dtStart', {
-            is: (dtStart: Date) => !!dtStart,
-            then: (schema) => schema.min(yup.ref('dtStart')),
-            otherwise: (schema) => schema,
-        }),
-    eventBackgroundColor: yup.string(),
+const schedulerEditorSchema = z
+    .object({
+        id: z.string().default('0'),
+        title: z.string().min(2).default('--'),
+        dtStart: z.date().default(() => new Date()),
+        dtEnd: z.date().default(() => addHours(new Date(), 1)),
+        eventBackgroundColor: z.string().optional(),
 
-    frequency: yup.mixed<Frequency>().default(Frequency.NEVER).required(),
-    interval: yup.number().min(1).default(1).positive().required(),
-    count: yup.number().min(0).default(0).required(),
-    until: yup.date(),
+        frequency: z.enum(Frequency).default(Frequency.NEVER),
+        interval: z.number().min(1).default(1),
+        count: z.number().min(0).default(0),
+        until: z.date().optional(),
 
-    byDay: yup.string().default(''),
-    byMonth: yup.number().min(0).default(0).max(12).required(),
-    byMonthDay: yup.number().min(0).default(0).max(31).required(),
-    bySetPos: yup.number().min(-1).default(0).max(4).required(),
+        byDay: z.string().default(''),
+        byMonth: z.number().min(0).max(12).default(0),
+        byMonthDay: z.number().min(0).max(31).default(0),
+        bySetPos: z.number().min(-1).max(4).default(0),
 
-    wkst: yup.mixed<Weekday>().default(Weekday.Sunday),
-})
+        wkst: z.enum(Weekday).default(Weekday.Sunday),
+    })
+    .refine(
+        (data) => {
+            return !data.dtStart || !data.dtEnd || data.dtEnd >= data.dtStart
+        },
+        {
+            message: 'End date must be after start date',
+            path: ['dtEnd'],
+        }
+    )
 
-interface ISchedulerEditor {
-    id: string
-    title: string
-    dtStart: Date
-    dtEnd: Date
-    eventBackgroundColor?: string
-    frequency: Frequency
-    interval: number
-    count: number
-    until?: Date
-    byDay: string
-    byMonth: number
-    byMonthDay: number
-    bySetPos: number
-    wkst: Weekday
-}
+type ISchedulerEditor = z.infer<typeof schedulerEditorSchema>
 
 const schedulerEditorDefaultValues: ISchedulerEditor =
-    schedulerEditorValidator.cast({}) as ISchedulerEditor
+    schedulerEditorSchema.parse({})
 
 const validateSchedulerEditor = (
     schedulerEditor: ISchedulerEditor
 ): ISchedulerEditor => {
     try {
-        schedulerEditorValidator.validateSync(schedulerEditor)
-        return schedulerEditor
+        return schedulerEditorSchema.parse(schedulerEditor)
     } catch (err) {
         console.error(
             `\nValidation error on schedulerEditor schema`,
@@ -73,7 +59,7 @@ const validateSchedulerEditor = (
 }
 
 export {
-    schedulerEditorValidator,
+    schedulerEditorSchema,
     schedulerEditorDefaultValues,
     validateSchedulerEditor,
 }

@@ -1,47 +1,37 @@
-import * as yup from 'yup'
+import * as z from 'zod'
 import { addHours } from '../dates'
 import { Frequency, Weekday } from '../types'
 
-const rRuleValidator = yup.object({
-    dtStart: yup.date().default(new Date()).required(),
-    dtEnd: yup
-        .date()
-        .default(addHours(new Date(), 1))
-        .min(yup.ref('dtStart'))
-        .when('dtStart', {
-            is: (dtStart: Date) => !!dtStart,
-            then: (schema) => schema.min(yup.ref('dtStart')),
-            otherwise: (schema) => schema,
-        }),
+const rRuleSchema = z
+    .object({
+        dtStart: z.date().default(() => new Date()),
+        dtEnd: z.date().default(() => addHours(new Date(), 1)),
 
-    frequency: yup.mixed<Frequency>().default(Frequency.NEVER).required(),
-    interval: yup.number().min(1).default(1).positive().required(),
-    count: yup.number().min(0).default(0).required(),
-    until: yup.date(),
+        frequency: z.enum(Frequency).default(Frequency.NEVER),
+        interval: z.number().min(1).default(1),
+        count: z.number().min(0).default(0),
+        until: z.date().optional(),
 
-    byDay: yup.string().default(''),
-    byMonth: yup.number().min(0).default(0).max(12).required(),
-    byMonthDay: yup.number().min(0).default(0).max(31).required(),
-    bySetPos: yup.number().min(-1).default(0).max(4).required(),
+        byDay: z.string().default(''),
+        byMonth: z.number().min(0).max(12).default(0),
+        byMonthDay: z.number().min(0).max(31).default(0),
+        bySetPos: z.number().min(-1).max(4).default(0),
 
-    wkst: yup.mixed<Weekday>().default(Weekday.Sunday),
-})
+        wkst: z.nativeEnum(Weekday).default(Weekday.Sunday),
+    })
+    .refine(
+        (data) => {
+            return !data.dtStart || !data.dtEnd || data.dtEnd >= data.dtStart
+        },
+        {
+            message: 'End date must be after start date',
+            path: ['dtEnd'],
+        }
+    )
 
-interface IRrule {
-    dtStart: Date
-    dtEnd: Date
-    frequency: Frequency
-    interval: number
-    count: number
-    until?: Date
-    byDay: string
-    byMonth: number
-    byMonthDay: number
-    bySetPos: number
-    wkst: Weekday
-}
+type IRrule = z.infer<typeof rRuleSchema>
 
-const rRuleDefaultValues: IRrule = rRuleValidator.cast({}) as IRrule
+const rRuleDefaultValues: IRrule = rRuleSchema.parse({})
 
 interface IRuleExtended extends IRrule {
     count: number
@@ -57,8 +47,7 @@ interface IRuleExtended extends IRrule {
 
 const validateRrule = (rRule: IRrule): IRrule => {
     try {
-        rRuleValidator.validateSync(rRule)
-        return rRule
+        return rRuleSchema.parse(rRule)
     } catch (err) {
         console.error(`\nValidation error on rRule schema`, rRule, err, '\n')
         const error = {
@@ -70,6 +59,6 @@ const validateRrule = (rRule: IRrule): IRrule => {
     }
 }
 
-export { rRuleValidator, rRuleDefaultValues, validateRrule }
+export { rRuleSchema, rRuleDefaultValues, validateRrule }
 
 export type { IRrule, IRuleExtended }

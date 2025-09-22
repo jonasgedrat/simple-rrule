@@ -1,13 +1,16 @@
-import * as Yup from 'yup'
+import * as z from 'zod'
 import { ByDay, BySetPos } from './../types'
 export const days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
 
 export const isWeekDayValid = (byDay: ByDay) => {
-    const byDayValid = Yup.mixed().oneOf(days)
-    return byDayValid.validateSync(byDay)
+    const byDayValid = z.enum(days as [string, ...string[]])
+    return byDayValid.parse(byDay)
 }
 
 export const isBySetPosValid = (bySetPos: BySetPos) => {
-    const bySetPosValid = Yup.mixed().oneOf([-1, 1, 2, 3, 4])
-    return bySetPosValid.validateSync(bySetPos)
+    const validValues = [-1, 0, 1, 2, 3, 4]
+    if (!validValues.includes(bySetPos)) {
+        throw new Error(`Invalid bySetPos value: ${bySetPos}`)
+    }
+    return bySetPos
 }

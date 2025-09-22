@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest'
 import { addSeconds } from '../../../src/dates'
 
 describe('addSeconds', () => {

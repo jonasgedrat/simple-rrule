@@ -36,9 +36,6 @@
     "analyze": "size-limit --why",
     "semantic-release": "semantic-release --branches main"
   },
-  "dependencies": {
-    "yup": "^1.7.1"
-  },
   "devDependencies": {
     "@vitest/coverage-v8": "3.2.4",
     "@vitest/ui": "3.2.4",
@@ -56,5 +53,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "zod": "4.1.11"
   }
 }

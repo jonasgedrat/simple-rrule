@@ -6,6 +6,12 @@ export default defineConfig({
         environment: 'node',
         include: ['test/**/*.{test,spec}.{js,ts}'],
         exclude: ['node_modules', 'dist'],
+        typecheck: {
+            enabled: true,
+            ignoreSourceErrors: false,
+            checker: 'tsc',
+            tsconfig: './tsconfig.json',
+        },
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html'],
