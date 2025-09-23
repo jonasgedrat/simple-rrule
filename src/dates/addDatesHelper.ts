@@ -4,7 +4,7 @@ import {
     secondsInMinute,
 } from '../constants'
 
-const getDaysInMonth = (date: Date) => {
+export const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear()
     const monthIndex = date.getMonth()
     const lastDayOfMonth = new Date(0)
