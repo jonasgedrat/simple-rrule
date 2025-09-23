@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest'
 import { addDays, addWeeks } from '../src/dates'
 import { expandRRule, expandRRuleFromString } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
-import { Frequency, Weekday } from '../src/types'
 import { count, dtStart, d } from './constants'
 
 //test
@@ -156,14 +155,14 @@ describe('expandRruleWeekly', () => {
     })
 
     it(`expandRRule Weekly`, () => {
-        const rRuleString = `${dtStart}\nRRULE:FREQ=${Frequency.WEEKLY};INTERVAL=1;COUNT=${count};BYDAY=MO,WE,FR;WKST=SU`
+        const rRuleString = `${dtStart}\nRRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=${count};BYDAY=MO,WE,FR;WKST=SU`
 
-        const rRule = parseRecurrenceFromString(rRuleString, Weekday.Sunday)
+        const rRule = parseRecurrenceFromString(rRuleString, 'SU')
         expect(rRule).not.toBeUndefined()
 
         if (rRule) {
             expect(rRule.interval).toEqual(1)
-            expect(rRule.frequency).toEqual(Frequency.WEEKLY)
+            expect(rRule.frequency).toEqual('WEEKLY')
 
             const startPeriod = addDays(rRule.dtStart, 7)
             const endPeriod = addDays(rRule.dtStart, 14)

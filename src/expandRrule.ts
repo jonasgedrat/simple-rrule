@@ -4,7 +4,7 @@ import {
     eachYearOfIntervalWithTime,
 } from './util'
 
-import { ByDay, BySetPos, Frequency, Weekday } from './types'
+import { ByDay, BySetPos } from './types'
 import { IRrule, IRuleExtended, validateRrule } from './validators/rRule'
 import { parseRecurrenceFromString } from './parseRrule'
 import { isWeekDayValid } from './validators/util'
@@ -74,7 +74,7 @@ export const expandRRuleFromString = (
     startRangePeriod: Date,
     endRangePeriod: Date
 ): IExpandResult => {
-    const rRule2 = parseRecurrenceFromString(rRuleString, Weekday.Sunday)
+    const rRule2 = parseRecurrenceFromString(rRuleString, 'SU')
     return expandRRule(rRule2!!, startRangePeriod, endRangePeriod)
 }
 
@@ -82,21 +82,19 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
     let dates: Date[] = []
 
     const isBySetPos =
-        (r.bySetPos !== 0 &&
-            r.byDay !== '' &&
-            r.frequency === Frequency.MONTHLY) ||
+        (r.bySetPos !== 0 && r.byDay !== '' && r.frequency === 'MONTHLY') ||
         (r.bySetPos !== 0 &&
             r.byMonth !== 0 &&
             r.byDay !== '' &&
-            r.frequency === Frequency.YEARLY)
+            r.frequency === 'YEARLY')
 
     if (isBefore(r.endRangePeriodOrUntil, r.firstEventInRangePeriod)) return []
 
     switch (r.frequency) {
-        case Frequency.SECONDLY:
+        case 'SECONDLY':
             //not implemented
             break
-        case Frequency.MINUTELY:
+        case 'MINUTELY':
             dates = eachDateOfInterval(
                 r.firstEventInRangePeriod,
                 r.endRangePeriodOrUntil,
@@ -104,7 +102,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 r.interval
             )
             break
-        case Frequency.HOURLY:
+        case 'HOURLY':
             dates = eachDateOfInterval(
                 r.firstEventInRangePeriod,
                 r.endRangePeriodOrUntil,
@@ -112,7 +110,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 r.interval
             )
             break
-        case Frequency.DAILY:
+        case 'DAILY':
             dates = eachDateOfInterval(
                 r.firstEventInRangePeriod,
                 r.endRangePeriodOrUntil,
@@ -121,7 +119,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             )
 
             break
-        case Frequency.WEEKLY:
+        case 'WEEKLY':
             if (r.byDay && r.byDay.length > 0) {
                 let resultWeekly: Date[] = []
 
@@ -171,7 +169,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             }
 
             break
-        case Frequency.MONTHLY:
+        case 'MONTHLY':
             dates = eachMonthOfIntervalWithTime(
                 r.dtStart,
                 r.endRangePeriodOrUntil,
@@ -214,7 +212,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
             break
 
-        case Frequency.YEARLY:
+        case 'YEARLY':
             if (isBySetPos) {
                 let currentYear = r.dtStart.getFullYear()
                 //infinite loop
@@ -279,8 +277,8 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
     let result: IDateEvents[] = []
 
     switch (r.frequency) {
-        case Frequency.MONTHLY:
-        case Frequency.YEARLY:
+        case 'MONTHLY':
+        case 'YEARLY':
             let index = 0
 
             result = dates.reduce((acc: IDateEvents[], curr) => {
@@ -384,10 +382,10 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
     let durationFromStart = 0
     let eventCountsFromDtStart = 0
     switch (r.frequency) {
-        case Frequency.SECONDLY:
+        case 'SECONDLY':
             //not implemented
             break
-        case Frequency.MINUTELY:
+        case 'MINUTELY':
             durationInFrequency = differenceInMinutes(
                 addDays(r.dtStart, r.interval),
                 r.dtStart
@@ -405,7 +403,7 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
             )
 
             break
-        case Frequency.HOURLY:
+        case 'HOURLY':
             durationInFrequency = differenceInHours(
                 addDays(r.dtStart, r.interval),
                 r.dtStart
@@ -419,7 +417,7 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
                 eventCountsFromDtStart * r.interval
             )
             break
-        case Frequency.DAILY:
+        case 'DAILY':
             durationInFrequency = differenceInDays(
                 addDays(r.dtStart, r.interval),
                 r.dtStart
@@ -434,7 +432,7 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
             )
 
             break
-        case Frequency.WEEKLY:
+        case 'WEEKLY':
             if (r.byDay.length > 1) {
                 setWeeklyFirstEvent(r)
                 result.firstEventInRangePeriod = r.firstEventInRangePeriod
@@ -460,7 +458,7 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
             )
 
             break
-        case Frequency.MONTHLY:
+        case 'MONTHLY':
             eventCountsFromDtStart = differenceInMonths(
                 r.startRangePeriod,
                 r.dtStart
@@ -474,7 +472,7 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
             }
 
             break
-        case Frequency.YEARLY:
+        case 'YEARLY':
             eventCountsFromDtStart = differenceInYears(
                 r.startRangePeriod,
                 r.dtStart

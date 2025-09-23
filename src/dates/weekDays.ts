@@ -1,14 +1,6 @@
-import { Day, Weekday } from '../types'
+import { Day, Weekday, WeekdayValuesList } from '../types'
 
-export const allDays = [
-    Weekday.Sunday,
-    Weekday.Monday,
-    Weekday.Tuesday,
-    Weekday.Wednesday,
-    Weekday.Thursday,
-    Weekday.Friday,
-    Weekday.Saturday,
-]
+export const allDays = WeekdayValuesList
 
 export interface IWeekDayInfo {
     weekDay: Weekday
@@ -29,31 +21,31 @@ export const getWeekDayFromDate = (date: Date): Weekday => {
 
 export const weekDayInfoList: IWeekDayInfo[] = [
     {
-        weekDay: Weekday.Sunday,
+        weekDay: 'SU',
         weekDayIndex: 0,
     },
     {
-        weekDay: Weekday.Monday,
+        weekDay: 'MO',
         weekDayIndex: 1,
     },
     {
-        weekDay: Weekday.Tuesday,
+        weekDay: 'TU',
         weekDayIndex: 2,
     },
     {
-        weekDay: Weekday.Wednesday,
+        weekDay: 'WE',
         weekDayIndex: 3,
     },
     {
-        weekDay: Weekday.Thursday,
+        weekDay: 'TH',
         weekDayIndex: 4,
     },
     {
-        weekDay: Weekday.Friday,
+        weekDay: 'FR',
         weekDayIndex: 5,
     },
     {
-        weekDay: Weekday.Saturday,
+        weekDay: 'SA',
         weekDayIndex: 6,
     },
 ]

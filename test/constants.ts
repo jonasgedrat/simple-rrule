@@ -22,11 +22,11 @@ export const today = new Date(
     d.second
 )
 
-export const frequencies = [
-    Frequency.MINUTELY,
-    Frequency.HOURLY,
-    Frequency.DAILY,
-    Frequency.WEEKLY,
+export const frequencies: Frequency[] = [
+    'MINUTELY',
+    'HOURLY',
+    'DAILY',
+    'WEEKLY',
 ]
 
 export const dtStart = `DTSTART:${toRRuleDateString(today)}`

@@ -3,25 +3,25 @@ import { Weekday } from './types'
 export const parseWeekDay = (weekDay: Weekday): 0 | 1 | 2 | 3 | 4 | 5 | 6 => {
     let result: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 0
     switch (weekDay) {
-        case Weekday.Sunday:
+        case 'SU':
             result = 0
             break
-        case Weekday.Monday:
+        case 'MO':
             result = 1
             break
-        case Weekday.Tuesday:
+        case 'TU':
             result = 2
             break
-        case Weekday.Wednesday:
+        case 'WE':
             result = 3
             break
-        case Weekday.Thursday:
+        case 'TH':
             result = 4
             break
-        case Weekday.Friday:
+        case 'FR':
             result = 5
             break
-        case Weekday.Saturday:
+        case 'SA':
             result = 6
             break
         default:

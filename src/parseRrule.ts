@@ -8,7 +8,7 @@ import { removeLastPipe } from './util'
 
 export const parseRecurrenceFromString = (
     recurrenceString: string = '',
-    weekStartsOn: Weekday = Weekday.Sunday
+    weekStartsOn: Weekday = 'SU'
 ): IRrule | undefined => {
     if (recurrenceString.trim() === '') return undefined
     if (recurrenceString.replaceAll(/\s/g, '') === '') return undefined

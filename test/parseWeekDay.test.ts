@@ -14,13 +14,13 @@ describe('parseWeekDay', () => {
     })
 
     it('should handle weekday enum values correctly', () => {
-        expect(parseWeekDay(Weekday.Sunday)).toBe(0)
-        expect(parseWeekDay(Weekday.Monday)).toBe(1)
-        expect(parseWeekDay(Weekday.Tuesday)).toBe(2)
-        expect(parseWeekDay(Weekday.Wednesday)).toBe(3)
-        expect(parseWeekDay(Weekday.Thursday)).toBe(4)
-        expect(parseWeekDay(Weekday.Friday)).toBe(5)
-        expect(parseWeekDay(Weekday.Saturday)).toBe(6)
+        expect(parseWeekDay('SU')).toBe(0)
+        expect(parseWeekDay('MO')).toBe(1)
+        expect(parseWeekDay('TU')).toBe(2)
+        expect(parseWeekDay('WE')).toBe(3)
+        expect(parseWeekDay('TH')).toBe(4)
+        expect(parseWeekDay('FR')).toBe(5)
+        expect(parseWeekDay('SA')).toBe(6)
     })
 
     it('should handle invalid inputs gracefully', () => {

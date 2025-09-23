@@ -1,12 +1,12 @@
 import { toRRuleDateString } from './dates'
-import { rRuleFields, Frequency } from './types'
+import { rRuleFields } from './types'
 import {
     ISchedulerEditor,
     validateSchedulerEditor,
 } from './validators/scheduler'
 
 export const getRRuleString = (payload: ISchedulerEditor) => {
-    if (payload.frequency === Frequency.NEVER) {
+    if (payload.frequency === 'NEVER') {
         return ''
     }
 
@@ -25,11 +25,11 @@ export const getRRuleString = (payload: ISchedulerEditor) => {
         rRuleString += `;${rRuleFields.until}=${toRRuleDateString(f.until)}`
     }
 
-    if (f.frequency === Frequency.YEARLY && f.byMonth > 0) {
+    if (f.frequency === 'YEARLY' && f.byMonth > 0) {
         rRuleString += `;${rRuleFields.byMonth}=${f.byMonth}`
     }
 
-    if (f.frequency === Frequency.MONTHLY && f.byMonthDay > 0) {
+    if (f.frequency === 'MONTHLY' && f.byMonthDay > 0) {
         rRuleString += `;${rRuleFields.byMonthDay}=${f.byMonthDay}`
     }
 

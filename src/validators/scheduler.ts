@@ -1,7 +1,7 @@
 import * as z from 'zod'
 import { rRuleSchema, rRuleDefaultValues } from './rRule'
 
-const schedulerEditorSchema = rRuleSchema.extend({
+const schedulerEditorSchema = rRuleSchema.safeExtend({
     id: z.string(),
     title: z.string().min(2),
     eventBackgroundColor: z.string().optional(),
@@ -17,10 +17,10 @@ const schedulerEditorDefaultValues: ISchedulerEditor = {
 
 const validateSchedulerEditor = (
     schedulerEditor: ISchedulerEditor
-): ISchedulerEditor | z.ZodError => {
+): ISchedulerEditor => {
     const result = schedulerEditorSchema.safeParse(schedulerEditor)
     if (!result.success) {
-        return result.error
+        throw result.error
     }
     return result.data
 }

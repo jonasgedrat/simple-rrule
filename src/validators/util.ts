@@ -1,7 +1,5 @@
 import { ByDay, ByDayValuesList, BySetPos } from './../types'
 
-// export const days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
-
 export const isWeekDayValid = (byDay: ByDay) => {
     return ByDayValuesList.includes(byDay)
 }

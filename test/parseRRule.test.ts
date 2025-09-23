@@ -1,9 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { getRRuleString } from '../src/getRrule'
-import { Frequency } from '../src/types'
 import { parseRecurrenceFromString } from '../src/parseRrule'
 import { toRRuleDateString } from '../src/dates'
-import { Weekday } from '../src/types'
 import { schedulerEditorDefaultValues } from '../src/validators/scheduler'
 
 let d = {
@@ -23,10 +21,10 @@ describe('parseRRule', () => {
     it(`parseRecurrenceFromString with poor rRule string`, () => {
         const s = `${dtStart}  RRULE:FREQ=WEEKLY;INTERVAL=1;UNTIL=20221215T152030Z;WKST=SU     `
 
-        const r = parseRecurrenceFromString(s, Weekday.Sunday)
+        const r = parseRecurrenceFromString(s, 'SU')
         expect(r).not.toBeUndefined()
         if (r) {
-            expect(r.frequency).toEqual(Frequency.WEEKLY)
+            expect(r.frequency).toEqual('WEEKLY')
             expect(r.interval).toEqual(1)
             expect(r.dtStart).toEqual(d.dtStart)
             expect(r.until).toEqual(new Date('2022-12-15T15:20:30.000Z'))
@@ -35,10 +33,10 @@ describe('parseRRule', () => {
 
     it(`parseRecurrenceFromString  RRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=3;WKST=SU`, () => {
         const s = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=WEEKLY;INTERVAL=1;COUNT=3;WKST=SU`
-        const r = parseRecurrenceFromString(s, Weekday.Sunday)
+        const r = parseRecurrenceFromString(s, 'SU')
         expect(r).not.toBeUndefined()
         if (r) {
-            expect(r.frequency).toEqual(Frequency.WEEKLY)
+            expect(r.frequency).toEqual('WEEKLY')
             expect(r.interval).toEqual(1)
             expect(r.count).toEqual(3)
             expect(r.dtStart.toISOString()).toEqual('2022-11-01T13:30:45.000Z')
@@ -49,11 +47,11 @@ describe('parseRRule', () => {
 
     it(`parseRecurrenceFromString  RRULE:FREQ=DAILY;INTERVAL=99;COUNT=99;WKST=SU`, () => {
         const s = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=DAILY;INTERVAL=99;COUNT=99;WKST=SU`
-        const r = parseRecurrenceFromString(s, Weekday.Sunday)
+        const r = parseRecurrenceFromString(s, 'SU')
 
         expect(r).not.toBeUndefined()
         if (r) {
-            expect(r.frequency).toEqual(Frequency.DAILY)
+            expect(r.frequency).toEqual('DAILY')
             expect(r.interval).toEqual(99)
             expect(r.count).toEqual(99)
             expect(r.dtStart.toISOString()).toEqual('2022-11-01T13:30:45.000Z')
@@ -65,7 +63,7 @@ describe('parseRRule', () => {
     it(`getRRuleString AND parseRecurrenceFromString test1`, () => {
         const s = getRRuleString({
             ...schedulerEditorDefaultValues,
-            frequency: Frequency.HOURLY,
+            frequency: 'HOURLY',
         })
         const r = parseRecurrenceFromString(s)
 
@@ -85,7 +83,7 @@ describe('parseRRule', () => {
     it(`getRRuleString AND parseRecurrenceFromString test2`, () => {
         const s = getRRuleString({
             ...schedulerEditorDefaultValues,
-            frequency: Frequency.WEEKLY,
+            frequency: 'WEEKLY',
             byDay: 'MO,FR',
         })
         const r = parseRecurrenceFromString(s)
@@ -106,7 +104,7 @@ describe('parseRRule', () => {
     it(`getRRuleString AND parseRecurrenceFromString test3`, () => {
         const s = getRRuleString({
             ...schedulerEditorDefaultValues,
-            frequency: Frequency.MONTHLY,
+            frequency: 'MONTHLY',
             bySetPos: 1,
         })
         const r = parseRecurrenceFromString(s)
@@ -127,7 +125,7 @@ describe('parseRRule', () => {
     it(`getRRuleString AND parseRecurrenceFromString test4`, () => {
         const s = getRRuleString({
             ...schedulerEditorDefaultValues,
-            frequency: Frequency.MONTHLY,
+            frequency: 'MONTHLY',
             bySetPos: 1,
             byMonthDay: 2,
         })
@@ -149,7 +147,7 @@ describe('parseRRule', () => {
     it(`getRRuleString AND parseRecurrenceFromString test5`, () => {
         const s = getRRuleString({
             ...schedulerEditorDefaultValues,
-            frequency: Frequency.YEARLY,
+            frequency: 'YEARLY',
             bySetPos: -1,
             byMonthDay: 12,
             byMonth: 3,

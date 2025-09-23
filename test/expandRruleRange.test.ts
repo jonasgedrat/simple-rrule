@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { expandRRule } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
-import { Frequency, Weekday } from '../src/types'
 import { dtStart, intervals, d, frequencies } from './constants'
 
 const rangeStartInterval = 27
@@ -15,10 +14,7 @@ describe('expandRruleRange', () => {
             it(`expandRRule Range frequency: ${frequency} interval: ${interval} `, () => {
                 const rRuleString = `${dtStart}\nRRULE:FREQ=${frequency};INTERVAL=${interval};WKST=SU`
 
-                const rRule = parseRecurrenceFromString(
-                    rRuleString,
-                    Weekday.Sunday
-                )
+                const rRule = parseRecurrenceFromString(rRuleString, 'SU')
                 expect(rRule).not.toBeUndefined()
 
                 if (rRule) {
@@ -29,7 +25,7 @@ describe('expandRruleRange', () => {
                     let endPeriod = new Date()
 
                     switch (frequency) {
-                        case Frequency.MINUTELY:
+                        case 'MINUTELY':
                             startPeriod = new Date(
                                 d.year,
                                 d.month,
@@ -47,7 +43,7 @@ describe('expandRruleRange', () => {
                                 d.second
                             )
                             break
-                        case Frequency.HOURLY:
+                        case 'HOURLY':
                             startPeriod = new Date(
                                 d.year,
                                 d.month,
@@ -66,7 +62,7 @@ describe('expandRruleRange', () => {
                             )
 
                             break
-                        case Frequency.DAILY:
+                        case 'DAILY':
                             startPeriod = new Date(
                                 d.year,
                                 d.month,
@@ -85,7 +81,7 @@ describe('expandRruleRange', () => {
                             )
 
                             break
-                        case Frequency.WEEKLY:
+                        case 'WEEKLY':
                             startPeriod = new Date(
                                 d.year,
                                 d.month,
@@ -118,7 +114,7 @@ describe('expandRruleRange', () => {
                     expect(lastEvent?.index).toEqual(rangeEndInterval + 1)
 
                     switch (frequency) {
-                        case Frequency.MINUTELY:
+                        case 'MINUTELY':
                             expect(ex.events[0].date).toEqual(
                                 new Date(
                                     d.year,
@@ -132,7 +128,7 @@ describe('expandRruleRange', () => {
                                 )
                             )
                             break
-                        case Frequency.HOURLY:
+                        case 'HOURLY':
                             expect(ex.events[0].date).toEqual(
                                 new Date(
                                     d.year,
@@ -147,7 +143,7 @@ describe('expandRruleRange', () => {
                             )
 
                             break
-                        case Frequency.DAILY:
+                        case 'DAILY':
                             expect(ex.events[0].date).toEqual(
                                 new Date(
                                     d.year,
@@ -162,7 +158,7 @@ describe('expandRruleRange', () => {
                             )
 
                             break
-                        case Frequency.WEEKLY:
+                        case 'WEEKLY':
                             expect(ex.events[0].date).toEqual(
                                 new Date(
                                     d.year,

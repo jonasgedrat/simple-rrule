@@ -1,13 +1,15 @@
-export enum Frequency {
-    NEVER = 'NEVER',
-    YEARLY = 'YEARLY',
-    MONTHLY = 'MONTHLY',
-    WEEKLY = 'WEEKLY',
-    DAILY = 'DAILY',
-    HOURLY = 'HOURLY',
-    MINUTELY = 'MINUTELY',
-    SECONDLY = 'SECONDLY',
-}
+export const FrequencyValues = {
+    NEVER: 'NEVER',
+    YEARLY: 'YEARLY',
+    MONTHLY: 'MONTHLY',
+    WEEKLY: 'WEEKLY',
+    DAILY: 'DAILY',
+    HOURLY: 'HOURLY',
+    MINUTELY: 'MINUTELY',
+    SECONDLY: 'SECONDLY',
+} as const
+export const FrequencyValuesList = Object.values(FrequencyValues)
+export type Frequency = (typeof FrequencyValues)[keyof typeof FrequencyValues]
 
 export const ByDayValues = {
     SU: 'SU',
@@ -26,15 +28,17 @@ export type Month = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11
 
 export type BySetPos = -1 | 0 | 1 | 2 | 3 | 4
 
-export enum Weekday {
-    Sunday = 'SU',
-    Monday = 'MO',
-    Tuesday = 'TU',
-    Wednesday = 'WE',
-    Thursday = 'TH',
-    Friday = 'FR',
-    Saturday = 'SA',
-}
+export const WeekdayValues = {
+    Sunday: 'SU',
+    Monday: 'MO',
+    Tuesday: 'TU',
+    Wednesday: 'WE',
+    Thursday: 'TH',
+    Friday: 'FR',
+    Saturday: 'SA',
+} as const
+export const WeekdayValuesList = Object.values(WeekdayValues)
+export type Weekday = (typeof WeekdayValues)[keyof typeof WeekdayValues]
 
 export const rRuleFields = {
     RRule: 'RRULE',

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { getRRuleString } from '../src/getRrule'
 import { toRRuleDateString } from '../src/dates'
-import { Frequency, Weekday } from '../src/types'
+
 import { schedulerEditorDefaultValues } from '../src/validators/scheduler'
 
 let d = {
@@ -20,7 +20,7 @@ describe('getRRuleString', () => {
             [
                 getRRuleString({
                     ...d,
-                    frequency: Frequency.WEEKLY,
+                    frequency: 'WEEKLY',
                     until: new Date('2022-12-20T01:00:00.000Z'),
                 }),
                 `${dtStart}RRULE:FREQ=WEEKLY;INTERVAL=1;UNTIL=20221220T010000Z;WKST=SU`,
@@ -28,7 +28,7 @@ describe('getRRuleString', () => {
             [
                 getRRuleString({
                     ...d,
-                    frequency: Frequency.DAILY,
+                    frequency: 'DAILY',
                 }),
                 `${dtStart}RRULE:FREQ=DAILY;INTERVAL=1;WKST=SU`,
             ],
@@ -36,7 +36,7 @@ describe('getRRuleString', () => {
                 getRRuleString({
                     ...d,
                     interval: 3,
-                    frequency: Frequency.WEEKLY,
+                    frequency: 'WEEKLY',
                 }),
                 `${dtStart}RRULE:FREQ=WEEKLY;INTERVAL=3;WKST=SU`,
             ],
@@ -44,15 +44,15 @@ describe('getRRuleString', () => {
                 getRRuleString({
                     ...d,
                     byDay: 'SU,MO,FR',
-                    frequency: Frequency.WEEKLY,
+                    frequency: 'WEEKLY',
                 }),
                 `${dtStart}RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=SU,MO,FR;WKST=SU`,
             ],
             [
                 getRRuleString({
                     ...d,
-                    frequency: Frequency.YEARLY,
-                    wkst: Weekday.Saturday,
+                    frequency: 'YEARLY',
+                    wkst: 'SA',
                 }),
                 `${dtStart}RRULE:FREQ=YEARLY;INTERVAL=1;WKST=SA`,
             ],

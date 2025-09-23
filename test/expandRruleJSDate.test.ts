@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { addDays, addHours, addMinutes } from '../src/dates'
 import { expandRRule } from '../src/expandRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
-import { Frequency, Weekday } from '../src/types'
+
 import { dtStart, intervals, today, d, frequencies } from './constants'
 
 let startPeriod = new Date()
@@ -22,10 +22,7 @@ describe('expandRruleJSDate', () => {
             it(`expandRRule JS Date frequency: ${frequency} interval: ${interval} count: 3`, () => {
                 const rRuleString = `${dtStart}\nRRULE:FREQ=${frequency};INTERVAL=${interval};COUNT=3;WKST=SU`
 
-                const rRule = parseRecurrenceFromString(
-                    rRuleString,
-                    Weekday.Sunday
-                )
+                const rRule = parseRecurrenceFromString(rRuleString, 'SU')
                 expect(rRule).not.toBeUndefined()
 
                 if (rRule) {
@@ -35,19 +32,19 @@ describe('expandRruleJSDate', () => {
 
                     //adjust date to performance
                     switch (frequency) {
-                        case Frequency.MINUTELY:
+                        case 'MINUTELY':
                             startPeriod = addMinutes(today, -2)
                             endPeriod = addMinutes(today, 10)
                             break
-                        case Frequency.HOURLY:
+                        case 'HOURLY':
                             startPeriod = addHours(today, -2)
                             endPeriod = addHours(today, 10)
                             break
-                        case Frequency.DAILY:
+                        case 'DAILY':
                             startPeriod = addDays(today, -2)
                             endPeriod = addDays(today, 10)
                             break
-                        case Frequency.WEEKLY:
+                        case 'WEEKLY':
                             startPeriod = addDays(today, -2)
                             endPeriod = addDays(today, 10 * 7)
                             break
@@ -64,7 +61,7 @@ describe('expandRruleJSDate', () => {
                     ex.events.map((e, i) => {
                         expect(e.index).toEqual(i + 1)
                         switch (frequency) {
-                            case Frequency.MINUTELY:
+                            case 'MINUTELY':
                                 expect(e.date).toEqual(
                                     new Date(
                                         d.year,
@@ -76,7 +73,7 @@ describe('expandRruleJSDate', () => {
                                     )
                                 )
                                 break
-                            case Frequency.HOURLY:
+                            case 'HOURLY':
                                 expect(e.date).toEqual(
                                     new Date(
                                         d.year,
@@ -88,7 +85,7 @@ describe('expandRruleJSDate', () => {
                                     )
                                 )
                                 break
-                            case Frequency.DAILY:
+                            case 'DAILY':
                                 expect(e.date).toEqual(
                                     new Date(
                                         d.year,
@@ -100,7 +97,7 @@ describe('expandRruleJSDate', () => {
                                     )
                                 )
                                 break
-                            case Frequency.WEEKLY:
+                            case 'WEEKLY':
                                 expect(e.date).toEqual(
                                     new Date(
                                         d.year,
