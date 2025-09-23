@@ -1,11 +1,8 @@
-# simple-rrule.js
+# Simple RRule
 
-**Simple recurrence rules to get scheduler events for calendar dates.**
+**A simple and powerful TypeScript library for working with calendar recurrence rules (RRule).**
 
-simple-rrule.js expands recurrence dates from a rrule string.
-
-rules as defined in the [iCalendar
-RFC](https://tools.ietf.org/html/rfc5545) (with partial implementation)
+Simple RRule is a simple implementation of the RRule standard, which allows parsing and expanding recurrence rules based on the [iCalendar RFC 5545](https://tools.ietf.org/html/rfc5545) standard. Ideal for scheduling systems, calendars and recurring events, note that it is not a complete implementation of all the standard rules.
 
 ---
 
@@ -18,189 +15,256 @@ RFC](https://tools.ietf.org/html/rfc5545) (with partial implementation)
 
 ---
 
-rrule.js supports recurrence rules as defined in the [iCalendar
-RFC](https://tools.ietf.org/html/rfc5545), with a few important
-[differences](#differences-from-icalendar-rfc). It is a partial port of the
-`rrule` module from the excellent
-[python-dateutil](http://labix.org/python-dateutil/) library. On top of
-that, it supports parsing and serialization of recurrence rules from and
-to natural language.
-
----
-
-### Quick Start
-
-Includes optional TypeScript types
+## 🚀 Installation
 
 ```bash
-$ yarn add simple-rrule
-# or
-$ npm install simple-rrule
+# With npm
+npm install simple-rrule
+
+# With yarn
+yarn add simple-rrule
+
+# With pnpm
+pnpm add simple-rrule
 ```
 
-#### Example 1
 
-```es6
+## 🎯 What is RRule?
+
+RRule (Recurrence Rule) is a standard defined in RFC 5545 that allows describing recurring events in a standardized way. For example:
+
+- "Every day at 10am"
+- "Every Monday and Wednesday"
+- "On the second Sunday of each month"
+- "Annually on December 25th"
+
+## 🔧 Main Features
+
+### 1. **RRule String Parsing**
+Converts RRule strings into typed TypeScript objects:
+
+```typescript
+import { parseRecurrenceFromString } from 'simple-rrule'
+
+const rRuleString = `
+DTSTART:20231201T100000Z
+DTEND:20231201T110000Z
+RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE,FR;COUNT=10
+`
+
+const rRule = parseRecurrenceFromString(rRuleString)
+console.log(rRule?.frequency) // 'WEEKLY'
+console.log(rRule?.byDay)     // 'MO,WE,FR'
+console.log(rRule?.count)     // 10
+```
+
+### 2. **Event Expansion**
+Generates all dates of a recurring event within a period:
+
+```typescript
+import { expandRRule } from 'simple-rrule'
+
+const events = expandRRule(
+    rRule,
+    new Date('2023-12-01'), // period start
+    new Date('2024-01-31')  // period end
+)
+
+console.log(events.events.length) // number of events found
+events.events.forEach(event => {
+    console.log(`Event ${event.index}: ${event.date}`)
+})
+```
+
+### 3. **RRule String Generation**
+Creates RRule strings from objects:
+
+```typescript
+import { getRRuleString } from 'simple-rrule'
+
+const rRuleString = getRRuleString({
+    dtStart: new Date('2023-12-01T10:00:00Z'),
+    dtEnd: new Date('2023-12-01T11:00:00Z'),
+    frequency: 'DAILY',
+    interval: 2,
+    count: 5
+})
+
+console.log(rRuleString)
+// DTSTART:20231201T100000Z
+// DTEND:20231201T110000Z
+// RRULE:FREQ=DAILY;INTERVAL=2;COUNT=5;WKST=SU
+```
+
+## 📚 Practical Examples
+
+### Example 1: Weekly Meeting
+```typescript
 import { expandRRuleFromString } from 'simple-rrule'
 
-const rRule =
-    'DTSTART:20221215T100000Z\nRRULE:FREQ=YEARLY;BYDAY=MO;BYMONTH=1;BYSETPOS=2;COUNT=5;WKST=SU'
-const rRule = `DTSTART:DTSTART:20221215T100000Z\nRRULE:FREQ=DAILY;INTERVAL=1;COUNT=3;WKST=SU`
+// Meeting every Monday at 2pm for 8 weeks
+const meeting = `
+DTSTART:20231204T140000Z
+DTEND:20231204T150000Z
+RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=8
+`
 
-const r = expandRRuleFromString(rRule, today, addDays(today, 3))
+const events = expandRRuleFromString(
+    meeting,
+    new Date('2023-12-01'),
+    new Date('2024-02-29')
+)
+
+console.log(`${events.events.length} meetings scheduled`)
 ```
 
-#### Example 2
+### Example 2: Daily Backup
+```typescript
+import { parseRecurrenceFromString, expandRRule } from 'simple-rrule'
 
-```es6
-import { parseRecurrenceFromString, expandRRule, WeekDay } from 'simple-rrule'
-const rRule =
-    'DTSTART:20221216T100000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYSETPOS=2;BYDAY=WE;UNTIL=20230411T100000Z;WKST=SU'
+// Backup every day at 2am
+const backupRule = parseRecurrenceFromString(`
+DTSTART:20231201T020000Z
+DTEND:20231201T020100Z
+RRULE:FREQ=DAILY;INTERVAL=1
+`)
 
-const rRule = await parseRecurrenceFromString(rRule, Weekday.Sunday)
-console.log(rRule)
+if (backupRule) {
+    const nextBackups = expandRRule(
+        backupRule,
+        new Date(),
+        new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // next 7 days
+    )
+    
+    console.log('Next backups:')
+    nextBackups.events.forEach(backup => {
+        console.log(backup.date.toLocaleString())
+    })
+}
+```
 
-const r = expandRRule(
-    rRule,
-    new Date('2023-02-02T10:00:00.000Z'),
-    new Date('2023-12-31T10:00:00.000Z')
+### Example 3: Complex Monthly Event
+```typescript
+// Second Monday of each month
+const monthlyEvent = `
+DTSTART:20231211T100000Z
+DTEND:20231211T120000Z
+RRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=2;COUNT=12
+`
+
+const events = expandRRuleFromString(
+    monthlyEvent,
+    new Date('2023-12-01'),
+    new Date('2024-12-31')
 )
 ```
 
-#### Example 3
+## 🏗️ TypeScript Types
 
-```es6
-import { expandRRuleFromString } from 'simple-rrule'
+The library offers complete typing for greater safety:
 
-const rRule =
-    'DTSTART:20221215T100000Z\nRRULE:FREQ=YEARLY;BYDAY=MO;BYMONTH=1;BYSETPOS=2;COUNT=5;WKST=SU'
+```typescript
+import { 
+    Frequency, 
+    ByDay, 
+    IRrule, 
+    IExpandResult 
+} from 'simple-rrule'
 
-const r = expandRRuleFromString(
-    rRule,
-    new Date('2023-01-28T10:00:00.000Z'),
-    new Date('2025-05-31T10:00:00.000Z')
-)
+// Available frequencies
+const freq: Frequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY' | 'HOURLY' | 'MINUTELY' | 'SECONDLY'
+
+// Days of the week
+const days: ByDay = 'SU' | 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA'
+
+// Main RRule interface
+interface IRrule {
+    dtStart: Date
+    dtEnd: Date
+    frequency: Frequency
+    interval: number
+    wkst: ByDay
+    count?: number
+    until?: Date
+    byDay?: string
+    byMonth?: number
+    byMonthDay?: number
+    bySetPos?: number
+}
 ```
 
-#### Example 4
+## 📖 RRule Fields Reference
 
-```es6
-import { expandRRuleFromString } from 'simple-rrule'
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `dtStart` | `Date` | ✅ | - | Recurrence start date and time |
+| `dtEnd` | `Date` | ✅ | - | End date and time (for duration) |
+| `frequency` | `Frequency` | ✅ | - | Frequency: DAILY, WEEKLY, MONTHLY, etc. |
+| `interval` | `number` | ✅ | 1 | Interval between repetitions |
+| `wkst` | `ByDay` | ✅ | 'SU' | First day of the week |
+| `count` | `number` | ❌ | - | Maximum number of occurrences |
+| `until` | `Date` | ❌ | - | End date for occurrences |
+| `byDay` | `string` | ❌ | - | Days of the week (ex: 'MO,WE,FR') |
+| `byMonth` | `number` | ❌ | - | Specific month (1-12) |
+| `byMonthDay` | `number` | ❌ | - | Day of the month (1-31) |
+| `bySetPos` | `number` | ❌ | - | Position in sequence (-1, 1-4) |
 
-const rRule =
-    'DTSTART:20221215T100000Z\nRRULE:FREQ=YEARLY;BYDAY=MO;BYMONTH=1;BYSETPOS=2;COUNT=5;WKST=SU'
+## 🔍 Supported Frequencies
 
-const r = expandRRuleFromString(
-    rRule,
-    new Date('2023-01-28T10:00:00.000Z'),
-    new Date('2025-05-31T10:00:00.000Z')
-)
+- **MINUTELY**: Every N minutes  
+- **HOURLY**: Every N hours
+- **DAILY**: Every N days
+- **WEEKLY**: Every N weeks
+- **MONTHLY**: Every N months
+- **YEARLY**: Every N years
+
+## ⚡ Automatic Validation
+
+The library uses Zod for automatic validation:
+
+```typescript
+// Invalid values generate clear errors
+const rRule = parseRecurrenceFromString(`
+DTSTART:20231201T100000Z
+RRULE:FREQ=WEEKLY;INTERVAL=0  // ❌ Interval must be >= 1
+`)
+// Returns undefined and logs validation error
 ```
 
-# Good examples in 'test' folder.
+## 🧪 Tested and Reliable
 
-### rrule string fields
+- **583 automated tests**
+- Complete coverage of edge cases
+- TypeScript type validation
+- Compatible with Vitest
 
-<table>
-    <!-- why, markdown... -->
-    <thead>
-    <tr>
-        <th>Field</th>
-        <th>Type</th>
-        <th>Required</th>
-        <th>Default</th>
-        <th>Description</th>
-    </tr>
-    <thead>
-    <tbody>
-    <tr>
-        <td><code>dtStart</code></td>
-        <td><code>Date</code></td>        
-        <td>Y</td>
-        <td></td>
-        <td>The recurrence start.</td>
-    </tr>
-    <tr>
-        <td><code>dtEnd</code></td>
-        <td><code>Date</code></td>        
-        <td>Y</td>
-        <td></td>
-        <td>Used for duration (dtStart-dtEnd)</td>
-    </tr>
-    <tr>
-        <td><code>frequency</code></td>
-        <td><code>Frequency as String</code></td>
-        <td>Y</td>
-        <td></td>
-        <td>
-            <ul>
-                <li><code>Frequency.YEARLY</code></li>
-                <li><code>Frequency.MONTHLY</code></li>
-                <li><code>Frequency.WEEKLY</code></li>
-                <li><code>Frequency.DAILY</code></li>
-                <li><code>Frequency.HOURLY</code></li>
-                <li><code>Frequency.MINUTELY</code></li>
-                <li><code>Frequency.SECONDLY</code></li>
-            </ul>
-        </td>
-    </tr>
-    <tr>
-        <td><code>interval</code></td>
-        <td><code>Positive Integer</code></td>        
-        <td>Y</td>
-        <td>1</td>
-        <td>The interval between each freq iteration</td>
-    </tr>
-    <tr>
-        <td><code>wkst</code></td>
-        <td><code>Weekday as String</code></td>        
-        <td>Y</td>
-        <td>'SU'</td>
-        <td>The week start day.</td>
-    </tr>  
-    <tr>
-        <td><code>count</code></td>
-        <td><code>Positive Integer</code></td>        
-        <td>N</td>
-        <td></td>
-        <td>How many occurrences will be generated.</td>
-    </tr>  
-    <tr>
-        <td><code>until</code></td>
-        <td><code>Date</code></td>        
-        <td>N</td>
-        <td></td>
-        <td>End limit of recurrence dates generated.</td>
-    </tr>
-        <tr>
-        <td><code>byday</code></td>
-        <td><code>WeekDay[] as String</code></td>
-        <td>N</td>
-        <td></td>
-        <td>Weekday or WeekDays ex: 'SU' or 'SU,MO,FR'</td>
-    </tr>
-    <tr>
-        <td><code>bysetpos</code></td>
-        <td><code>Integer</code></td>
-        <td>N</td>
-        <td></td>
-        <td>Used only in byMonth and byYear</td>
-    </tr>
-    <tr>
-        <td><code>bymonth</code></td>
-        <td><code>Integer</code></td>
-        <td>N</td>
-        <td></td>
-        <td>Month</td>
-    </tr>
-    <tr>
-        <td><code>bymonthday</code></td>
-        <td><code>Integer</code></td>
-        <td>N</td>
-        <td></td>
-        <td>Month day</td>
-    </tr>  
-    </tbody>
-</table>
+## 📝 RRule String Examples
+
+```typescript
+// Daily for 30 days
+"DTSTART:20231201T090000Z\nRRULE:FREQ=DAILY;COUNT=30"
+
+// Weekly on Tuesdays and Thursdays
+"DTSTART:20231201T140000Z\nRRULE:FREQ=WEEKLY;BYDAY=TU,TH"
+
+// Monthly on the 15th
+"DTSTART:20231215T100000Z\nRRULE:FREQ=MONTHLY;BYMONTHDAY=15"
+
+// Annually on Christmas
+"DTSTART:20231225T000000Z\nRRULE:FREQ=YEARLY;BYMONTH=12;BYMONTHDAY=25"
+
+// First Monday of each month
+"DTSTART:20231204T100000Z\nRRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=1"
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! See the tests in the `test/` folder for usage examples and covered cases.
+
+## 📄 License
+
+MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
+
+**Simple RRule** - Making recurrence rules simple and powerful in TypeScript! 🎯
