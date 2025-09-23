@@ -9,7 +9,17 @@ export enum Frequency {
     SECONDLY = 'SECONDLY',
 }
 
-export type ByDay = 'SU' | 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA'
+export const ByDayValues = {
+    SU: 'SU',
+    MO: 'MO',
+    TU: 'TU',
+    WE: 'WE',
+    TH: 'TH',
+    FR: 'FR',
+    SA: 'SA',
+} as const
+export const ByDayValuesList = Object.values(ByDayValues)
+export type ByDay = (typeof ByDayValues)[keyof typeof ByDayValues]
 
 export type Day = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type Month = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11
