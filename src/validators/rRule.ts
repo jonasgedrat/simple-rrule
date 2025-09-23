@@ -4,20 +4,17 @@ import { Frequency, Weekday } from '../types'
 
 const rRuleSchema = z
     .object({
-        dtStart: z.date().default(() => new Date()),
-        dtEnd: z.date().default(() => addHours(new Date(), 1)),
-
-        frequency: z.enum(Frequency).default(Frequency.NEVER),
-        interval: z.number().min(1).default(1),
-        count: z.number().min(0).default(0),
+        dtStart: z.date(),
+        dtEnd: z.date(),
+        frequency: z.enum(Frequency),
+        interval: z.number().min(1),
+        count: z.number().min(0),
         until: z.date().optional(),
-
-        byDay: z.string().default(''),
-        byMonth: z.number().min(0).max(12).default(0),
-        byMonthDay: z.number().min(0).max(31).default(0),
-        bySetPos: z.number().min(-1).max(4).default(0),
-
-        wkst: z.nativeEnum(Weekday).default(Weekday.Sunday),
+        byDay: z.string(),
+        byMonth: z.number().min(0).max(12),
+        byMonthDay: z.number().min(0).max(31),
+        bySetPos: z.number().min(-1).max(4),
+        wkst: z.enum(Weekday),
     })
     .refine(
         (data) => {
@@ -31,10 +28,20 @@ const rRuleSchema = z
 
 type IRrule = z.infer<typeof rRuleSchema>
 
-const rRuleDefaultValues: IRrule = rRuleSchema.parse({})
+const rRuleDefaultValues: IRrule = {
+    dtStart: new Date(),
+    dtEnd: addHours(new Date(), 1),
+    frequency: Frequency.NEVER,
+    interval: 1,
+    count: 0,
+    byDay: '',
+    byMonth: 0,
+    byMonthDay: 0,
+    bySetPos: 0,
+    wkst: Weekday.Sunday,
+}
 
 interface IRuleExtended extends IRrule {
-    count: number
     startRangePeriod: Date
     endRangePeriodOrUntil: Date
     secondsDuration: number
@@ -45,18 +52,12 @@ interface IRuleExtended extends IRrule {
     firstEventInRangePeriod: Date
 }
 
-const validateRrule = (rRule: IRrule): IRrule => {
-    try {
-        return rRuleSchema.parse(rRule)
-    } catch (err) {
-        console.error(`\nValidation error on rRule schema`, rRule, err, '\n')
-        const error = {
-            err: 'E_MALFORMED_BODY',
-            stack: (err as Error).message,
-            status: 400,
-        }
-        throw error
+const validateRrule = (rRule: IRrule): IRrule | z.ZodError => {
+    const result = rRuleSchema.safeParse(rRule)
+    if (!result.success) {
+        return result.error
     }
+    return result.data
 }
 
 export { rRuleSchema, rRuleDefaultValues, validateRrule }
