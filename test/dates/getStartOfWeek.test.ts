@@ -130,7 +130,7 @@ describe('getStartOfWeekWithoutChangeTime', () => {
 
         it('should handle year boundary correctly', () => {
             const wkst: Weekday = 'SU'
-            const newYearDay = new Date('2024-01-01T00:00:00.000Z') // Monday, Jan 1st
+            const newYearDay = new Date('2024-01-01T00:00:00.000Z') // Sunday, Jan 1st
             const result = getStartOfWeekWithoutChangeTime(newYearDay, wkst)
             
             expect(result.getDay()).toBe(0) // Sunday
@@ -155,7 +155,7 @@ describe('getStartOfWeekWithoutChangeTime', () => {
             expect(result.getMilliseconds()).toBe(999)
             expect(result.getSeconds()).toBe(59)
             expect(result.getMinutes()).toBe(59)
-            expect(result.getHours()).toBe(20)
+            expect(result.getUTCHours()).toBe(23) // Use UTC hours to avoid timezone issues
             // Wednesday (day 3) with Monday start (day 1): diff = (3 < 1 ? 7 : 0) + 3 - 1 = 0 + 3 - 1 = 2, so go back 2 days
             expect(result.toISOString()).toBe('2024-01-15T23:59:59.999Z')
         })

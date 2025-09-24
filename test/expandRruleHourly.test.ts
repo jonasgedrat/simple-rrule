@@ -24,9 +24,9 @@ describe('expandRruleHourly', () => {
         )
 
         expect(result.events.length).toBe(5) // 10:00, 12:00, 14:00, 16:00, 18:00
-        expect(result.events[0].date.getHours()).toBe(7)
-        expect(result.events[1].date.getHours()).toBe(9)
-        expect(result.events[2].date.getHours()).toBe(11)
+        expect(result.events[0].date.getUTCHours()).toBe(10)
+        expect(result.events[1].date.getUTCHours()).toBe(12)
+        expect(result.events[2].date.getUTCHours()).toBe(14)
     })
 
     it('should respect count limit for hourly recurrence', () => {
@@ -44,8 +44,8 @@ describe('expandRruleHourly', () => {
         const result = expandRRule(rule, startDate, endDate)
 
         expect(result.events.length).toBe(3)
-        expect(result.events[0].date.getHours()).toBe(7)
-        expect(result.events[1].date.getHours()).toBe(8)
-        expect(result.events[2].date.getHours()).toBe(9)
+        expect(result.events[0].date.getUTCHours()).toBe(10)
+        expect(result.events[1].date.getUTCHours()).toBe(11)
+        expect(result.events[2].date.getUTCHours()).toBe(12)
     })
 })

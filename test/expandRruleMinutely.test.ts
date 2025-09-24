@@ -41,7 +41,7 @@ describe('expandRruleMinutely', () => {
         const result = expandRRule(rule, startDate, endDate)
 
         expect(result.events.length).toBe(3) // 10:00, 10:10, 10:20
-        expect(result.events[2].date.getHours()).toBe(7)
+        expect(result.events[2].date.getUTCHours()).toBe(10)
         expect(result.events[2].date.getMinutes()).toBe(20)
     })
 })
