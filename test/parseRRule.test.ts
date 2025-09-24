@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest'
 import { getRRuleString } from '../src/getRrule'
 import { parseRecurrenceFromString } from '../src/parseRrule'
 import { toRRuleDateString } from '../src/dates'
-import { schedulerEditorDefaultValues } from '../src/validators/scheduler'
+import { IRrule, rRuleDefaultValues } from '../src/validators/rRule'
 
-let d = {
-    ...schedulerEditorDefaultValues,
+let d: IRrule = {
+    ...rRuleDefaultValues,
     dtStart: new Date('2022-12-15T00:00:00.000Z'),
     dtEnd: new Date('2022-12-15T01:00:00.000Z'),
 }
@@ -62,7 +62,7 @@ describe('parseRRule', () => {
 
     it(`getRRuleString AND parseRecurrenceFromString test1`, () => {
         const s = getRRuleString({
-            ...schedulerEditorDefaultValues,
+            ...rRuleDefaultValues,
             frequency: 'HOURLY',
         })
         const r = parseRecurrenceFromString(s)
@@ -82,7 +82,7 @@ describe('parseRRule', () => {
 
     it(`getRRuleString AND parseRecurrenceFromString test2`, () => {
         const s = getRRuleString({
-            ...schedulerEditorDefaultValues,
+            ...rRuleDefaultValues,
             frequency: 'WEEKLY',
             byDay: 'MO,FR',
         })
@@ -103,7 +103,7 @@ describe('parseRRule', () => {
 
     it(`getRRuleString AND parseRecurrenceFromString test3`, () => {
         const s = getRRuleString({
-            ...schedulerEditorDefaultValues,
+            ...rRuleDefaultValues,
             frequency: 'MONTHLY',
             bySetPos: 1,
         })
@@ -124,7 +124,7 @@ describe('parseRRule', () => {
 
     it(`getRRuleString AND parseRecurrenceFromString test4`, () => {
         const s = getRRuleString({
-            ...schedulerEditorDefaultValues,
+            ...rRuleDefaultValues,
             frequency: 'MONTHLY',
             bySetPos: 1,
             byMonthDay: 2,
@@ -146,7 +146,7 @@ describe('parseRRule', () => {
 
     it(`getRRuleString AND parseRecurrenceFromString test5`, () => {
         const s = getRRuleString({
-            ...schedulerEditorDefaultValues,
+            ...rRuleDefaultValues,
             frequency: 'YEARLY',
             bySetPos: -1,
             byMonthDay: 12,
@@ -199,7 +199,9 @@ describe('parseRRule', () => {
 
         it('deve lançar erro para datas inválidas (dtEnd antes de dtStart)', () => {
             const s = `DTSTART:20221103T133045Z\nDTEND:20221101T133045Z\nRRULE:FREQ=DAILY;INTERVAL=1`
-            expect(() => parseRecurrenceFromString(s)).toThrow('End date must be after start date')
+            expect(() => parseRecurrenceFromString(s)).toThrow(
+                'End date must be after start date'
+            )
         })
 
         it('deve definir interval padrão quando interval=0', () => {
@@ -329,10 +331,10 @@ describe('parseRRule', () => {
         it('deve ignorar byMonth fora do intervalo (1-12)', () => {
             const s1 = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=YEARLY;BYMONTH=0`
             const s2 = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=YEARLY;BYMONTH=13`
-            
+
             const r1 = parseRecurrenceFromString(s1)
             const r2 = parseRecurrenceFromString(s2)
-            
+
             expect(r1?.byMonth).toEqual(0) // valor padrão
             expect(r2?.byMonth).toEqual(0) // valor padrão
         })
@@ -340,18 +342,18 @@ describe('parseRRule', () => {
         it('deve ignorar byMonthDay fora do intervalo (1-31)', () => {
             const s1 = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=MONTHLY;BYMONTHDAY=0`
             const s2 = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=MONTHLY;BYMONTHDAY=32`
-            
+
             const r1 = parseRecurrenceFromString(s1)
             const r2 = parseRecurrenceFromString(s2)
-            
+
             expect(r1?.byMonthDay).toEqual(0) // valor padrão
             expect(r2?.byMonthDay).toEqual(0) // valor padrão
         })
 
         it('deve aceitar bySetPos válidos (-1, 1-4)', () => {
             const testCases = [-1, 1, 2, 3, 4]
-            
-            testCases.forEach(pos => {
+
+            testCases.forEach((pos) => {
                 const s = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=MONTHLY;BYSETPOS=${pos}`
                 const r = parseRecurrenceFromString(s)
                 expect(r?.bySetPos).toEqual(pos)
@@ -361,7 +363,7 @@ describe('parseRRule', () => {
         it('deve lançar erro para bySetPos inválidos', () => {
             const s1 = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=MONTHLY;BYSETPOS=-2`
             const s2 = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=MONTHLY;BYSETPOS=5`
-            
+
             expect(() => parseRecurrenceFromString(s1)).toThrow()
             expect(() => parseRecurrenceFromString(s2)).toThrow()
         })
@@ -381,8 +383,12 @@ describe('parseRRule', () => {
             const r = parseRecurrenceFromString(s)
             expect(r).not.toBeUndefined()
             if (r) {
-                expect(r.dtStart.toISOString()).toEqual('2022-12-31T23:59:59.000Z')
-                expect(r.dtEnd.toISOString()).toEqual('2023-01-01T00:00:59.000Z')
+                expect(r.dtStart.toISOString()).toEqual(
+                    '2022-12-31T23:59:59.000Z'
+                )
+                expect(r.dtEnd.toISOString()).toEqual(
+                    '2023-01-01T00:00:59.000Z'
+                )
             }
         })
 
@@ -391,7 +397,9 @@ describe('parseRRule', () => {
             const r = parseRecurrenceFromString(s)
             expect(r).not.toBeUndefined()
             if (r) {
-                expect(r.until?.toISOString()).toEqual('2022-12-15T15:20:30.000Z')
+                expect(r.until?.toISOString()).toEqual(
+                    '2022-12-15T15:20:30.000Z'
+                )
             }
         })
 
@@ -400,8 +408,12 @@ describe('parseRRule', () => {
             const r = parseRecurrenceFromString(s)
             expect(r).not.toBeUndefined()
             if (r) {
-                expect(r.dtStart.toISOString()).toEqual('2022-11-01T13:30:45.000Z')
-                expect(r.dtEnd.toISOString()).toEqual('2022-11-01T14:30:45.000Z') // +1 hora
+                expect(r.dtStart.toISOString()).toEqual(
+                    '2022-11-01T13:30:45.000Z'
+                )
+                expect(r.dtEnd.toISOString()).toEqual(
+                    '2022-11-01T14:30:45.000Z'
+                ) // +1 hora
             }
         })
 
@@ -422,19 +434,19 @@ describe('parseRRule', () => {
     describe('Integração com getRRuleString', () => {
         it('deve fazer round-trip corretamente para regras complexas', () => {
             const original = {
-                ...schedulerEditorDefaultValues,
+                ...rRuleDefaultValues,
                 frequency: 'MONTHLY' as const,
                 bySetPos: -1,
                 byMonthDay: 15,
                 byDay: 'FR',
                 interval: 2,
                 count: 10,
-                wkst: 'MO' as const
+                wkst: 'MO' as const,
             }
-            
+
             const rRuleString = getRRuleString(original)
             const parsed = parseRecurrenceFromString(rRuleString)
-            
+
             expect(parsed).not.toBeUndefined()
             if (parsed) {
                 expect(parsed.frequency).toEqual(original.frequency)
@@ -449,21 +461,23 @@ describe('parseRRule', () => {
 
         it('deve fazer round-trip para regra YEARLY com until', () => {
             const original = {
-                ...schedulerEditorDefaultValues,
+                ...rRuleDefaultValues,
                 frequency: 'YEARLY' as const,
                 byMonth: 12,
                 until: new Date('2025-12-31T23:59:59.000Z'),
-                interval: 1
+                interval: 1,
             }
-            
+
             const rRuleString = getRRuleString(original)
             const parsed = parseRecurrenceFromString(rRuleString)
-            
+
             expect(parsed).not.toBeUndefined()
             if (parsed) {
                 expect(parsed.frequency).toEqual(original.frequency)
                 expect(parsed.byMonth).toEqual(original.byMonth)
-                expect(parsed.until?.toISOString()).toEqual(original.until.toISOString())
+                expect(parsed.until?.toISOString()).toEqual(
+                    original.until.toISOString()
+                )
                 expect(parsed.interval).toEqual(original.interval)
             }
         })
