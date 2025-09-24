@@ -11,7 +11,7 @@
     "src"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=20"
   },
   "repository": {
     "type": "git",
@@ -29,9 +29,6 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "coverage": "vitest run --coverage",
-    "format": "prettier --write \"**/*.(js|ts)\"",
-    "lint": "tsdx lint",
-    "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "semantic-release": "semantic-release --branches main"
@@ -45,7 +42,7 @@
     "semantic-release": "^23.0.0",
     "size-limit": "^11.2.0",
     "tsdx": "^0.14.1",
-    "tslib": "^2.8.0",
+    "tslib": "^2.8.1",
     "typescript": "^5.9.2",
     "vitest": "3.2.4"
   },
