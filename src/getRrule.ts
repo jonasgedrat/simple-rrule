@@ -1,16 +1,14 @@
 import { toRRuleDateString } from './dates'
 import { rRuleFields } from './types'
-import {
-    ISchedulerEditor,
-    validateSchedulerEditor,
-} from './validators/scheduler'
+import { IRrule, validateRrule } from './validators'
 
-export const getRRuleString = (payload: ISchedulerEditor) => {
+export const getRRuleString = (payload: IRrule) => {
     if (payload.frequency === 'NEVER') {
         return ''
     }
 
-    const f = validateSchedulerEditor(payload)
+    // const f = validateSchedulerEditor(payload)
+    const f = validateRrule(payload)
 
     let rRuleString = `${rRuleFields.frequency}=${f.frequency.toUpperCase()}`
     const start = `${rRuleFields.dtStart}:${toRRuleDateString(f.dtStart)}`
