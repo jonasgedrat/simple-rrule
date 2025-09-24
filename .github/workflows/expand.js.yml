@@ -31,7 +31,6 @@ jobs:
                   cache: 'pnpm'
             - run: pnpm install --frozen-lockfile
             - run: pnpm test
-            # - run: pnpm test --ci --coverage --maxWorkers=2
 
     publish-npm: #publish only main branch
         runs-on: ubuntu-latest
