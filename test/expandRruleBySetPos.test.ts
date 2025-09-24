@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { expandRRule } from '../src/expandRrule'
 import { BySetPos } from '../src/types'
-import { IRrule } from '../src/validators/rRule'
+import { IRrule, rRuleDefaultValues } from '../src/validators/rRule'
 
 describe('expandRruleBySetPos', () => {
     it('should handle BYSETPOS with MONTHLY frequency correctly', () => {
@@ -10,17 +10,12 @@ describe('expandRruleBySetPos', () => {
 
         // Test for "First Monday of the month"
         const rule: IRrule = {
-            frequency: 'MONTHLY',
-            interval: 1,
+            ...rRuleDefaultValues,
             dtStart: startDate,
             dtEnd: new Date('2023-01-01T11:00:00.000Z'),
-            count: 0,
-            wkst: 'SU',
+            frequency: 'MONTHLY',
             byDay: 'MO',
-            byMonthDay: 0,
-            byMonth: 0,
             bySetPos: 1 as BySetPos,
-            until: undefined,
         }
 
         const result = expandRRule(rule, startDate, endDate)
@@ -47,17 +42,13 @@ describe('expandRruleBySetPos', () => {
 
         // Test for "Last Friday of March each year"
         const rule: IRrule = {
-            frequency: 'YEARLY',
-            interval: 1,
+            ...rRuleDefaultValues,
             dtStart: startDate,
             dtEnd: new Date('2023-01-01T11:00:00.000Z'),
-            count: 0,
-            wkst: 'SU',
+            frequency: 'YEARLY',
             byDay: 'FR',
-            byMonthDay: 0,
             byMonth: 3, // March
             bySetPos: -1 as BySetPos, // Last occurrence
-            until: undefined,
         }
 
         const result = expandRRule(rule, startDate, endDate)

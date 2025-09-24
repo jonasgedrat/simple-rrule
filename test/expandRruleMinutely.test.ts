@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { expandRRule } from '../src/expandRrule'
 import { addMinutes } from '../src/dates'
-import { IRrule } from '../src/validators/rRule'
+import { IRrule, rRuleDefaultValues } from '../src/validators/rRule'
 
 describe('expandRruleMinutely', () => {
     it('should expand minutely recurrence correctly', () => {
@@ -9,17 +9,11 @@ describe('expandRruleMinutely', () => {
         const endDate = new Date('2023-01-01T11:00:00.000Z')
 
         const rule: IRrule = {
-            frequency: 'MINUTELY',
-            interval: 15,
+            ...rRuleDefaultValues,
             dtStart: startDate,
             dtEnd: addMinutes(startDate, 5),
-            count: 0,
-            wkst: 'SU',
-            byDay: '',
-            byMonthDay: 0,
-            byMonth: 0,
-            bySetPos: 0,
-            until: undefined,
+            frequency: 'MINUTELY',
+            interval: 15,
         }
 
         const result = expandRRule(rule, startDate, endDate)
@@ -36,16 +30,11 @@ describe('expandRruleMinutely', () => {
         const untilDate = new Date('2023-01-01T10:30:00.000Z')
 
         const rule: IRrule = {
-            frequency: 'MINUTELY',
-            interval: 10,
+            ...rRuleDefaultValues,
             dtStart: startDate,
             dtEnd: addMinutes(startDate, 5),
-            count: 0,
-            wkst: 'SU',
-            byDay: '',
-            byMonthDay: 0,
-            byMonth: 0,
-            bySetPos: 0,
+            frequency: 'MINUTELY',
+            interval: 10,
             until: untilDate,
         }
 

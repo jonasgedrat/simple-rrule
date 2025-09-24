@@ -1,28 +1,30 @@
 import { describe, it, expect } from 'vitest'
 import { expandRRule } from '../src/expandRrule'
-import { addHours } from '../src/dates'
-import { IRrule } from '../src/validators/rRule'
+import { addDays, addHours } from '../src/dates'
+import { IRrule, rRuleDefaultValues } from '../src/validators/rRule'
+import { getRRuleString } from '../src/getRrule'
 
 describe('expandRruleHourly', () => {
     it('should expand hourly recurrence correctly', () => {
         const startDate = new Date('2023-01-01T10:00:00.000Z')
         const endDate = new Date('2023-01-01T18:00:00.000Z')
 
-        const rule: IRrule = {
-            frequency: 'HOURLY',
-            interval: 2,
+        const rRule: IRrule = {
+            ...rRuleDefaultValues,
             dtStart: startDate,
             dtEnd: addHours(startDate, 1),
-            count: 0,
-            wkst: 'SU',
-            byDay: '',
-            byMonthDay: 0,
-            byMonth: 0,
-            bySetPos: 0,
-            until: undefined,
+            frequency: 'HOURLY',
+            interval: 2,
         }
 
-        const result = expandRRule(rule, startDate, endDate)
+        const rRuleString = getRRuleString(rRule)
+        console.log('rRuleString', rRuleString)
+        const result = expandRRule(
+            rRule,
+            addDays(startDate, 1),
+            addDays(endDate, 1)
+        )
+        console.log('result', result)
 
         expect(result.events.length).toBe(5) // 10:00, 12:00, 14:00, 16:00, 18:00
         expect(result.events[0].date.getHours()).toBe(7)
@@ -35,17 +37,11 @@ describe('expandRruleHourly', () => {
         const endDate = new Date('2023-01-01T18:00:00.000Z')
 
         const rule: IRrule = {
-            frequency: 'HOURLY',
-            interval: 1,
+            ...rRuleDefaultValues,
             dtStart: startDate,
             dtEnd: addHours(startDate, 1),
+            frequency: 'HOURLY',
             count: 3,
-            wkst: 'SU',
-            byDay: '',
-            byMonthDay: 0,
-            byMonth: 0,
-            bySetPos: 0,
-            until: undefined,
         }
 
         const result = expandRRule(rule, startDate, endDate)
