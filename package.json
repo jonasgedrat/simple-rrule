@@ -4,11 +4,11 @@
   "description": "simple rrule string parser and expand date events",
   "author": "Jonas Gedrat",
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/simple-rrule.esm.js",
+  "main": "dist/simple-rrule.umd.js",
+  "module": "dist/simple-rrule.es.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "engines": {
     "node": ">=20"
@@ -22,18 +22,21 @@
   },
   "homepage": "https://github.com/jonasgedrat/simple-rrule.git#readme",
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
+    "start": "vite build --watch",
+    "build": "vite build",
     "commit": "git-cz",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "coverage": "vitest run --coverage",
+    "lint": "eslint src --ext .ts,.tsx",
+    "prepare": "vite build",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "semantic-release": "semantic-release --branches main"
   },
   "devDependencies": {
+    "@types/node": "24.5.2",
     "@vitest/coverage-v8": "3.2.4",
     "@vitest/ui": "3.2.4",
     "cz-conventional-changelog": "^3.3.0",
@@ -41,9 +44,9 @@
     "prettier": "^3.6.2",
     "semantic-release": "^23.0.0",
     "size-limit": "^11.2.0",
-    "tsdx": "^0.14.1",
     "tslib": "^2.8.1",
     "typescript": "^5.9.2",
+    "vite": "7.1.7",
     "vitest": "3.2.4"
   },
   "config": {
