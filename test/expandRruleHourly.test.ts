@@ -17,14 +17,11 @@ describe('expandRruleHourly', () => {
             interval: 2,
         }
 
-        const rRuleString = getRRuleString(rRule)
-        console.log('rRuleString', rRuleString)
         const result = expandRRule(
             rRule,
             addDays(startDate, 1),
             addDays(endDate, 1)
         )
-        console.log('result', result)
 
         expect(result.events.length).toBe(5) // 10:00, 12:00, 14:00, 16:00, 18:00
         expect(result.events[0].date.getHours()).toBe(7)
