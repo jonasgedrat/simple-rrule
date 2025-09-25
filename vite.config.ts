@@ -1,7 +1,15 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
+import dts from 'vite-plugin-dts'
 
 export default defineConfig({
+  plugins: [
+    dts({
+      insertTypesEntry: true,
+      include: ['src/**/*'],
+      exclude: ['test/**/*', 'src/**/*.test.ts']
+    })
+  ],
   build: {
     lib: {
       // Ponto de entrada da biblioteca

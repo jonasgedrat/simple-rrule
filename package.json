@@ -7,6 +7,13 @@
   "main": "dist/simple-rrule.umd.js",
   "module": "dist/simple-rrule.es.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/simple-rrule.es.js",
+      "require": "./dist/simple-rrule.umd.js"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -50,6 +57,7 @@
     "tslib": "^2.8.1",
     "typescript": "^5.9.2",
     "vite": "7.1.7",
+    "vite-plugin-dts": "4.5.4",
     "vitest": "3.2.4"
   },
   "config": {
