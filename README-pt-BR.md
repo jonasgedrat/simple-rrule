@@ -170,7 +170,7 @@ Esta biblioteca está com ampla cobertura de testes, mas precisa de auxilio para
 
 ### Também exporta funções utilitárias de datas
 `addDays`, `addHours`, `addMinutes`, `addMonths`, `addYears`, `addWeeks`, `addSeconds`, `addMilliseconds`, `differenceInDays`, `differenceInHours`, `differenceInMinutes`, `differenceInMonths`, `differenceInSeconds`, `differenceInWeeks`, `differenceInYears`, `differenceInMilliseconds`, `eachDateOfInterval`, `getStartOfWeekWithoutChangeTime`, `getWeekDayFromDate`, `getWeekDayName`,  `isBefore`, `isLastDayOfMonth`, `compareAsc`, `setByDay`, `setByMonth`, `toRRuleDateString`, `fromRruleDateStringToDate`, `isDate`, `isWeekDayValid`, `isBySetPosValid`, `getBySetPos`, `eachMonthOfIntervalWithTime`, `eachYearOfIntervalWithTime`
-#### além de tipos e constantes como `FrequencyValues`, `ByDayValues`, `WeekdayValues`, `rRuleFields`, interfaces `IDateEvents`, `IExpandResult`, `IRrule`, `IRuleExtended`, `ISchedulerEditor`, `IWeekDayInfo` e tipos `Frequency`, `ByDay`, `Weekday`, `Day`, `Month`, `BySetPos`, `YearMonths`, `MonthDays`.
+#### além de tipos e constantes como  `WeekdayValues`, `rRuleFields`, interfaces `IDateEvents`, `IExpandResult`, `IRrule`, `IRuleExtended`, `ISchedulerEditor`, `IWeekDayInfo` e tipos `Frequency`, `ByDay`, `Weekday`, `Day`, `Month`, `BySetPos`, `YearMonths`, `MonthDays`.
 
 
 ## 🚀 Instalação

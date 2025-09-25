@@ -7,7 +7,6 @@ export const getRRuleString = (payload: IRrule) => {
         return ''
     }
 
-    // const f = validateSchedulerEditor(payload)
     const f = validateRrule(payload)
 
     let rRuleString = `${rRuleFields.frequency}=${f.frequency.toUpperCase()}`
