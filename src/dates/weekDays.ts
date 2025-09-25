@@ -7,13 +7,6 @@ export interface IWeekDayInfo {
     weekDayIndex: Day
 }
 
-export const getDayFromWeekDay = (weekDay: Weekday): Day => {
-    const result = weekDayInfoList.find(
-        (x) => x.weekDay === weekDay
-    )?.weekDayIndex
-    return result || 0
-}
-
 export const getWeekDayFromDate = (date: Date): Weekday => {
     const day = date.getDay()
     return allDays[day]
