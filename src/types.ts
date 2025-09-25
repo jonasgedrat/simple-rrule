@@ -1,13 +1,3 @@
-export const FrequencyValuesList = [
-    'NEVER',
-    'YEARLY',
-    'MONTHLY',
-    'WEEKLY',
-    'DAILY',
-    'HOURLY',
-    'MINUTELY',
-    'SECONDLY',
-]
 export type Frequency =
     | 'NEVER'
     | 'YEARLY'
@@ -17,27 +7,32 @@ export type Frequency =
     | 'HOURLY'
     | 'MINUTELY'
     | 'SECONDLY'
+export const FrequencyValuesList: Frequency[] = [
+    'NEVER',
+    'YEARLY',
+    'MONTHLY',
+    'WEEKLY',
+    'DAILY',
+    'HOURLY',
+    'MINUTELY',
+    'SECONDLY',
+]
 
-export const ByDayValuesList = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
-
-export type ByDay = 'SU' | 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA'
+export type Weekday = 'SU' | 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA'
+export const WeekdayValuesList: Weekday[] = [
+    'SU',
+    'MO',
+    'TU',
+    'WE',
+    'TH',
+    'FR',
+    'SA',
+]
 
 export type Day = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type Month = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11
 
 export type BySetPos = -1 | 0 | 1 | 2 | 3 | 4
-
-export const WeekdayValues = {
-    Sunday: 'SU',
-    Monday: 'MO',
-    Tuesday: 'TU',
-    Wednesday: 'WE',
-    Thursday: 'TH',
-    Friday: 'FR',
-    Saturday: 'SA',
-} as const
-export const WeekdayValuesList = Object.values(WeekdayValues)
-export type Weekday = (typeof WeekdayValues)[keyof typeof WeekdayValues]
 
 export const rRuleFields = {
     RRule: 'RRULE',

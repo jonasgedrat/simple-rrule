@@ -4,7 +4,7 @@ import {
     eachYearOfIntervalWithTime,
 } from './util'
 
-import { ByDay, BySetPos } from './types'
+import { Weekday, BySetPos } from './types'
 import { IRrule, IRuleExtended, validateRrule } from './validators/rRule'
 import { parseRecurrenceFromString } from './parseRrule'
 import { isWeekDayValid } from './validators/util'
@@ -127,7 +127,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
                 //throw error is weekDay is not valid
                 weekDays.map((d) => {
-                    isWeekDayValid(d as ByDay)
+                    isWeekDayValid(d as Weekday)
                 })
 
                 let starPeriodDate = new Date(r.firstEventInRangePeriod)
@@ -180,7 +180,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                 dates = dates.reduce((acc: Date[], curr: Date) => {
                     const result = getBySetPos(
                         curr,
-                        r.byDay as ByDay,
+                        r.byDay as Weekday,
                         r.bySetPos as BySetPos,
                         r.count,
                         acc.length | 0
@@ -225,7 +225,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                             r.dtStart.getHours(),
                             r.dtStart.getMinutes()
                         ),
-                        r.byDay as ByDay,
+                        r.byDay as Weekday,
                         r.bySetPos as BySetPos,
                         r.count,
                         dates.length

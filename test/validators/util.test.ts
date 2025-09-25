@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { isWeekDayValid, isBySetPosValid } from '../../src/validators/util'
-import { ByDay, ByDayValuesList, BySetPos } from '../../src/types'
+import { Weekday, WeekdayValuesList, BySetPos } from '../../src/types'
 
 describe('isWeekDayValid', () => {
     it('should validate valid week days', () => {
-        const validDays: ByDay[] = ['SU', 'MO', 'TU']
+        const validDays: Weekday[] = ['SU', 'MO', 'TU']
 
         validDays.forEach((day) => {
             const result = isWeekDayValid(day)
@@ -12,7 +12,7 @@ describe('isWeekDayValid', () => {
         })
     })
     it('should validate valid ALL week days', () => {
-        const validDays: ByDay[] = ByDayValuesList
+        const validDays: Weekday[] = WeekdayValuesList
         validDays.forEach((day) => {
             const result = isWeekDayValid(day)
             expect(result).toBe(true)
@@ -23,7 +23,7 @@ describe('isWeekDayValid', () => {
         const invalidDays = ['INVALID', 'XX', 'MONDAY', 'sunday', '', 'MOO']
 
         invalidDays.forEach((day) => {
-            const result = isWeekDayValid(day as ByDay)
+            const result = isWeekDayValid(day as Weekday)
             expect(result).toBe(false)
         })
     })
@@ -32,7 +32,7 @@ describe('isWeekDayValid', () => {
         const edgeCases = [null, undefined, 123, {}, []]
 
         edgeCases.forEach((day) => {
-            const result = isWeekDayValid(day as ByDay)
+            const result = isWeekDayValid(day as Weekday)
             expect(result).toBe(false)
         })
     })

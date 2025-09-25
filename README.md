@@ -170,7 +170,7 @@ This library has extensive test coverage, but needs help with documentation.
 
 ### It also exports date utility functions
 `addDays`, `addHours`, `addMinutes`, `addMonths`, `addYears`, `addWeeks`, `addSeconds`, `addMilliseconds`, `differenceInDays`, `differenceInHours`, `differenceInMinutes`, `differenceInMonths`, `differenceInSeconds`, `differenceInWeeks`, `differenceInYears`, `differenceInMilliseconds`, `eachDateOfInterval`, `getStartOfWeekWithoutChangeTime`, `getWeekDayFromDate`, `getWeekDayName`, `isBefore`, `isLastDayOfMonth`, `compareAsc`, `setByDay`, `setByMonth`, `toRRuleDateString`, `fromRruleDateStringToDate`, `isDate`, `isWeekDayValid`, `isBySetPosValid`, `getBySetPos`, `eachMonthOfIntervalWithTime`, `eachYearOfIntervalWithTime`
-#### as well as types and constants like  `WeekdayValues`, `rRuleFields`, interfaces `IDateEvents`, `IExpandResult`, `IRrule`, `IRuleExtended`, `ISchedulerEditor`, `IWeekDayInfo` and types `Frequency`, `ByDay`, `Weekday`, `Day`, `Month`, `BySetPos`, `YearMonths`, `MonthDays`.
+#### as well as types and constants like   `rRuleFields`, interfaces `IDateEvents`, `IExpandResult`, `IRrule`, `IRuleExtended`, `ISchedulerEditor`, `IWeekDayInfo` and types `Frequency`, `Weekday`, `Day`, `Month`, `BySetPos`, `YearMonths`, `MonthDays`.
 
 
 ## 🚀 Installation

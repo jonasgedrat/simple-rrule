@@ -1,10 +1,10 @@
 import { addMonths } from './dates'
-import { ByDay, BySetPos, WeekdayValuesList } from './types'
+import { Weekday, BySetPos, WeekdayValuesList } from './types'
 import { isBySetPosValid, isWeekDayValid } from './validators/util'
 
 export const getBySetPos = (
     currDate: Date,
-    byDay: ByDay,
+    byDay: Weekday,
     bySetPos: BySetPos,
     maxCount: number,
     currentCount: number
@@ -22,7 +22,7 @@ export const getBySetPos = (
     const weekDaysInMonth = []
     const weekDayIndex = WeekdayValuesList.findIndex((x) => x === byDay)
 
-    //find the first WeekDay in month
+    //find the first Weekday in month
     while (firstDayOfMonth.getDay() !== weekDayIndex) {
         firstDayOfMonth.setDate(firstDayOfMonth.getDate() + 1)
     }
@@ -35,7 +35,7 @@ export const getBySetPos = (
 
     const result =
         bySetPos === -1
-            ? weekDaysInMonth.slice(-1)[0] //last WeekDay in month
+            ? weekDaysInMonth.slice(-1)[0] //last Weekday in month
             : weekDaysInMonth[bySetPos - 1]
 
     return result

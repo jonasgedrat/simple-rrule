@@ -1,7 +1,7 @@
-import { ByDay, ByDayValuesList, BySetPos } from './../types'
+import { Weekday, WeekdayValuesList, BySetPos } from './../types'
 
-export const isWeekDayValid = (byDay: ByDay) => {
-    return ByDayValuesList.includes(byDay)
+export const isWeekDayValid = (byDay: Weekday) => {
+    return WeekdayValuesList.includes(byDay)
 }
 
 export const isBySetPosValid = (bySetPos: BySetPos) => {
