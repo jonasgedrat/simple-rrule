@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       zod:
-        specifier: 4.1.11
+        specifier: '>=4'
         version: 4.1.11
     devDependencies:
       '@semantic-release/changelog':

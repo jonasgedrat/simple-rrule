@@ -3,17 +3,7 @@
   "version": "0.0.0-development",
   "description": "simple rrule string parser and expand date events",
   "author": "Jonas Gedrat",
-  "license": "MIT",
-  "main": "dist/simple-rrule.umd.js",
-  "module": "dist/simple-rrule.es.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/simple-rrule.es.js",
-      "require": "./dist/simple-rrule.umd.js"
-    }
-  },
+  "license": "MIT", 
   "files": [
     "dist"
   ],
@@ -42,6 +32,9 @@
     "analyze": "size-limit --why",
     "semantic-release": "semantic-release --branches main"
   },
+  "peerDependencies": {
+    "zod": ">=4"
+  },
   "devDependencies": {
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
@@ -66,8 +59,5 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "dependencies": {
-    "zod": "4.1.11"
   }
 }
