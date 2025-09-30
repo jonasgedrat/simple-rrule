@@ -41,7 +41,8 @@ export const parseRecurrenceFromString = (
             if (dtStart) {
                 rRule.dtStart = dtStart
                 //1 hour for duration by default
-                rRule.dtEnd = addHours(dtStart, 1)
+
+                rRule.dtEnd = addHours(new Date(dtStart), 1).toISOString()
             }
         }
 

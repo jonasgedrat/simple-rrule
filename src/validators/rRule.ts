@@ -1,24 +1,34 @@
 import * as z from 'zod'
 import { addHours } from '../dates'
-import { Frequency, Weekday } from '../types'
+import { FrequencyValuesList, WeekdayValuesList } from '../types'
+import { isDate } from 'util/types'
 
 const rRuleSchema = z
     .object({
-        dtStart: z.date(),
-        dtEnd: z.date(),
-        frequency: z.string<Frequency>(),
+        dtStart: z.iso.datetime(),
+        dtEnd: z.iso.datetime(),
+        frequency: z.enum(FrequencyValuesList),
         interval: z.number().min(1),
         count: z.number().min(0),
-        until: z.date().optional(),
+        until: z.iso.datetime().optional(),
         byDay: z.string(),
         byMonth: z.number().min(0).max(12),
         byMonthDay: z.number().min(0).max(31),
         bySetPos: z.number().min(-1).max(4),
-        wkst: z.string<Weekday>(),
+        wkst: z.enum(WeekdayValuesList),
     })
     .refine(
         (data) => {
-            return !data.dtStart || !data.dtEnd || data.dtEnd >= data.dtStart
+            const _dtStart = new Date(data.dtStart)
+            const _dtEnd = new Date(data.dtEnd)
+
+            console.log('_dtStart', _dtStart, _dtEnd)
+
+            return (
+                !isDate(_dtStart) ||
+                !isDate(_dtEnd) ||
+                _dtEnd.getTime() >= _dtStart.getTime()
+            )
         },
         {
             message: 'End date must be after start date',
@@ -26,11 +36,21 @@ const rRuleSchema = z
         }
     )
 
+// .refine(
+//     (data) => {
+//         return !data.dtStart || !data.dtEnd || data.dtEnd >= data.dtStart
+//     },
+//     {
+//         message: 'End date must be after start date',
+//         path: ['dtEnd'],
+//     }
+// )
+
 type IRrule = z.infer<typeof rRuleSchema>
 
 const rRuleDefaultValues: IRrule = {
-    dtStart: new Date(),
-    dtEnd: addHours(new Date(), 1),
+    dtStart: new Date().toISOString(),
+    dtEnd: addHours(new Date(), 1).toISOString(),
     frequency: 'NEVER',
     interval: 1,
     count: 0,

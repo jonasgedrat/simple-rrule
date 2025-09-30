@@ -6,8 +6,8 @@ import { IRrule, rRuleDefaultValues } from '../src/validators/rRule'
 
 let d: IRrule = {
     ...rRuleDefaultValues,
-    dtStart: new Date('2022-12-15T00:00:00.000Z'),
-    dtEnd: new Date('2022-12-15T01:00:00.000Z'),
+    dtStart: '2022-12-15T00:00:00.000Z',
+    dtEnd: '2022-12-15T01:00:00.000Z',
 }
 
 export const dtStart = `  DTSTART:${toRRuleDateString(d.dtStart)}\n\r
@@ -27,7 +27,7 @@ describe('parseRRule', () => {
             expect(r.frequency).toEqual('WEEKLY')
             expect(r.interval).toEqual(1)
             expect(r.dtStart).toEqual(d.dtStart)
-            expect(r.until).toEqual(new Date('2022-12-15T15:20:30.000Z'))
+            expect(r.until).toEqual('2022-12-15T15:20:30.000Z')
         }
     })
 
@@ -39,8 +39,8 @@ describe('parseRRule', () => {
             expect(r.frequency).toEqual('WEEKLY')
             expect(r.interval).toEqual(1)
             expect(r.count).toEqual(3)
-            expect(r.dtStart.toISOString()).toEqual('2022-11-01T13:30:45.000Z')
-            expect(r.dtEnd.toISOString()).toEqual('2022-11-03T13:30:45.000Z')
+            expect(r.dtStart).toEqual('2022-11-01T13:30:45.000Z')
+            expect(r.dtEnd).toEqual('2022-11-03T13:30:45.000Z')
             expect(r.wkst === 'SU')
         }
     })
@@ -54,8 +54,8 @@ describe('parseRRule', () => {
             expect(r.frequency).toEqual('DAILY')
             expect(r.interval).toEqual(99)
             expect(r.count).toEqual(99)
-            expect(r.dtStart.toISOString()).toEqual('2022-11-01T13:30:45.000Z')
-            expect(r.dtEnd.toISOString()).toEqual('2022-11-03T13:30:45.000Z')
+            expect(r.dtStart).toEqual('2022-11-01T13:30:45.000Z')
+            expect(r.dtEnd).toEqual('2022-11-03T13:30:45.000Z')
             expect(r.wkst).toEqual('SU')
         }
     })
@@ -383,12 +383,8 @@ describe('parseRRule', () => {
             const r = parseRecurrenceFromString(s)
             expect(r).not.toBeUndefined()
             if (r) {
-                expect(r.dtStart.toISOString()).toEqual(
-                    '2022-12-31T23:59:59.000Z'
-                )
-                expect(r.dtEnd.toISOString()).toEqual(
-                    '2023-01-01T00:00:59.000Z'
-                )
+                expect(r.dtStart).toEqual('2022-12-31T23:59:59.000Z')
+                expect(r.dtEnd).toEqual('2023-01-01T00:00:59.000Z')
             }
         })
 
@@ -397,9 +393,7 @@ describe('parseRRule', () => {
             const r = parseRecurrenceFromString(s)
             expect(r).not.toBeUndefined()
             if (r) {
-                expect(r.until?.toISOString()).toEqual(
-                    '2022-12-15T15:20:30.000Z'
-                )
+                expect(r.until).toEqual('2022-12-15T15:20:30.000Z')
             }
         })
 
@@ -408,12 +402,8 @@ describe('parseRRule', () => {
             const r = parseRecurrenceFromString(s)
             expect(r).not.toBeUndefined()
             if (r) {
-                expect(r.dtStart.toISOString()).toEqual(
-                    '2022-11-01T13:30:45.000Z'
-                )
-                expect(r.dtEnd.toISOString()).toEqual(
-                    '2022-11-01T14:30:45.000Z'
-                ) // +1 hora
+                expect(r.dtStart).toEqual('2022-11-01T13:30:45.000Z')
+                expect(r.dtEnd).toEqual('2022-11-01T14:30:45.000Z') // +1 hora
             }
         })
 
@@ -464,7 +454,7 @@ describe('parseRRule', () => {
                 ...rRuleDefaultValues,
                 frequency: 'YEARLY' as const,
                 byMonth: 12,
-                until: new Date('2025-12-31T23:59:59.000Z'),
+                until: '2025-12-31T23:59:59.000Z',
                 interval: 1,
             }
 
@@ -475,9 +465,7 @@ describe('parseRRule', () => {
             if (parsed) {
                 expect(parsed.frequency).toEqual(original.frequency)
                 expect(parsed.byMonth).toEqual(original.byMonth)
-                expect(parsed.until?.toISOString()).toEqual(
-                    original.until.toISOString()
-                )
+                expect(parsed.until).toEqual(original.until)
                 expect(parsed.interval).toEqual(original.interval)
             }
         })

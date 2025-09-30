@@ -8,7 +8,12 @@ import isDate from './isDate'
  * @example
  * toRRuleDateString(new Date('2022-12-15T15:20:30.000Z')) // '20221215T152030Z'
  */
-export const toRRuleDateString = (date: Date, utc = true): string => {
+export const toRRuleDateString = (dateIso: string, utc = true): string => {
+    const date = new Date(dateIso)
+    if (!isDate(date)) {
+        throw new Error(errorString)
+    }
+
     if (utc) {
         return [
             date.getUTCFullYear().toString().padStart(4, '0'),
@@ -35,7 +40,7 @@ export const toRRuleDateString = (date: Date, utc = true): string => {
 
 const errorString = 'Invalid fromRruleDateStringToDate'
 
-export const fromRruleDateStringToDate = (dtString: string): Date => {
+export const fromRruleDateStringToDate = (dtString: string): string => {
     //only 1000-1999/2000-1999 years
     //months 01 to 12
     //days 01 to 31
@@ -65,11 +70,9 @@ export const fromRruleDateStringToDate = (dtString: string): Date => {
 
     const isoString = `${year}-${month}-${day}T${hour}:${minute}:${second}.000Z`
 
-    const result = new Date(isoString)
-
-    if (!isDate(result)) {
-        throw new Error(errorString)
+    if (isDate(new Date(isoString))) {
+        return isoString
     }
 
-    return result
+    throw new Error(errorString)
 }

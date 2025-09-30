@@ -5,8 +5,8 @@ import { rRuleDefaultValues } from '../src/validators/rRule'
 
 let d = {
     ...rRuleDefaultValues,
-    dtStart: new Date('2022-12-15T00:00:00.000Z'),
-    dtEnd: new Date('2022-12-15T01:00:00.000Z'),
+    dtStart: '2022-12-15T00:00:00.000Z',
+    dtEnd: '2022-12-15T01:00:00.000Z',
 }
 
 export const dtStart = `DTSTART:${toRRuleDateString(
