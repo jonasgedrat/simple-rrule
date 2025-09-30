@@ -1,11 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { getRRuleString } from '../src/getRrule'
 import { toRRuleDateString } from '../src/dates'
-
-import { schedulerEditorDefaultValues } from '../src/validators/scheduler'
+import { rRuleDefaultValues } from '../src/validators/rRule'
 
 let d = {
-    ...schedulerEditorDefaultValues,
+    ...rRuleDefaultValues,
     dtStart: new Date('2022-12-15T00:00:00.000Z'),
     dtEnd: new Date('2022-12-15T01:00:00.000Z'),
 }
