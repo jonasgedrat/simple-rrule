@@ -21,7 +21,7 @@ describe('getRRuleString', () => {
                     getRRuleString({
                         ...d,
                         frequency: 'WEEKLY',
-                        until: new Date('2022-12-20T01:00:00.000Z'),
+                        until: '2022-12-20T01:00:00.000Z',
                     }),
                     `${dtStart}RRULE:FREQ=WEEKLY;INTERVAL=1;UNTIL=20221220T010000Z;WKST=SU`,
                 ],
@@ -151,7 +151,7 @@ describe('getRRuleString', () => {
         })
 
         it('should include UNTIL when specified', () => {
-            const until = new Date('2023-01-15T12:00:00.000Z')
+            const until = '2023-01-15T12:00:00.000Z'
             const result = getRRuleString({
                 ...d,
                 frequency: 'WEEKLY',
@@ -366,7 +366,7 @@ describe('getRRuleString', () => {
                 byDay: 'WE',
                 bySetPos: -1,
                 interval: 2,
-                until: new Date('2023-12-31T23:59:59.000Z'),
+                until: '2023-12-31T23:59:59.000Z',
             })
             expect(result).toBe(
                 `${dtStart}RRULE:FREQ=MONTHLY;INTERVAL=2;UNTIL=20231231T235959Z;BYMONTHDAY=15;BYSETPOS=-1;BYDAY=WE;BYMONTHDAY=15;WKST=SU`
@@ -421,7 +421,7 @@ describe('getRRuleString', () => {
         })
 
         it('should handle far future until date', () => {
-            const until = new Date('2099-12-31T23:59:59.000Z')
+            const until = '2099-12-31T23:59:59.000Z'
             const result = getRRuleString({
                 ...d,
                 frequency: 'YEARLY',
@@ -478,8 +478,8 @@ describe('getRRuleString', () => {
 
     describe('Date formatting', () => {
         it('should format dates correctly in different timezones', () => {
-            const dtStart = new Date('2022-06-15T14:30:45.123Z')
-            const dtEnd = new Date('2022-06-15T15:30:45.123Z')
+            const dtStart = '2022-06-15T14:30:45.123Z'
+            const dtEnd = '2022-06-15T15:30:45.123Z'
             const result = getRRuleString({
                 ...d,
                 dtStart,
@@ -494,8 +494,8 @@ describe('getRRuleString', () => {
         })
 
         it('should handle leap year dates', () => {
-            const dtStart = new Date('2024-02-29T12:00:00.000Z')
-            const dtEnd = new Date('2024-02-29T13:00:00.000Z')
+            const dtStart = '2024-02-29T12:00:00.000Z'
+            const dtEnd = '2024-02-29T13:00:00.000Z'
             const result = getRRuleString({
                 ...d,
                 dtStart,

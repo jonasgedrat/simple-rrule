@@ -23,8 +23,8 @@ import { expandRRule,rRuleDefaultValues } from 'simple-rrule'
 
 const rRule: IRrule = {
     ...rRuleDefaultValues,//default values
-    dtStart: new Date('2023-01-01T10:00:00.000Z'), //start of year 2023
-    dtEnd: new Date('2023-01-01T11:00:00.000Z'),//duration of 1 hour          
+    dtStart: '2023-01-01T10:00:00.000Z', //start of year 2023
+    dtEnd: '2023-01-01T11:00:00.000Z',//duration of 1 hour          
     frequency: 'HOURLY',
     interval: 10 // every 10 hours
 }
@@ -141,8 +141,8 @@ RRULE:FREQ=WEEKLY;INTERVAL=0  // ❌ Interval must be >= 1
 
 ```typescript
 type IRrule = {
-    dtStart: Date;
-    dtEnd: Date;
+    dtStart: string;  //iso datetime
+    dtEnd: string;    //iso datetime
     frequency: Frequency;
     interval: number;
     count: number;
@@ -151,9 +151,8 @@ type IRrule = {
     byMonthDay: number;
     bySetPos: number;
     wkst: Weekday;
-    until?: Date | undefined;
+    until?: string | undefined; //iso datetime
 }
-
 ```
 
 

@@ -10,8 +10,8 @@ describe('expandRruleMinutely', () => {
 
         const rule: IRrule = {
             ...rRuleDefaultValues,
-            dtStart: startDate,
-            dtEnd: addMinutes(startDate, 5),
+            dtStart: startDate.toISOString(),
+            dtEnd: addMinutes(startDate, 5).toISOString(),
             frequency: 'MINUTELY',
             interval: 15,
         }
@@ -31,11 +31,11 @@ describe('expandRruleMinutely', () => {
 
         const rule: IRrule = {
             ...rRuleDefaultValues,
-            dtStart: startDate,
-            dtEnd: addMinutes(startDate, 5),
+            dtStart: startDate.toISOString(),
+            dtEnd: addMinutes(startDate, 5).toISOString(),
             frequency: 'MINUTELY',
             interval: 10,
-            until: untilDate,
+            until: untilDate.toISOString(),
         }
 
         const result = expandRRule(rule, startDate, endDate)
@@ -45,4 +45,3 @@ describe('expandRruleMinutely', () => {
         expect(result.events[2].date.getMinutes()).toBe(20)
     })
 })
-

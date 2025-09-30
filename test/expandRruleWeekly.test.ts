@@ -164,8 +164,8 @@ describe('expandRruleWeekly', () => {
             expect(rRule.interval).toEqual(1)
             expect(rRule.frequency).toEqual('WEEKLY')
 
-            const startPeriod = addDays(rRule.dtStart, 7)
-            const endPeriod = addDays(rRule.dtStart, 14)
+            const startPeriod = addDays(new Date(rRule.dtStart), 7)
+            const endPeriod = addDays(new Date(rRule.dtStart), 14)
 
             //2 weeks after 1 week - 3 events per week result 6 events
             const ex = expandRRule(rRule, startPeriod, endPeriod)

@@ -22,8 +22,6 @@ const rRuleSchema = z
             const _dtStart = new Date(data.dtStart)
             const _dtEnd = new Date(data.dtEnd)
 
-            console.log('_dtStart', _dtStart, _dtEnd)
-
             return (
                 !isDate(_dtStart) ||
                 !isDate(_dtEnd) ||

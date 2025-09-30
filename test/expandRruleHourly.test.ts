@@ -11,8 +11,8 @@ describe('expandRruleHourly', () => {
 
         const rRule: IRrule = {
             ...rRuleDefaultValues,
-            dtStart: startDate,
-            dtEnd: addHours(startDate, 1),
+            dtStart: startDate.toISOString(),
+            dtEnd: addHours(startDate, 1).toISOString(),
             frequency: 'HOURLY',
             interval: 2,
         }
@@ -35,8 +35,8 @@ describe('expandRruleHourly', () => {
 
         const rule: IRrule = {
             ...rRuleDefaultValues,
-            dtStart: startDate,
-            dtEnd: addHours(startDate, 1),
+            dtStart: startDate.toISOString(),
+            dtEnd: addHours(startDate, 1).toISOString(),
             frequency: 'HOURLY',
             count: 3,
         }

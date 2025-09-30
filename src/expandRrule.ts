@@ -47,6 +47,7 @@ export const expandRRule = (
     minimalSecondsDuration: number = 60 * 5 //5 minutes
 ): IExpandResult => {
     const rRule = validateRrule(rRulePayload)
+
     const r = validateAndAdjustRRule(
         rRule,
         startRangePeriod,
@@ -89,6 +90,8 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             r.frequency === 'YEARLY')
 
     if (isBefore(r.endRangePeriodOrUntil, r.firstEventInRangePeriod)) return []
+
+    const _dtStart = new Date(r.dtStart)
 
     switch (r.frequency) {
         case 'SECONDLY':
@@ -171,7 +174,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             break
         case 'MONTHLY':
             dates = eachMonthOfIntervalWithTime(
-                r.dtStart,
+                _dtStart,
                 r.endRangePeriodOrUntil,
                 r.byMonthDay
             )
@@ -188,7 +191,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
                     if (result) {
                         if (
-                            result.getTime() >= r.dtStart.getTime() &&
+                            result.getTime() >= _dtStart.getTime() &&
                             result.getTime() <=
                                 r.endRangePeriodOrUntil.getTime()
                         ) {
@@ -214,7 +217,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
         case 'YEARLY':
             if (isBySetPos) {
-                let currentYear = r.dtStart.getFullYear()
+                let currentYear = _dtStart.getFullYear()
                 //infinite loop
                 while (true) {
                     const dt = getBySetPos(
@@ -222,8 +225,8 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                             currentYear,
                             r.byMonth - 1,
                             1, //first day of month
-                            r.dtStart.getHours(),
-                            r.dtStart.getMinutes()
+                            _dtStart.getHours(),
+                            _dtStart.getMinutes()
                         ),
                         r.byDay as Weekday,
                         r.bySetPos as BySetPos,
@@ -234,7 +237,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
                     if (dt) {
                         if (
                             dt.getTime() <= r.endRangePeriodOrUntil.getTime() &&
-                            dt.getTime() >= r.dtStart.getTime()
+                            dt.getTime() >= _dtStart.getTime()
                         ) {
                             dates.push(dt)
                         }
@@ -257,7 +260,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             }
 
             dates = eachYearOfIntervalWithTime(
-                r.dtStart,
+                _dtStart,
                 r.endRangePeriodOrUntil,
                 r.byMonthDay
             )
@@ -284,7 +287,7 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             result = dates.reduce((acc: IDateEvents[], curr) => {
                 index++
                 if (
-                    curr.getTime() >= r.dtStart.getTime() &&
+                    curr.getTime() >= _dtStart.getTime() &&
                     curr.getTime() >= r.startRangePeriod.getTime()
                 ) {
                     acc.push({
@@ -325,23 +328,27 @@ const validateAndAdjustRRule = (
     endRangePeriod: Date,
     minimalSecondsDuration: number = 60 * 60 * 5
 ): IRuleExtended => {
+    const _dtStart = new Date(rRule.dtStart)
+    const _dtEnd = !rRule.dtEnd
+        ? addSeconds(_dtStart, minimalSecondsDuration)
+        : new Date(rRule.dtEnd)
+    const _until = !rRule.until ? undefined : new Date(rRule.until)
+
     const result: IRuleExtended = {
         ...rRule,
         count: rRule.count && rRule.count > 0 ? rRule.count : 0,
         startRangePeriod:
-            rRule.dtStart > startRangePeriod ? rRule.dtStart : startRangePeriod,
+            _dtStart > startRangePeriod ? _dtStart : startRangePeriod,
         endRangePeriodOrUntil:
-            !!rRule.until && rRule.until < endRangePeriod
-                ? rRule.until
-                : endRangePeriod,
-        secondsDuration: !rRule.dtEnd
+            !!_until && _until < endRangePeriod ? _until : endRangePeriod,
+        secondsDuration: !_dtEnd
             ? minimalSecondsDuration
-            : differenceInSeconds(rRule.dtEnd, rRule.dtStart),
+            : differenceInSeconds(_dtEnd, _dtStart),
         hasErrors: false,
         errorMessages: '',
         eventsCount: 0,
         startIndexCount: 0,
-        firstEventInRangePeriod: rRule.dtStart,
+        firstEventInRangePeriod: new Date(rRule.dtStart),
     }
 
     if (result.secondsDuration > 0 && !!rRule.until && rRule.until) {
@@ -350,23 +357,25 @@ const validateAndAdjustRRule = (
             -result.secondsDuration
         )
     }
-    if (!rRule.dtEnd) {
-        result.dtEnd = addSeconds(rRule.dtStart, minimalSecondsDuration)
-    } else if (rRule.dtStart > rRule.dtEnd) {
+
+    if (_dtStart.getTime() > _dtEnd.getTime()) {
         result.hasErrors = true
         result.errorMessages +=
             `\nInvalid recurrence rule: Start date (${rRule.dtStart})` +
             `is greater than End date ${rRule.dtStart}`
     }
 
-    if (!!rRule.until && rRule.until < result.startRangePeriod) {
+    if (!!_until && _until.getTime() < result.startRangePeriod.getTime()) {
         result.hasErrors = true
         result.errorMessages +=
             `\nInvalid recurrence rule: _startRangePeriod date (${result.startRangePeriod})` +
             `is greater than until date ${rRule.until}`
     }
 
-    if (!result.hasErrors && result.dtStart < result.startRangePeriod) {
+    if (
+        !result.hasErrors &&
+        _dtStart.getTime() < result.startRangePeriod.getTime()
+    ) {
         const r = setStartIndexCountAndFirstEventInRangePeriod(result)
         return r
     }
@@ -381,53 +390,56 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
     let durationInFrequency = 0
     let durationFromStart = 0
     let eventCountsFromDtStart = 0
+
+    const _dtStart = new Date(r.dtStart)
+
     switch (r.frequency) {
         case 'SECONDLY':
             //not implemented
             break
         case 'MINUTELY':
             durationInFrequency = differenceInMinutes(
-                addDays(r.dtStart, r.interval),
-                r.dtStart
+                addDays(_dtStart, r.interval),
+                _dtStart
             )
             durationFromStart = differenceInMinutes(
                 r.startRangePeriod,
-                r.dtStart
+                _dtStart
             )
             eventCountsFromDtStart = Math.ceil(
                 durationFromStart / durationInFrequency
             )
             result.firstEventInRangePeriod = addMinutes(
-                r.dtStart,
+                _dtStart,
                 eventCountsFromDtStart * r.interval
             )
 
             break
         case 'HOURLY':
             durationInFrequency = differenceInHours(
-                addDays(r.dtStart, r.interval),
-                r.dtStart
+                addDays(_dtStart, r.interval),
+                _dtStart
             )
-            durationFromStart = differenceInHours(r.startRangePeriod, r.dtStart)
+            durationFromStart = differenceInHours(r.startRangePeriod, _dtStart)
             eventCountsFromDtStart = Math.ceil(
                 durationFromStart / durationInFrequency
             )
             result.firstEventInRangePeriod = addHours(
-                r.dtStart,
+                _dtStart,
                 eventCountsFromDtStart * r.interval
             )
             break
         case 'DAILY':
             durationInFrequency = differenceInDays(
-                addDays(r.dtStart, r.interval),
-                r.dtStart
+                addDays(_dtStart, r.interval),
+                _dtStart
             )
-            durationFromStart = differenceInDays(r.startRangePeriod, r.dtStart)
+            durationFromStart = differenceInDays(r.startRangePeriod, _dtStart)
             eventCountsFromDtStart = Math.ceil(
                 durationFromStart / durationInFrequency
             )
             result.firstEventInRangePeriod = addDays(
-                r.dtStart,
+                _dtStart,
                 eventCountsFromDtStart * r.interval
             )
 
@@ -442,18 +454,18 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
             //if not byDay then the first event is dtStart
 
             durationInFrequency = differenceInDays(
-                addDays(r.dtStart, r.interval * 7),
-                r.dtStart
+                addDays(_dtStart, r.interval * 7),
+                _dtStart
             )
 
-            durationFromStart = differenceInWeeks(r.startRangePeriod, r.dtStart)
+            durationFromStart = differenceInWeeks(r.startRangePeriod, _dtStart)
 
             eventCountsFromDtStart = Math.ceil(
                 durationFromStart / durationInFrequency
             )
 
             result.firstEventInRangePeriod = addDays(
-                r.dtStart,
+                _dtStart,
                 eventCountsFromDtStart * (r.interval * 7)
             )
 
@@ -461,12 +473,12 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
         case 'MONTHLY':
             eventCountsFromDtStart = differenceInMonths(
                 r.startRangePeriod,
-                r.dtStart
+                _dtStart
             )
 
             if (eventCountsFromDtStart > 0) {
                 result.firstEventInRangePeriod = addMonths(
-                    r.dtStart,
+                    _dtStart,
                     eventCountsFromDtStart
                 )
             }
@@ -475,12 +487,12 @@ const setStartIndexCountAndFirstEventInRangePeriod = (
         case 'YEARLY':
             eventCountsFromDtStart = differenceInYears(
                 r.startRangePeriod,
-                r.dtStart
+                _dtStart
             )
 
             if (eventCountsFromDtStart > 0) {
                 result.firstEventInRangePeriod = addYears(
-                    r.dtStart,
+                    _dtStart,
                     eventCountsFromDtStart
                 )
             }
@@ -505,12 +517,12 @@ const setWeeklyFirstEvent = (r: IRuleExtended) => {
     const weekDays = r.byDay?.split(',')
     if (weekDays.length === 0) return
 
+    const _dtStart = new Date(r.dtStart)
+
     r.firstEventInRangePeriod = getStartOfWeekWithoutChangeTime(
-        r.dtStart,
+        _dtStart,
         r.wkst
     )
-
-    const _dtStart = new Date(r.dtStart).getTime()
 
     let fDt = new Date(r.firstEventInRangePeriod)
     let count = 0
@@ -519,7 +531,7 @@ const setWeeklyFirstEvent = (r: IRuleExtended) => {
         const t = addDays(fDt, count)
         ++count
         const weekDay = getWeekDayFromDate(t)
-        if (t.getTime() >= _dtStart && weekDays.includes(weekDay)) {
+        if (t.getTime() >= _dtStart.getTime() && weekDays.includes(weekDay)) {
             r.firstEventInRangePeriod = t
             break
         }

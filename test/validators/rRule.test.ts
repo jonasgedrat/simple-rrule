@@ -11,8 +11,8 @@ describe('validateRrule', () => {
             ...rRuleDefaultValues,
             frequency: 'DAILY',
             interval: 1,
-            dtStart: new Date('2023-01-01T10:00:00.000Z'),
-            dtEnd: new Date('2023-01-01T11:00:00.000Z'),
+            dtStart: '2023-01-01T10:00:00.000Z',
+            dtEnd: '2023-01-01T11:00:00.000Z',
         }
 
         const result = validateRrule(rule)
@@ -46,4 +46,3 @@ describe('validateRrule', () => {
         expect(() => validateRrule(rule)).toThrow()
     })
 })
-

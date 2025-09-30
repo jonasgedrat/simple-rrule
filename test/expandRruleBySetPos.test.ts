@@ -5,20 +5,20 @@ import { IRrule, rRuleDefaultValues } from '../src/validators/rRule'
 
 describe('expandRruleBySetPos', () => {
     it('should handle BYSETPOS with MONTHLY frequency correctly', () => {
-        const startDate = new Date('2023-01-01T10:00:00.000Z')
-        const endDate = new Date('2023-03-31T10:00:00.000Z')
+        const startDate = '2023-01-01T10:00:00.000Z'
+        const endDate = '2023-03-31T10:00:00.000Z'
 
         // Test for "First Monday of the month"
         const rule: IRrule = {
             ...rRuleDefaultValues,
             dtStart: startDate,
-            dtEnd: new Date('2023-01-01T11:00:00.000Z'),
+            dtEnd: endDate,
             frequency: 'MONTHLY',
             byDay: 'MO',
             bySetPos: 1 as BySetPos,
         }
 
-        const result = expandRRule(rule, startDate, endDate)
+        const result = expandRRule(rule, new Date(startDate), new Date(endDate))
 
         // Should return first Monday of each month in the range
         expect(result.events.length).toBe(3) // Jan, Feb, Mar
@@ -37,21 +37,21 @@ describe('expandRruleBySetPos', () => {
     })
 
     it('should handle BYSETPOS with YEARLY frequency correctly', () => {
-        const startDate = new Date('2023-01-01T10:00:00.000Z')
-        const endDate = new Date('2025-12-31T10:00:00.000Z')
+        const startDate = '2023-01-01T10:00:00.000Z'
+        const endDate = '2025-12-31T10:00:00.000Z'
 
         // Test for "Last Friday of March each year"
         const rule: IRrule = {
             ...rRuleDefaultValues,
             dtStart: startDate,
-            dtEnd: new Date('2023-01-01T11:00:00.000Z'),
+            dtEnd: endDate,
             frequency: 'YEARLY',
             byDay: 'FR',
             byMonth: 3, // March
             bySetPos: -1 as BySetPos, // Last occurrence
         }
 
-        const result = expandRRule(rule, startDate, endDate)
+        const result = expandRRule(rule, new Date(startDate), new Date(endDate))
 
         // Should return last Friday of March for each year in the range
         expect(result.events.length).toBe(3) // 2023, 2024, 2025
@@ -72,4 +72,3 @@ describe('expandRruleBySetPos', () => {
         expect(result.events[2].date.getDate()).toBe(28)
     })
 })
-
