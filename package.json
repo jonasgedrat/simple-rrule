@@ -4,14 +4,13 @@
   "description": "simple rrule string parser and expand date events",
   "author": "Jonas Gedrat",
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/simple-rrule.umd.js",
+  "module": "dist/simple-rrule.es.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "import": "./dist/simple-rrule.es.js",
+      "require": "./dist/simple-rrule.umd.js"
     }
   },
   "files": [
