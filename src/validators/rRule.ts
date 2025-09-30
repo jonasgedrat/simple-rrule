@@ -1,7 +1,6 @@
 import * as z from 'zod'
-import { addHours } from '../dates'
+import { addHours, isDate } from '../dates'
 import { FrequencyValuesList, WeekdayValuesList } from '../types'
-import isDate from '../dates/isDate'
 
 const rRuleSchema = z
     .object({

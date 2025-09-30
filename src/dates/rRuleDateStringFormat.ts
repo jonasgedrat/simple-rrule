@@ -1,4 +1,4 @@
-import isDate from './isDate'
+import { isDate } from './isDate'
 
 /**
  * Converts a Date object to RRule date string format (YYYYMMDDTHHMMSSZ)
