@@ -194,4 +194,81 @@ describe('expandRruleWeekly', () => {
             })
         }
     })
+
+    it('deve lançar erro quando BYDAY contém weekday inválido', () => {
+        const rRule = `DTSTART:20230602T080000Z\nDTEND:20230702T090000Z\nRRULE:
+    FREQ=WEEKLY;
+    INTERVAL=1;
+    BYDAY=MO,INVALID,SU;WKST=SU`
+
+        expect(() =>
+            expandRRuleFromString(
+                rRule,
+                new Date('2023-06-06T00:00:45.000Z'),
+                new Date('2023-09-24T13:30:45.000Z')
+            )
+        ).toThrowError('Invalid weekday value in BYDAY: INVALID')
+    })
+
+    it('deve lançar erro quando BYDAY contém weekday em lowercase', () => {
+        const rRule = `DTSTART:20230602T080000Z\nDTEND:20230702T090000Z\nRRULE:FREQ=WEEKLY;BYDAY=mo,TH,FR;WKST=SU`
+
+        expect(() =>
+            expandRRuleFromString(
+                rRule,
+                new Date('2023-06-06T00:00:00.000Z'),
+                new Date('2023-07-01T00:00:00.000Z')
+            )
+        ).toThrowError('Invalid weekday value in BYDAY: mo')
+    })
+
+    it('deve lançar erro quando BYDAY contém nome completo do dia', () => {
+        const rRule = `DTSTART:20230602T080000Z\nDTEND:20230702T090000Z\nRRULE:FREQ=WEEKLY;BYDAY=MONDAY,TH;WKST=SU`
+
+        expect(() =>
+            expandRRuleFromString(
+                rRule,
+                new Date('2023-06-06T00:00:00.000Z'),
+                new Date('2023-07-01T00:00:00.000Z')
+            )
+        ).toThrowError('Invalid weekday value in BYDAY: MONDAY')
+    })
+
+    it('deve lançar erro quando BYDAY contém apenas weekday inválido', () => {
+        const rRule = `DTSTART:20230602T080000Z\nDTEND:20230702T090000Z\nRRULE:FREQ=WEEKLY;BYDAY=XX;WKST=SU`
+
+        expect(() =>
+            expandRRuleFromString(
+                rRule,
+                new Date('2023-06-06T00:00:00.000Z'),
+                new Date('2023-07-01T00:00:00.000Z')
+            )
+        ).toThrowError('Invalid weekday value in BYDAY: XX')
+    })
+
+    it('deve lançar erro quando BYDAY contém weekday com typo', () => {
+        const rRule = `DTSTART:20230602T080000Z\nDTEND:20230702T090000Z\nRRULE:FREQ=WEEKLY;BYDAY=MO,TUE;WKST=SU`
+
+        expect(() =>
+            expandRRuleFromString(
+                rRule,
+                new Date('2023-06-06T00:00:00.000Z'),
+                new Date('2023-07-01T00:00:00.000Z')
+            )
+        ).toThrowError('Invalid weekday value in BYDAY: TUE')
+    })
+
+    it('não deve lançar erro quando BYDAY contém apenas weekdays válidos', () => {
+        const validWeekdays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
+        const byDay = validWeekdays.join(',')
+        const rRule = `DTSTART:20230602T080000Z\nDTEND:20230702T090000Z\nRRULE:FREQ=WEEKLY;BYDAY=${byDay};WKST=SU`
+
+        expect(() =>
+            expandRRuleFromString(
+                rRule,
+                new Date('2023-06-06T00:00:00.000Z'),
+                new Date('2023-07-01T00:00:00.000Z')
+            )
+        ).not.toThrow()
+    })
 })

@@ -1,7 +1,7 @@
+import { WeekdayValuesList } from '../types'
+
+// Lookup direto (independe de dados de Intl/locale e e mais rapido em
+// chamadas dentro de laco, ex: expansao de regras WEEKLY).
 export const getWeekDayName = (date: Date) => {
-    const result = date
-        .toLocaleDateString('en-US', { weekday: 'short' })
-        .toUpperCase()
-        .substring(0, 2)
-    return result
+    return WeekdayValuesList[date.getDay()]
 }

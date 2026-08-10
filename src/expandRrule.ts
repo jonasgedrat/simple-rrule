@@ -128,9 +128,10 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
 
                 const weekDays = r.byDay?.split(',')
 
-                //throw error is weekDay is not valid
-                weekDays.map((d) => {
-                    isWeekDayValid(d as Weekday)
+                weekDays.forEach((d) => {
+                    if (!isWeekDayValid(d as Weekday)) {
+                        throw new Error(`Invalid weekday value in BYDAY: ${d}`)
+                    }
                 })
 
                 let starPeriodDate = new Date(r.firstEventInRangePeriod)
@@ -266,8 +267,11 @@ const getEventsByFrequency = (r: IRuleExtended): IDateEvents[] => {
             )
 
             if (r.bySetPos === 0 && r.byMonth > 0 && r.byMonthDay > 0) {
+                // troca o mes primeiro e so entao aplica o dia (com clamp) --
+                // a ordem inversa faria Date.setMonth "rolar" quando o dia
+                // atual nao existe no mes de destino (ver setByMonth/setByDay)
                 dates = dates.map((x) =>
-                    setByMonth(setByDay(x, r.byMonthDay), r.byMonth)
+                    setByDay(setByMonth(x, r.byMonth), r.byMonthDay)
                 )
                 r.startIndexCount = 0
                 break

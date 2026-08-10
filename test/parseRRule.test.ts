@@ -350,8 +350,8 @@ describe('parseRRule', () => {
             expect(r2?.byMonthDay).toEqual(0) // valor padrão
         })
 
-        it('deve aceitar bySetPos válidos (-1, 1-4)', () => {
-            const testCases = [-1, 1, 2, 3, 4]
+        it('deve aceitar bySetPos válidos (-4..-1, 1-4)', () => {
+            const testCases = [-4, -3, -2, -1, 1, 2, 3, 4]
 
             testCases.forEach((pos) => {
                 const s = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=MONTHLY;BYSETPOS=${pos}`
@@ -361,7 +361,7 @@ describe('parseRRule', () => {
         })
 
         it('deve lançar erro para bySetPos inválidos', () => {
-            const s1 = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=MONTHLY;BYSETPOS=-2`
+            const s1 = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=MONTHLY;BYSETPOS=-5`
             const s2 = `DTSTART:20221101T133045Z\nDTEND:20221103T133045Z\nRRULE:FREQ=MONTHLY;BYSETPOS=5`
 
             expect(() => parseRecurrenceFromString(s1)).toThrow()

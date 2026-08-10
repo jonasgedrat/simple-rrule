@@ -13,7 +13,7 @@ const rRuleSchema = z
         byDay: z.string(),
         byMonth: z.number().min(0).max(12),
         byMonthDay: z.number().min(0).max(31),
-        bySetPos: z.number().min(-1).max(4),
+        bySetPos: z.number().min(-4).max(4),
         wkst: z.enum(WeekdayValuesList),
     })
     .refine(

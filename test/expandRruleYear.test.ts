@@ -204,4 +204,111 @@ describe('expandRruleYear', () => {
             expect(d1?.date).toEqual(d2?.date)
         }
     })
+
+    it('YEARLY: BYMONTHDAY=31 com BYMONTH=4 (abril nao tem dia 31) deve cair em abril clampado, nao em maio', () => {
+        const rRule =
+            'DTSTART:20220115T100000Z\nRRULE:FREQ=YEARLY;INTERVAL=1;BYMONTHDAY=31;BYMONTH=4;COUNT=4;WKST=SU'
+
+        const r = expandRRuleFromString(
+            rRule,
+            new Date('2022-01-15T10:00:00.000Z'),
+            new Date('2026-12-31T10:00:00.000Z')
+        )
+
+        expect(r.events.map((e) => e.date.toISOString())).toEqual([
+            '2022-04-30T10:00:00.000Z',
+            '2023-04-30T10:00:00.000Z',
+            '2024-04-30T10:00:00.000Z',
+            '2025-04-30T10:00:00.000Z',
+        ])
+    })
+
+    it('YEARLY: DTSTART em fevereiro (28 dias) + BYMONTH=1 (jan) + BYMONTHDAY=31 deve cair em 31/jan, nao 28/jan', () => {
+        const rRule =
+            'DTSTART:20230205T100000Z\nRRULE:FREQ=YEARLY;INTERVAL=1;BYMONTHDAY=31;BYMONTH=1;COUNT=5;WKST=SU'
+
+        const r = expandRRuleFromString(
+            rRule,
+            new Date('2023-02-05T10:00:00.000Z'),
+            new Date('2028-12-31T10:00:00.000Z')
+        )
+
+        expect(r.events.map((e) => e.date.toISOString())).toEqual([
+            '2024-01-31T10:00:00.000Z',
+            '2025-01-31T10:00:00.000Z',
+            '2026-01-31T10:00:00.000Z',
+            '2027-01-31T10:00:00.000Z',
+        ])
+    })
+
+    it('YEARLY: DTSTART em abril (30 dias) + BYMONTH=3 (mar) + BYMONTHDAY=31 nao deve grudar no dia 30', () => {
+        const rRule =
+            'DTSTART:20230410T100000Z\nRRULE:FREQ=YEARLY;INTERVAL=1;BYMONTHDAY=31;BYMONTH=3;COUNT=4;WKST=SU'
+
+        const r = expandRRuleFromString(
+            rRule,
+            new Date('2023-04-10T10:00:00.000Z'),
+            new Date('2027-12-31T10:00:00.000Z')
+        )
+
+        expect(r.events.map((e) => e.date.toISOString())).toEqual([
+            '2024-03-31T10:00:00.000Z',
+            '2025-03-31T10:00:00.000Z',
+            '2026-03-31T10:00:00.000Z',
+        ])
+    })
+
+    it('YEARLY: DTSTART em fevereiro (ano bissexto, 29 dias) + BYMONTH=12 + BYMONTHDAY=31 deve cair em 31/dez', () => {
+        const rRule =
+            'DTSTART:20240215T100000Z\nRRULE:FREQ=YEARLY;INTERVAL=1;BYMONTHDAY=31;BYMONTH=12;COUNT=4;WKST=SU'
+
+        const r = expandRRuleFromString(
+            rRule,
+            new Date('2024-02-15T10:00:00.000Z'),
+            new Date('2028-12-31T10:00:00.000Z')
+        )
+
+        expect(r.events.map((e) => e.date.toISOString())).toEqual([
+            '2024-12-31T10:00:00.000Z',
+            '2025-12-31T10:00:00.000Z',
+            '2026-12-31T10:00:00.000Z',
+            '2027-12-31T10:00:00.000Z',
+        ])
+    })
+
+    it('YEARLY: DTSTART em fevereiro + BYMONTH=2 + BYMONTHDAY=29 (ano comum clampado para 28, bissexto 29)', () => {
+        const rRule =
+            'DTSTART:20230201T100000Z\nRRULE:FREQ=YEARLY;INTERVAL=1;BYMONTHDAY=29;BYMONTH=2;COUNT=5;WKST=SU'
+
+        const r = expandRRuleFromString(
+            rRule,
+            new Date('2023-02-01T10:00:00.000Z'),
+            new Date('2028-12-31T10:00:00.000Z')
+        )
+
+        expect(r.events.map((e) => e.date.toISOString())).toEqual([
+            '2023-02-28T10:00:00.000Z',
+            '2024-02-29T10:00:00.000Z',
+            '2025-02-28T10:00:00.000Z',
+            '2026-02-28T10:00:00.000Z',
+            '2027-02-28T10:00:00.000Z',
+        ])
+    })
+
+    it('YEARLY: DTSTART em junho (30 dias) + BYMONTH=1 + BYMONTHDAY=31 nao deve ficar no dia 30', () => {
+        const rRule =
+            'DTSTART:20230615T100000Z\nRRULE:FREQ=YEARLY;INTERVAL=1;BYMONTHDAY=31;BYMONTH=1;COUNT=4;WKST=SU'
+
+        const r = expandRRuleFromString(
+            rRule,
+            new Date('2023-06-15T10:00:00.000Z'),
+            new Date('2027-12-31T10:00:00.000Z')
+        )
+
+        expect(r.events.map((e) => e.date.toISOString())).toEqual([
+            '2024-01-31T10:00:00.000Z',
+            '2025-01-31T10:00:00.000Z',
+            '2026-01-31T10:00:00.000Z',
+        ])
+    })
 })

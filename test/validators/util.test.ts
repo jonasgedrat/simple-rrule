@@ -40,7 +40,7 @@ describe('isWeekDayValid', () => {
 
 describe('isBySetPosValid', () => {
     it('should validate valid bySetPos values', () => {
-        const validValues: BySetPos[] = [-1, 1, 2, 3, 4]
+        const validValues: BySetPos[] = [-4, -3, -2, -1, 1, 2, 3, 4]
 
         validValues.forEach((value) => {
             const result = isBySetPosValid(value)
@@ -49,7 +49,7 @@ describe('isBySetPosValid', () => {
     })
 
     it('should throw error for invalid bySetPos values', () => {
-        const invalidValues = [0, 5, -2, 10, 100, -10]
+        const invalidValues = [0, 5, 10, 100, -5, -10]
 
         invalidValues.forEach((value) => {
             expect(() => isBySetPosValid(value as BySetPos)).toThrow(
@@ -62,7 +62,7 @@ describe('isBySetPosValid', () => {
         const edgeCases = [
             { value: 0, expectedError: 'Invalid bySetPos value: 0' },
             { value: 5, expectedError: 'Invalid bySetPos value: 5' },
-            { value: -2, expectedError: 'Invalid bySetPos value: -2' },
+            { value: -5, expectedError: 'Invalid bySetPos value: -5' },
             { value: 10, expectedError: 'Invalid bySetPos value: 10' },
         ]
 

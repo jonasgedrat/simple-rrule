@@ -5,7 +5,7 @@ export const isWeekDayValid = (byDay: Weekday) => {
 }
 
 export const isBySetPosValid = (bySetPos: BySetPos) => {
-    const validValues = [-1, 1, 2, 3, 4]
+    const validValues = [-4, -3, -2, -1, 1, 2, 3, 4]
     if (!validValues.includes(bySetPos)) {
         throw new Error(`Invalid bySetPos value: ${bySetPos}`)
     }

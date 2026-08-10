@@ -31,8 +31,11 @@ export const WeekdayValuesList: Weekday[] = [
 
 export type Day = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type Month = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11
-
-export type BySetPos = -1 | 0 | 1 | 2 | 3 | 4
+// Indice dentro do conjunto de ocorrencias de um unico periodo (mes/ano), nao da serie inteira.
+// Negativos contam a partir do fim do periodo (-1 = ultima, -2 = penultima...), garantindo
+// semantica estavel mesmo quando o periodo tem 4 ou 5 ocorrencias do dia da semana (ver getBySetPos).
+// 0 e o sentinel "nao usado" (ver expandRrule.ts / rRule.ts).
+export type BySetPos = -4 | -3 | -2 | -1 | 0 | 1 | 2 | 3 | 4
 
 export const rRuleFields = {
     RRule: 'RRULE',

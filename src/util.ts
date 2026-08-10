@@ -1,4 +1,4 @@
-import { addMonths } from './dates'
+import { addMonths, setDayOfMonthClamped } from './dates'
 import { Weekday, BySetPos, WeekdayValuesList } from './types'
 import { isBySetPosValid, isWeekDayValid } from './validators/util'
 
@@ -11,9 +11,10 @@ export const getBySetPos = (
 ): Date | undefined => {
     if (maxCount > 0 && currentCount === maxCount) return undefined
 
-    if (!isWeekDayValid(byDay) && !isBySetPosValid(bySetPos)) {
-        return undefined
+    if (!isWeekDayValid(byDay)) {
+        throw new Error(`Invalid byDay value: ${byDay}`)
     }
+    isBySetPosValid(bySetPos)
 
     const firstDayOfMonth = new Date(currDate)
     firstDayOfMonth.setDate(1)
@@ -34,8 +35,8 @@ export const getBySetPos = (
     }
 
     const result =
-        bySetPos === -1
-            ? weekDaysInMonth.slice(-1)[0] //last Weekday in month
+        bySetPos < 0
+            ? weekDaysInMonth[weekDaysInMonth.length + bySetPos] //conta a partir do fim: -1 = ultimo, -2 = penultimo...
             : weekDaysInMonth[bySetPos - 1]
 
     return result
@@ -55,15 +56,17 @@ export const eachMonthOfIntervalWithTime = (
         throw new RangeError('Invalid interval')
     }
 
-    const _startDateBase = new Date(startDate)
-
-    if (byMonthDay > 0 && byMonthDay <= 31) {
-        _startDateBase.setDate(byMonthDay)
-    }
-
-    let currentDate = new Date(_startDateBase)
+    const hasByMonthDay = byMonthDay > 0 && byMonthDay <= 31
 
     let count = 0
+
+    // A base de incremento de mes e sempre `startDate` (nunca uma data ja
+    // ajustada por byMonthDay), para que o dia desejado nao "vaze" para o
+    // mes seguinte quando o mes de startDate nao comporta esse dia
+    // (ex: startDate em fevereiro e byMonthDay=31).
+    let currentDate = hasByMonthDay
+        ? setDayOfMonthClamped(startDate, byMonthDay)
+        : new Date(startDate)
 
     while (currentDate.getTime() <= endTime) {
         if (currentDate.getTime() >= startDate.getTime()) {
@@ -76,7 +79,10 @@ export const eachMonthOfIntervalWithTime = (
             break
         }
 
-        currentDate = addMonths(_startDateBase, count)
+        const nextMonthBase = addMonths(startDate, count)
+        currentDate = hasByMonthDay
+            ? setDayOfMonthClamped(nextMonthBase, byMonthDay)
+            : nextMonthBase
     }
 
     return dates
@@ -95,15 +101,16 @@ export const eachYearOfIntervalWithTime = (
         throw new RangeError('Invalid interval')
     }
 
-    const _startDateBase = new Date(startDate)
-
-    if (byMonthDay > 0 && byMonthDay <= 31) {
-        _startDateBase.setDate(byMonthDay)
-    }
-
-    let currentDate = new Date(_startDateBase)
+    const hasByMonthDay = byMonthDay > 0 && byMonthDay <= 31
 
     let count = 0
+
+    // Mesma logica de eachMonthOfIntervalWithTime: incrementa sempre a
+    // partir de `startDate` e so entao aplica o clamp do dia desejado,
+    // para nao "vazar" o dia para o mes/ano seguinte.
+    let currentDate = hasByMonthDay
+        ? setDayOfMonthClamped(startDate, byMonthDay)
+        : new Date(startDate)
 
     while (currentDate.getTime() <= endTime) {
         if (currentDate.getTime() >= startDate.getTime()) {
@@ -111,7 +118,10 @@ export const eachYearOfIntervalWithTime = (
         }
         count++
 
-        currentDate = addMonths(_startDateBase, count * 12)
+        const nextYearBase = addMonths(startDate, count * 12)
+        currentDate = hasByMonthDay
+            ? setDayOfMonthClamped(nextYearBase, byMonthDay)
+            : nextYearBase
     }
 
     return dates

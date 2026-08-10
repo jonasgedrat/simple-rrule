@@ -24,6 +24,18 @@ export const addMonths = (date: Date, months: number) => {
     return newDate
 }
 
+// Define o dia do mes sem "rollover": ao contrario de Date.setDate nativo,
+// que rola para o mes seguinte quando o dia pedido nao existe no mes atual
+// (ex: 31 em fevereiro vira 3 de marco), aqui o dia e limitado (clamp) ao
+// ultimo dia valido do mes de `date` (ex: 31 em fevereiro vira 28/29).
+// Nao muta `date` - sempre retorna uma nova instancia.
+export const setDayOfMonthClamped = (date: Date, day: number): Date => {
+    const newDate = new Date(date)
+    const daysInMonth = getDaysInMonth(newDate)
+    newDate.setDate(Math.min(day, daysInMonth))
+    return newDate
+}
+
 export const addYears = (date: Date, years: number) => {
     return addMonths(date, years * 12)
 }

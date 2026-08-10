@@ -262,4 +262,67 @@ describe('expandRruleMonth', () => {
             )
         }
     })
+
+    it('MONTHLY: BYMONTHDAY=31 com DTSTART em fevereiro deve manter o dia 31 (clampado) em cada mes, nao "grudar" no dia 3', () => {
+        const rRule =
+            'DTSTART:20230215T100000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=31;COUNT=4;WKST=SU'
+
+        const r = expandRRuleFromString(
+            rRule,
+            new Date('2023-02-15T10:00:00.000Z'),
+            new Date('2023-08-31T10:00:00.000Z')
+        )
+
+        expect(r.r.hasErrors).toBe(false)
+        expect(r.events.length).toEqual(4)
+        expect(r.events[0].date.toISOString()).toEqual(
+            '2023-02-28T10:00:00.000Z'
+        ) // fevereiro clampado para 28
+        expect(r.events[1].date.toISOString()).toEqual(
+            '2023-03-31T10:00:00.000Z'
+        )
+        expect(r.events[2].date.toISOString()).toEqual(
+            '2023-04-30T10:00:00.000Z'
+        ) // abril clampado para 30
+        expect(r.events[3].date.toISOString()).toEqual(
+            '2023-05-31T10:00:00.000Z'
+        )
+    })
+
+    it('MONTHLY: BYMONTHDAY=30 com DTSTART em fevereiro nao deve grudar no dia 2', () => {
+        const rRule =
+            'DTSTART:20230205T100000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=30;COUNT=4;WKST=SU'
+
+        const r = expandRRuleFromString(
+            rRule,
+            new Date('2023-02-05T10:00:00.000Z'),
+            new Date('2023-08-31T10:00:00.000Z')
+        )
+
+        expect(r.events.map((e) => e.date.toISOString())).toEqual([
+            '2023-02-28T10:00:00.000Z', // fevereiro clampado para 28
+            '2023-03-30T10:00:00.000Z',
+            '2023-04-30T10:00:00.000Z',
+            '2023-05-30T10:00:00.000Z',
+        ])
+    })
+
+    it('MONTHLY: mantem compatibilidade com DTSTART no dia 31 (caso ja coberto por expandRruleMonth.test.ts)', () => {
+        const rRule =
+            'DTSTART:20221231T100000Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=31;COUNT=5;WKST=SU'
+
+        const r = expandRRuleFromString(
+            rRule,
+            new Date('2022-12-31T10:00:00.000Z'),
+            new Date('2023-05-31T10:00:00.000Z')
+        )
+
+        expect(r.events.map((e) => e.date.toISOString())).toEqual([
+            '2022-12-31T10:00:00.000Z',
+            '2023-01-31T10:00:00.000Z',
+            '2023-02-28T10:00:00.000Z',
+            '2023-03-31T10:00:00.000Z',
+            '2023-04-30T10:00:00.000Z',
+        ])
+    })
 })
