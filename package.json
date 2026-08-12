@@ -6,6 +6,7 @@
   "license": "MIT",
   "main": "dist/simple-rrule.umd.js",
   "module": "dist/simple-rrule.es.js",
+  "publishConfig": {"access": "public", "provenance": true},
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
