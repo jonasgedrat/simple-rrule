@@ -25,6 +25,8 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: 'pnpm'
+            - name: Approve pnpm build scripts
+              run: pnpm approve-builds --all
             - run: pnpm install --frozen-lockfile
             - run: pnpm test:run
 
@@ -48,6 +50,8 @@ jobs:
               with:
                   node-version: 24.x
                   cache: 'pnpm'
+            - name: Approve pnpm build scripts
+              run: pnpm approve-builds --all
             - run: pnpm install --frozen-lockfile
             - name: Clean previous builds
               run: rm -rf dist
