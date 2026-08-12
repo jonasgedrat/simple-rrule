@@ -11,7 +11,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node-version: [22.x]
+                node-version: [24.x]
         steps:
             - uses: actions/checkout@v4
               with:
@@ -25,7 +25,6 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: 'pnpm'
-            - run: pnpm approve-builds @swc/core@1.15.47 esbuild@0.27.7 || true
             - run: pnpm install --frozen-lockfile
             - run: pnpm test:run
 
@@ -44,12 +43,11 @@ jobs:
               uses: pnpm/action-setup@v2
               with:
                   version: latest
-            - name: Use Node.js 22
+            - name: Use Node.js 24
               uses: actions/setup-node@v4
               with:
-                  node-version: 22.x
+                  node-version: 24.x
                   cache: 'pnpm'
-            - run: pnpm approve-builds @swc/core@1.15.47 esbuild@0.27.7 || true
             - run: pnpm install --frozen-lockfile
             - name: Clean previous builds
               run: rm -rf dist
