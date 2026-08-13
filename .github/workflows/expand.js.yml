@@ -36,6 +36,7 @@ jobs:
     permissions:
       contents: write
       packages: write
+      issues: write
       id-token: write
     steps:
       - uses: actions/checkout@v5
@@ -62,3 +63,4 @@ jobs:
       - run: pnpm run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
