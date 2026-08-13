@@ -1,19 +1,33 @@
 {
-    "editor.formatOnSave": true,
-    "cSpell.ignoreRegExpList": ["/[(\\/\\/)|(\\/\\*)].*$/gm"],
-    "cSpell.words": [
-        "BYDAY",
-        "BYEARDAY",
-        "BYHOUR",
-        "BYMINUTE",
-        "bymonth",
-        "bymonthday",
-        "bysetpos",
-        "DTEND",
-        "DTSTART",
-        "Gedrat",
-        "Rrule",
-        "tsdx",
-        "wkst"
-    ]
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "notebook.formatOnSave.enabled": true,
+
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+
+  "oxc.enable": true,
+  // "typescript.experimental.useTsgo": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  }
 }

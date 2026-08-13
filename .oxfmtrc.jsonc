@@ -1,0 +1,83 @@
+// se parar de formatar corretamente é por que este arquivo nao está correto
+//
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false,
+  "singleQuote": true,
+  "semi": false,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "endOfLine": "crlf",
+  "newlinesBetween": false,
+  "sortImports": {
+    "groups": [
+      "Dependencies",
+      { "newlinesBetween": true },
+      "G2",
+      { "newlinesBetween": true },
+      "store",
+      { "newlinesBetween": true },
+      "Features",
+      { "newlinesBetween": true },
+      "Common",
+      { "newlinesBetween": true },
+
+      "unknown",
+      "index",
+      "sibling",
+      "parent",
+    ],
+    "customGroups": [
+      {
+        "groupName": "G2",
+        "elementNamePattern": [
+          "**/controllers",
+          "**/controllers/**",
+          "**/services",
+          "**/services/**",
+          "**/utils",
+          "**/utils/**",
+          "**/router",
+          "**/router/**",
+          "**/localesResources",
+          "**/localesResources/**",
+        ],
+      },
+      {
+        "groupName": "Common",
+        "elementNamePattern": ["**/Common", "**/Common/**"],
+      },
+      {
+        "groupName": "Features",
+        "elementNamePattern": ["**/Features", "**/Features/**"],
+      },
+      {
+        "groupName": "store",
+        "elementNamePattern": ["**/store", "**/store/**"],
+      },
+
+      {
+        "groupName": "Dependencies",
+        "elementNamePattern": [
+          "@tanstack/**",
+          "@hookform/**",
+          "@rematch/**",
+          "react",
+          "react-**",
+          "lodash**",
+          "redux/**",
+          "classnames",
+          "date-fns",
+          "echarts",
+          "simple-rrule",
+          "usehooks-ts",
+          "zod/**",
+          "zustand/**",
+        ],
+      },
+    ],
+  },
+}

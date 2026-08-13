@@ -8,25 +8,28 @@
 </p>
 
 # Simple RRule
+
 **A simple and high-performance TypeScript library for working with recurrence rules (RRule).**
 
 A simple implementation of the RRule standard [iCalendar RFC 5545](https://tools.ietf.org/html/rfc5545). Note that this is not a complete implementation of all standard rules, it allows parsing and expanding recurrence rules. Ideal for getting the complete set of recurring events in a calendar, the simple-rrule library aims to simplify this process.
 
 ## 🎯 RRule
+
 - Every day at 10 AM or, every day every 10 hours or, every Monday and Wednesday or, on the second Sunday of each month or, Christmas: annually on December 25th.....
 
 **Important: Does not work with TZ timezone.**
 
 **Example:**
+
 ```typescript
-import { expandRRule,rRuleDefaultValues } from 'simple-rrule'
+import { expandRRule, rRuleDefaultValues } from 'simple-rrule'
 
 const rRule: IRrule = {
-    ...rRuleDefaultValues,//default values
-    dtStart: '2023-01-01T10:00:00.000Z', //start of year 2023
-    dtEnd: '2023-01-01T11:00:00.000Z',//duration of 1 hour          
-    frequency: 'HOURLY',
-    interval: 10 // every 10 hours
+  ...rRuleDefaultValues, //default values
+  dtStart: '2023-01-01T10:00:00.000Z', //start of year 2023
+  dtEnd: '2023-01-01T11:00:00.000Z', //duration of 1 hour
+  frequency: 'HOURLY',
+  interval: 10, // every 10 hours
 }
 //returns the rRuleString
 const rRuleString = getRRuleString(rRule)
@@ -35,13 +38,13 @@ console.log(rRuleString)
 // DTEND:20230101T110000Z
 // RRULE:FREQ=HOURLY;INTERVAL=10;WKST=SU
 
- //returns the rRule object
- const parseR = parseRecurrenceFromString(rRuleString)
+//returns the rRule object
+const parseR = parseRecurrenceFromString(rRuleString)
 
 const result1 = expandRRule(
-    rRule,
-    new Date('2023-12-31'),
-    new Date('2024-01-01')//year transition
+  rRule,
+  new Date('2023-12-31'),
+  new Date('2024-01-01') //year transition
 )
 console.log('result1', result1)
 // result {
@@ -73,9 +76,9 @@ console.log('result1', result1)
 // }
 
 const result2 = expandRRule(
-    rRule,
-    new Date('2024-02-28'),
-    new Date('2024-03-01') //leap year
+  rRule,
+  new Date('2024-02-28'),
+  new Date('2024-03-01') //leap year
 )
 console.log(result2)
 // result2 {
@@ -110,8 +113,10 @@ console.log(result2)
 ```
 
 ## 🔍 expandRRule
+
 expandRRule is focused on performance, it doesn't build event loops from the beginning.
 To optimize performance it makes calculations and returns events within the specified period, the index in events is the event counter.
+
 ## ⚡ Automatic Validation
 
 The library uses Zod4 for automatic validation in main functions:
@@ -124,14 +129,16 @@ RRULE:FREQ=WEEKLY;INTERVAL=0  // ❌ Interval must be >= 1
 `)
 // Returns undefined and logs validation error
 ```
+
 ## 🔍 Supported Frequencies
 
-- **MINUTELY**: Every N minutes  
+- **MINUTELY**: Every N minutes
 - **HOURLY**: Every N hours
 - **DAILY**: Every N days
 - **WEEKLY**: Every N weeks
 - **MONTHLY**: Every N months
 - **YEARLY**: Every N years
+
 ## 🧪 Tested and Reliable
 
 - **580++ tests** automated
@@ -141,36 +148,37 @@ RRULE:FREQ=WEEKLY;INTERVAL=0  // ❌ Interval must be >= 1
 
 ```typescript
 type IRrule = {
-    dtStart: string;  //iso datetime
-    dtEnd: string;    //iso datetime
-    frequency: Frequency;
-    interval: number;
-    count: number;
-    byDay: string;
-    byMonth: number;
-    byMonthDay: number;
-    bySetPos: number;
-    wkst: Weekday;
-    until?: string | undefined; //iso datetime
+  dtStart: string //iso datetime
+  dtEnd: string //iso datetime
+  frequency: Frequency
+  interval: number
+  count: number
+  byDay: string
+  byMonth: number
+  byMonthDay: number
+  bySetPos: number
+  wkst: Weekday
+  until?: string | undefined //iso datetime
 }
 ```
 
-
 ## 🔧 TODO: Documentation
+
 This library has extensive test coverage, but needs help with documentation.
 
+### The Simple RRule library exports the following functions:
 
-### The Simple RRule library exports the following functions: 
 - `expandRRule` and `expandRRuleFromString` for rule expansion
-- `getRRuleString` for RRule string generation 
+- `getRRuleString` for RRule string generation
 - `parseRecurrenceFromString` for RRule string parsing
 - `parseWeekDay` for weekday conversion
 - `validateRrule` for rule validation
 
 ### It also exports date utility functions
-`addDays`, `addHours`, `addMinutes`, `addMonths`, `addYears`, `addWeeks`, `addSeconds`, `addMilliseconds`, `differenceInDays`, `differenceInHours`, `differenceInMinutes`, `differenceInMonths`, `differenceInSeconds`, `differenceInWeeks`, `differenceInYears`, `differenceInMilliseconds`, `eachDateOfInterval`, `getStartOfWeekWithoutChangeTime`, `getWeekDayFromDate`, `getWeekDayName`, `isBefore`, `isLastDayOfMonth`, `compareAsc`, `setByDay`, `setByMonth`, `toRRuleDateString`, `fromRruleDateStringToDate`, `isDate`, `isWeekDayValid`, `isBySetPosValid`, `getBySetPos`, `eachMonthOfIntervalWithTime`, `eachYearOfIntervalWithTime`
-#### as well as types and constants like   `rRuleFields`, interfaces `IDateEvents`, `IExpandResult`, `IRrule`, `IRuleExtended`, `IWeekDayInfo` and types `Frequency`, `Weekday`, `Day`, `Month`, `BySetPos`, `YearMonths`, `MonthDays`.
 
+`addDays`, `addHours`, `addMinutes`, `addMonths`, `addYears`, `addWeeks`, `addSeconds`, `addMilliseconds`, `differenceInDays`, `differenceInHours`, `differenceInMinutes`, `differenceInMonths`, `differenceInSeconds`, `differenceInWeeks`, `differenceInYears`, `differenceInMilliseconds`, `eachDateOfInterval`, `getStartOfWeekWithoutChangeTime`, `getWeekDayFromDate`, `getWeekDayName`, `isBefore`, `isLastDayOfMonth`, `compareAsc`, `setByDay`, `setByMonth`, `toRRuleDateString`, `fromRruleDateStringToDate`, `isDate`, `isWeekDayValid`, `isBySetPosValid`, `getBySetPos`, `eachMonthOfIntervalWithTime`, `eachYearOfIntervalWithTime`
+
+#### as well as types and constants like `rRuleFields`, interfaces `IDateEvents`, `IExpandResult`, `IRrule`, `IRuleExtended`, `IWeekDayInfo` and types `Frequency`, `Weekday`, `Day`, `Month`, `BySetPos`, `YearMonths`, `MonthDays`.
 
 ## 🚀 Installation
 
@@ -184,6 +192,3 @@ yarn add simple-rrule
 # With pnpm
 pnpm add simple-rrule
 ```
-
-
-

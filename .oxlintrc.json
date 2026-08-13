@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["unicorn", "typescript", "oxc", "react"],
+
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "typescript/unbound-method": "off" //todo para outra tarefa: revisar spread por causa da performance
+  },
+  //https://oxc.rs/docs/guide/usage/linter/ignore-files.html
+  "ignorePatterns": [
+    "scripts/**",
+    "src/assets/**",
+    "public/**",
+    "pnpm-lock.yaml",
+    "api-source-dont-use-it.d.ts",
+    "**/*.test.{ts,tsx,js,jsx}"
+  ]
+}

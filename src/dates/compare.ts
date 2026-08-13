@@ -1,16 +1,16 @@
 export const isBefore = (firstDate: Date, lastDate: Date): boolean => {
-    return firstDate.getTime() <= lastDate.getTime()
+  return firstDate.getTime() <= lastDate.getTime()
 }
 
 export const isLastDayOfMonth = (date: Date): boolean => {
-    const endOfDay = new Date(date)
-    endOfDay.setHours(23, 59, 59, 999)
+  const endOfDay = new Date(date)
+  endOfDay.setHours(23, 59, 59, 999)
 
-    const endOfMonth = new Date(date)
-    const month = endOfMonth.getMonth()
-    endOfMonth.setFullYear(endOfMonth.getFullYear(), month + 1, 0)
-    endOfMonth.setHours(23, 59, 59, 999)
-    return endOfDay.getTime() === endOfMonth.getTime()
+  const endOfMonth = new Date(date)
+  const month = endOfMonth.getMonth()
+  endOfMonth.setFullYear(endOfMonth.getFullYear(), month + 1, 0)
+  endOfMonth.setHours(23, 59, 59, 999)
+  return endOfDay.getTime() === endOfMonth.getTime()
 }
 
 /**
@@ -45,14 +45,14 @@ export const isLastDayOfMonth = (date: Date): boolean => {
  * // ]
  */
 export const compareAsc = (dateLeft: Date, dateRight: Date): number => {
-    const diff = dateLeft.getTime() - dateRight.getTime()
+  const diff = dateLeft.getTime() - dateRight.getTime()
 
-    if (diff < 0) {
-        return -1
-    } else if (diff > 0) {
-        return 1
-        // Return 0 if diff is 0; return NaN if diff is NaN
-    } else {
-        return diff
-    }
+  if (diff < 0) {
+    return -1
+  } else if (diff > 0) {
+    return 1
+    // Return 0 if diff is 0; return NaN if diff is NaN
+  } else {
+    return diff
+  }
 }
