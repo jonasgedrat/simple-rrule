@@ -2,11 +2,21 @@
   "name": "simple-rrule",
   "version": "0.0.0-development",
   "description": "simple rrule string parser and expand date events",
-  "author": "Jonas Gedrat",
+  "homepage": "https://github.com/jonasgedrat/simple-rrule.git#readme",
+  "bugs": {
+    "url": "https://github.com/jonasgedrat/simple-rrule.git/issues"
+  },
   "license": "MIT",
+  "author": "Jonas Gedrat",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonasgedrat/simple-rrule.git"
+  },
+  "files": [
+    "dist"
+  ],
   "main": "dist/simple-rrule.umd.js",
   "module": "dist/simple-rrule.es.js",
-  "publishConfig": {"access": "public", "provenance": true},
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -14,40 +24,25 @@
       "require": "./dist/simple-rrule.umd.js"
     }
   },
-  "files": [
-    "dist"
-  ],
-  "engines": {
-    "node": ">=24"
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jonasgedrat/simple-rrule.git"
-  },
-  "bugs": {
-    "url": "https://github.com/jonasgedrat/simple-rrule.git/issues"
-  },
-  "homepage": "https://github.com/jonasgedrat/simple-rrule.git#readme",
   "scripts": {
     "start": "vite build --watch",
     "build": "tsup src/index.ts --dts --sourcemap --target es5",
     "commit": "git-cz",
     "test": "vitest",
     "test:ui": "vitest --ui",
-
-    
     "test:run": "vitest run",
     "coverage": "vitest run --coverage",
-     "lint-and-typecheck": "oxlint --type-aware && tsc -b --noEmit",
-         "format": "oxfmt --write",
-             "typecheck": "tsc -b --noEmit",
+    "lint-and-typecheck": "oxlint --type-aware && tsc -b --noEmit",
+    "format": "oxfmt --write",
+    "typecheck": "tsc -b --noEmit",
     "prepare": "vite build",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "semantic-release": "semantic-release --branches main"
-  },
-  "peerDependencies": {
-    "zod": ">=4"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^7.0.0",
@@ -58,7 +53,7 @@
     "@vitest/ui": "^4.1.10",
     "commitizen": "^4.3.2",
     "cz-conventional-changelog": "^3.3.0",
-        "husky": "^9.1.7",
+    "husky": "^9.1.7",
     "oxfmt": "^0.50.0",
     "oxlint": "^1.56.0",
     "oxlint-tsgolint": "^0.23.0",
@@ -71,15 +66,21 @@
     "vite-plugin-dts": "^5.0.3",
     "vitest": "^4.1.10"
   },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },  
+  "peerDependencies": {
+    "zod": ">=4"
+  },
   "lint-staged": {
     "*.{ts,tsx}": [
       "oxfmt --write",
       "oxlint --type-aware --deny-warnings"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "engines": {
+    "node": ">=24"
   }
 }
