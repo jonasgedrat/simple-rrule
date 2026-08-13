@@ -51,8 +51,6 @@ jobs:
         with:
           node-version: 24.x
           cache: 'pnpm'
-      - name: Update npm CLI
-        run: npm install -g npm@latest
       - name: Approve pnpm build scripts
         run: pnpm approve-builds --all
       - run: pnpm install --frozen-lockfile
