@@ -1,6 +1,6 @@
 {
   "name": "simple-rrule",
-  "version": "0.0.0-development",
+  "version": "1.11.0",
   "description": "simple rrule string parser and expand date events",
   "homepage": "https://github.com/jonasgedrat/simple-rrule.git#readme",
   "bugs": {
@@ -42,11 +42,12 @@
     "prepare": "vite build",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "semantic-release": "semantic-release --branches main"
+    "release:patch": "pnpm version patch && pnpm run build && pnpm publish --provenance --access public && git push --follow-tags",
+    "release:minor": "pnpm version minor && pnpm run build && pnpm publish --provenance --access public && git push --follow-tags",
+    "release:major": "pnpm version major && pnpm run build && pnpm publish --provenance --access public && git push --follow-tags",
+    "prepublishOnly": "pnpm run build"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^7.0.0",
-    "@semantic-release/git": "^11.0.1",
     "@swc/core": "^1.15.47",
     "@types/node": "^26.2.0",
     "@vitest/coverage-v8": "^4.1.10",
@@ -57,7 +58,6 @@
     "oxfmt": "^0.50.0",
     "oxlint": "^1.56.0",
     "oxlint-tsgolint": "^0.23.0",
-    "semantic-release": "^25.0.9",
     "size-limit": "^13.0.3",
     "tslib": "^2.8.1",
     "tsup": "^8.5.1",
